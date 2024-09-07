@@ -4,6 +4,7 @@ import PunakhaDzong from "../assets/PunakhaDzong.jpg";
 import Cham from "../assets/Cham.jpg";
 import TigerNest from "../assets/TigerNest.jpg";
 import Highway from "../assets/Highway.jpg";
+import { ContactUsForm } from "../components/ContactUsForm";
 
 export const Home = () => {
   return (
@@ -21,7 +22,7 @@ export const Home = () => {
         />
       </div>
 
-      <div className="container my-5 pb-5">
+      <div className="container my-5 pb-5 px-0">
         <div>
           <h1>Fall into travel</h1>
           <p>
@@ -44,10 +45,9 @@ export const Home = () => {
                 display: "block",
               }}
             />
-            </div>
+          </div>
           <div className="col-4">
-
-          <img
+            <img
               className="rounded-3"
               src={TigerNest}
               alt="Hero Banner"
@@ -61,7 +61,7 @@ export const Home = () => {
           </div>
 
           <div className="col-4">
-          <img
+            <img
               className="rounded-3"
               src={Highway}
               alt="Hero Banner"
@@ -91,7 +91,7 @@ export const Home = () => {
 
           <div className="col-5">
             <img
-            className="rounded-3"
+              className="rounded-3"
               src={PunakhaDzong}
               alt="Hero Banner"
               style={{
