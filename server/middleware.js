@@ -15,3 +15,4 @@ export const authenticateJWT = (req, res, next) => {
         res.status(403).json({ message: 'Token is not valid' });
     }
 };
+
