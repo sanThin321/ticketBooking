@@ -26,6 +26,11 @@ const userSchema=new mongoose.Schema({
         enum: ['Admin', 'Agency', 'Customer'],
         default: 'Customer' 
     },
+    agencyName: {
+        type: String,
+        required: function() { return this.userType === 'Agency'; }, // Required if userType is 'Agency'
+        unique:true
+    },
     password: {
         type: String,
         required: true

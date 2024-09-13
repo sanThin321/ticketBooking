@@ -13,8 +13,12 @@ const DB = process.env.DATABASE.replace(
     'PASSWORD',
     process.env.DATABASE_PASSWORD,
 )
-
-mongoose.connect(DB).then((con) => {
+// Updated connection options
+const mongooseOptions = {
+    
+    ssl: true,  // Enable SSL
+};
+mongoose.connect(DB,mongooseOptions).then((con) => {
     console.log(con.connections)
     console.log('DB connection succesful')
 

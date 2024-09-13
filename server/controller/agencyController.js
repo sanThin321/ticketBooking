@@ -1,28 +1,40 @@
-import Routes, {Register, RegisterBus} from '../model/agencyModel.js';
+import {Routes,RegisterMember, RegisterBus} from '../model/agencyModel.js';
+import Agency from '../model/agencyModel.js';
 
-//Add routes
+
+// Add a new route
 export const addRoute = async (req, res) => {
-    try {
-      const { From, To, Departure, Arrival } = req.body;
-  
-      // Create a new route instance
+  const { agencyId, From, To, Departure, Arrival } = req.body;
+
+  // Validate required fields
+  if (!agencyId || !From || !To || !Departure || !Arrival) {
+      return res.status(400).json({ msg: 'Please provide all required fields' });
+  }
+
+  try {
+      // Check if the agency exists
+      const agency = await Agency.findById(agencyId);
+      if (!agency) {
+          return res.status(404).json({ msg: 'Agency not found' });
+      }
+
+      // Create a new route
       const newRoute = new Routes({
-        From,
-        To,
-        Departure,
-        Arrival
+          agencyId,
+          From,
+          To,
+          Departure,
+          Arrival
       });
-  
+
       // Save the route to the database
       await newRoute.save();
-  
-      res.status(200).json({
-        message: 'Route added successfully',
-        route: newRoute
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Error adding route', error });
-    }
+
+      res.status(201).json({ msg: 'Route added successfully', route: newRoute });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ msg: 'Server error' });
+  }
 };
   
 // Get all routes
@@ -91,12 +103,12 @@ export const register= async (req, res)=>{
         if ( !fullName||!email || !phoneNumber || !role ) {
             return res.status(400).json({ msg: 'Please enter all fields' });
         }
-        let member = await Register.findOne({ email });
+        let member = await RegisterMember.findOne({ email });
         if (member) {
             return res.status(400).json({ msg: 'Member already exists' });
         }
-        //register a member
-        const registration= new Register({
+        //registerMe a member
+        const registration= new RegisterMember({
             fullName,
             email,
             phoneNumber,
@@ -117,7 +129,7 @@ export const register= async (req, res)=>{
 //Get the all member
 export const getAllMember=async(req,res)=>{
     try{
-        const members=await Register.find();
+        const members=await RegisterMember.find();
         res.status(200).json(members);
     }catch(error){
         res.status(500).json({message: 'Error fetching members'})
@@ -130,7 +142,7 @@ export const updateMember=async (req, res)=>{
     const { fullName, email, phoneNumber, role } = req.body;
 
     try{
-        const member= await Register.findById(id);
+        const member= await RegisterMember.findById(id);
 
         if(!member){
             return res.status(404).json({message: 'Member not found'})
@@ -159,7 +171,7 @@ export const deleteMember=async(req, res)=>{
     const { id }=req.params;
 
     try{
-        const member=await Register.findByIdAndDelete(id);
+        const member=await RegisterMember.findByIdAndDelete(id);
 
         if(!member){
             return res.status(404).json({message:'Member not found'})

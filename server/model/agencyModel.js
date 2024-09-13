@@ -1,7 +1,33 @@
 import mongoose from "mongoose";
 
+//Agency
+const agencySchema = new mongoose.Schema({
+    agencyName: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    routes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Routes'
+    }],
+    members: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'RegisterMember' 
+    }],
+    bus:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'RegisterBus'
+    }]
+});
+
 //route
 const routeSchema= new mongoose.Schema({
+    agencyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agency',
+        required: true
+    },
     From:{
         type:String,
         required:true
@@ -22,6 +48,11 @@ const routeSchema= new mongoose.Schema({
 
 //Register member
 const registerSchema=new mongoose.Schema({
+    agencyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agency',
+        required: true
+    },
     fullName:{
         type:String,
         required:true
@@ -44,6 +75,11 @@ const registerSchema=new mongoose.Schema({
 
 //register bus
 const registerBusSchema=new mongoose.Schema({
+    agencyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agency',
+        required: true
+    },
     driverName:{
         type:String,
         required:true
@@ -62,9 +98,9 @@ const registerBusSchema=new mongoose.Schema({
         required:true
     }
 })
+const Agency = mongoose.model('Agency', agencySchema, 'Agency');
 const Routes=mongoose.model('Routes', routeSchema, 'Routes')
-const Register=mongoose.model('Register', registerSchema, 'Register')
+const RegisterMember=mongoose.model('RegisterMember', registerSchema, 'RegisterMember')
 const RegisterBus=mongoose.model('RegisterBus', registerBusSchema, 'RegisterBus')
-
-export default Routes;
-export {Register, RegisterBus}
+export default Agency;
+export {Routes, RegisterMember, RegisterBus}

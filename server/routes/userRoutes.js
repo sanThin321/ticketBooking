@@ -16,9 +16,9 @@ router.post('/forgotPassword', forgotPassword);
 router.post('/verifyCode',verifyCode);
 router.post('/resetPassword', resetPassword);
 
-//Add routes, get all routes, update and delete
+//Add routes, get all routes, update and delete//agency
 router.post('/addroute', addRoute);
-router.get('/routes', getAllRoutes);
+router.get('/routes/:id', getAllRoutes);
 router.put('/updateroute/:id', updateRoute);
 router.delete('/deleteroute/:id', deleteRoute);
 
