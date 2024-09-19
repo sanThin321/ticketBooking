@@ -1,11 +1,8 @@
-// controllers/authController.js
 import User from '../model/userModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/email.js';
-import crypto from 'crypto';
-import Agency from '../model/agencyModel.js';
-
+import crypto from 'crypto'
 //signup
 export const signup = async (req, res) => {
     const { firstName, lastName, email, phoneNumber, userType, password, confirmPassword, agencyName } = req.body;
@@ -19,34 +16,22 @@ export const signup = async (req, res) => {
         return res.status(400).json({ msg: 'Passwords do not match' });
     }
 
-    // Check if userType is 'Agency' and validate agencyName
-    if (userType === 'Agency') {
-        if (!agencyName || agencyName.trim() === '') {
-            return res.status(400).json({ msg: 'Agency name is required for Agency user type' });
-        }
-        
-        // Check if the agency already exists
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ msg: 'Agency or user already exists' });
-        }
-        const existingAgency = await Agency.findOne({ agencyName });
-        if (existingAgency) {
-            return res.status(400).json({ msg: 'Agency already exists' });
-        }
-        
-        // Create and save the new agency
-        const newAgency = new Agency({ agencyName });
-        await newAgency.save();
-    }
-
     try {
         // Check if the user already exists
         let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ msg: 'User already exists' });
         }
-
+        if (userType === 'Agency') {
+            if (!agencyName || agencyName.trim() === '') {
+                return res.status(400).json({ msg: 'Agency name is required for Agency user type' });
+            }
+            
+            const existingAgency = await User.findOne({ agencyName });
+            if (existingAgency) {
+                return res.status(400).json({ msg: 'Agency already exists' });
+            } 
+        }
         // Create and save the user
         const newUser = new User({
             firstName,
@@ -229,3 +214,4 @@ export const resetPassword = async (req, res) => {
         res.status(400).json({ message: 'Error resetting password' });
     }
 };
+

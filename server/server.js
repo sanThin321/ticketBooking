@@ -9,6 +9,8 @@ dotenv.config({path:'./config.env'})
 const app=express()
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
 const DB = process.env.DATABASE.replace(
     'PASSWORD',
     process.env.DATABASE_PASSWORD,
