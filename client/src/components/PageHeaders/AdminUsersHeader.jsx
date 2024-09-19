@@ -3,10 +3,10 @@ import { SlidersHorizontal } from "lucide-react"
 
 export const AdminUsersHeader = () => {
     return (
-        <div className="container container-shadow py-3 my-4">
-            <div className="row bg-white rounded-4">
+        <div className="container rounded container-shadow py-3 my-4">
+            <div className="rounded-4 d-flex align-items-center">
                 <div className="col-2 align-items-center">
-                    <h5 className="">Manage Users</h5>
+                    <h4 className="mb-0">Manage Users</h4>
                 </div>
                 <div className="col-lg-10">
                     <div className="d-flex justify-content-end gap-3">
