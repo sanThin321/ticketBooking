@@ -153,10 +153,6 @@ export const verifyCode = async (req, res) => {
             .update(token)
             .digest('hex');
 
-        // Debug: Log the hashed token and current time
-        console.log(`Hashed token: ${hashedToken}`);
-        console.log(`Current time: ${Date.now()}`);
-
         // Find user with the hashed token and check if token is still valid
         const user = await User.findOne({
             resetPasswordToken: hashedToken,
@@ -166,40 +162,36 @@ export const verifyCode = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'Invalid or expired token' });
         }
-
-        res.status(200).json({ message: 'Token is valid', userId: user._id });
+        const tempToken = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' } // Short-lived temporary token
+        );
+        res.status(200).json({ message: 'Token is valid',  tempToken,
+            redirectUrl: '/reset-password' });
     } catch (err) {
         console.error(err);
         res.status(400).json({ message: 'Invalid or expired token' });
     }
 };
 
-
-// Reset password function
-// Reset password function
+// Reset password using the temporary token
 export const resetPassword = async (req, res) => {
-    const { token, newPassword, confirmPassword } = req.body;
+    const { tempToken, newPassword, confirmPassword } = req.body;
 
     try {
-        // Hash the provided token
-        const hashedToken = crypto
-            .createHash('sha256')
-            .update(token)
-            .digest('hex');
-
-        // Find user with the hashed token and check if token is still valid
-        const user = await User.findOne({
-            resetPasswordToken: hashedToken,
-            resetPasswordExpire: { $gt: Date.now() }, // Token should still be valid
-        });
-
-        if (!user) {
-            return res.status(400).json({ message: 'Invalid or expired token' });
-        }
-
-        // Check if the new password and confirmation password match
         if (newPassword !== confirmPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
+        }
+
+        // Verify the temporary token
+        const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+
+        // Find user by ID from the temporary token
+        const user = await User.findById(decoded.userId);
+
+        if (!user) {
+            return res.status(400).json({ message: 'User not found' });
         }
 
         // Set the new password
