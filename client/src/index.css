@@ -5,3 +5,16 @@ html, body {
 .container-shadow{
    box-shadow: 0 4px 16px rgba(17, 34, 17, 0.05);
 }
+
+.container-background-color {
+   background-color: #CDEAE1;
+}
+
+.border-right {
+   border-right: 1px solid #D7E2EE;
+}
+.border-left {
+   border-left: 1px solid #D7E2EE;
+}
+
+ 

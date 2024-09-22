@@ -1,26 +1,26 @@
 import { useState } from "react";
-import { UserDetail } from "../../components/Cards/UserDetail";
+import { PaymentDetail } from "../../components/Cards/PaymentDetail";
 import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 
-export const AdminUsers = () => {
+export const AdminPaymentDetails = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   return (
     <>
       <AdminHeader
         toggleFilters={() => setShowFilters((prev) => !prev)}
-        title="Manage Users"
+        title="Payment Details"
       />
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
-            <UserDetail />
-            <UserDetail />
-            <UserDetail />
+            <PaymentDetail />
+            <PaymentDetail />
+            <PaymentDetail />
           </div>
           <div
             className={`p-3 border border-secondary-subtle rounded ${
-              showFilters ? "d-block ease" : "d-none"
+              showFilters ? "d-block" : "d-none"
             }`}
           >
             <h5>Filters</h5>
