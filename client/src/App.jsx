@@ -14,6 +14,7 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { SetPassword } from "./pages/SetPassword";
 import { VerifyCode } from "./pages/VerifyCode";
 import { UserProfile } from "./pages/UserProfile";
+import { AgencyOwnerDashboard } from "./pages/AgencyOwnerDashboard";
 
 const App = () => {
   return (
@@ -31,10 +32,10 @@ const App = () => {
         <Route path="/set-password" element={<SetPassword />} />
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/agencyOwnerDashboard" element={<AgencyOwnerDashboard />} />
       </Routes>
       <Footer />
     </BrowserRouter>
   );
 };
-
 export default App;
