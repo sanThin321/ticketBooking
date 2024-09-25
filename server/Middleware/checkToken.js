@@ -1,6 +1,4 @@
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
-import User from '../model/userModel.js';
 
 export const authenticateJWT = (req, res, next) => {
   const token = req.cookies.token; // Get token from cookies
@@ -19,3 +17,5 @@ export const authenticateJWT = (req, res, next) => {
     res.status(403).json({ message: "Token is not valid" });
   }
 };
+
+

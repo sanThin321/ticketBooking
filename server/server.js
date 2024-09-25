@@ -29,5 +29,5 @@ mongoose.connect(DB,mongooseOptions).then((con) => {
 app.use('/pelrizhabtho', authRoutes)
 const port = 4004
 app.listen(port, () => {
-    console.log(`App running on port ${port}..`)
+    console.log(`App running on port ${port}..`)
 })

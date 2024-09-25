@@ -1,18 +1,39 @@
 // routes/authRoutes.js
-import express from 'express';
-import { signup, login, forgotPassword, verifyCode, resetPassword } from '../controller/userController.js';
+import express from "express";
+import {
+  signup,
+  login,
+  forgotPassword,
+  verifyCode,
+  resetPassword,
+} from "../controller/userController.js";
+import { authenticateJWT } from "../Middleware/checkToken.js";
+import { roleBasedRedirect } from "../Middleware/Redriect.js";
+import { validateDriver } from "../Middleware/vaildateItsfromagency.js";
+import {
+  registerMember,
+  getAllMembers,
+  updateMember,
+  deleteMember,
+} from "../controller/memberController.js";
+import { registerBus } from "../controller/busController.js";
 
 const router = express.Router();
 
 // Sign-up and Login
-router.post('/signup', signup);
-router.post('/login', login);
-router.post('/forgotPassword', forgotPassword);
-router.post('/verifyCode',verifyCode);
-router.post('/resetPassword', resetPassword);
+router.post("/signup", signup);
+router.post("/login", login);
+router.get("/redirect", authenticateJWT, roleBasedRedirect);
+router.post("/forgotPassword", forgotPassword);
+router.post("/verifyCode", verifyCode);
+router.post("/resetPassword", resetPassword);
 
-//Add routes, get all routes, update and delete//agency
-// router.post('/addroute',authenticateJWT, addRoute);
+//Agency member
+router.post("/registermember", registerMember);
+router.get("/members/agency/:agencyId", getAllMembers);
+router.put("/updatemember/:memberId", updateMember);
+router.delete("/deletemember/:memberId", deleteMember);
 
-
+//Agency Bus
+router.post("/registerbus", validateDriver, registerBus);
 export default router;
