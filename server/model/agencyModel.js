@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 //route
 const routeSchema= new mongoose.Schema({
-    agencyId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
     From:{
         type:String,
         required:true
@@ -84,7 +80,7 @@ const registerBusSchema=new mongoose.Schema({
 const scheduleSchema=new mongoose.Schema({
     agencyId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        required: true
     },
     routeId:{
         type: mongoose.Schema.Types.ObjectId,
@@ -96,7 +92,11 @@ const scheduleSchema=new mongoose.Schema({
         ref:"Register_Bus",
         required: true
     },
-    departure:{
+    BusNumber:{
+        type:String,
+        required:true
+    },
+    Departure:{
         type:String,
         required:true
     },
