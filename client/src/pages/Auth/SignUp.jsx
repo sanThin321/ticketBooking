@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import dzong from "../assets/dzong.jpeg";
+import dzong from "../../assets/dzong.jpeg";
 
 export const SignUp = () => {
   const [user, setUser] = useState({
@@ -15,7 +15,7 @@ export const SignUp = () => {
   });
 
   const handleChange = (e) => {
-    const { id, value, type, checked } = e.target;
+    const { id, value, type } = e.target;
 
     if (type === "radio") {
       setUser((prevUser) => ({

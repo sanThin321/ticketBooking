@@ -1,5 +1,5 @@
 import { Armchair, CalendarDays, ChevronRight, Minus } from "lucide-react";
-import AgencyLogo from "../../assets/AgencyLogo.png";
+import AgencyLogo from "../../assets/AgencyLogo.jpeg";
 
 export const PurchaseHistory = () => {
   return (

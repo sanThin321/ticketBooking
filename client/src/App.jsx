@@ -5,16 +5,19 @@ import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { Users } from "./pages/Users";
 import { Payment } from "./pages/Payment";
-import { Booking } from "./pages/Booking";
-import LogIn from "./pages/LogIn";
-import SignUp from "./pages/SignUp";
+import { BookingSeats } from "./pages/Users/BookingSeats";
+import LogIn from "./pages/Auth/LogIn";
+import SignUp from "./pages/Auth/SignUp";
 import Header from "./components/common/Header";
 import { Footer } from "./components/common/Footer";
-import { ForgotPassword } from "./pages/ForgotPassword";
-import { SetPassword } from "./pages/SetPassword";
-import { VerifyCode } from "./pages/VerifyCode";
+import { ForgotPassword } from "./pages/Auth/ForgotPassword";
+import { SetPassword } from "./pages/Auth/SetPassword";
+import { VerifyCode } from "./pages/Auth/VerifyCode";
 import { UserProfile } from "./pages/UserProfile";
-import { AgencyOwnerDashboard } from "./pages/AgencyOwnerDashboard";
+import { AdminUsers } from "./pages/Dashboard/AdminUsers";
+import { AdminPaymentDetails } from "./pages/Dashboard/AdminPaymentDetails";
+import { AdminBookings } from "./pages/Dashboard/AdminBookings";
+import { SingleBookingDetails } from "./pages/Dashboard/SingleBookingDetails";
 
 const App = () => {
   return (
@@ -27,15 +30,20 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
         <Route path="/payment" element={<Payment />} />
-        <Route path="/booking" element={<Booking />} />
+        <Route path="/booking-tickets" element={<BookingSeats />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/set-password" element={<SetPassword />} />
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/agencyOwnerDashboard" element={<AgencyOwnerDashboard />} />
+        <Route path="/admin-users" element={<AdminUsers />} />
+        <Route path="/admin-payments" element={<AdminPaymentDetails />} />
+        <Route path="/admin-bookings" element={<AdminBookings />} />
+        <Route path="/admin-booking-sigle" element={<SingleBookingDetails />} />
+
       </Routes>
       <Footer />
     </BrowserRouter>
   );
 };
+
 export default App;
