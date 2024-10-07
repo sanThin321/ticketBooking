@@ -40,7 +40,7 @@ export const BookingSeats = () => {
   return (
     <div className="container my-5">
       <div className="row">
-        <div className="col-8">
+        <div className="col-12 col-lg-8">
           <div className="rounded border p-3">
             <h5>
               <strong>Book Seat</strong>
