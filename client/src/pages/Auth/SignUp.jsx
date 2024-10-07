@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
+import axios from "axios";
 
 export const SignUp = () => {
   const [user, setUser] = useState({
@@ -10,7 +11,7 @@ export const SignUp = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    userType: "passenger",
+    userType: "Customer",
     agencyName: "",
   });
 
@@ -31,9 +32,20 @@ export const SignUp = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
+    try {
+      const response = await axios.post(
+        "http://localhost:4004/pelrizhabtho/signup",
+        user
+      )
+
+      if (response.statusText === "OK") {
+        alert("Success: " + response.data)
+      }
+    } catch (error) {
+      console.error("Error while sign up: " + error)
+    }
   };
 
   return (
@@ -153,8 +165,8 @@ export const SignUp = () => {
                   className="form-check-input"
                   type="radio"
                   name="userType"
-                  id="passenger"
-                  checked={user.userType === "passenger"}
+                  id="Customer"
+                  checked={user.userType === "Customer"}
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor="passenger">
@@ -166,9 +178,9 @@ export const SignUp = () => {
                   className="form-check-input"
                   type="radio"
                   name="userType"
-                  id="agencyOwner"
+                  id="Agency"
                   autoComplete="off"
-                  checked={user.userType === "agencyOwner"}
+                  checked={user.userType === "Agency"}
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor="agencyOwner">
@@ -177,7 +189,7 @@ export const SignUp = () => {
               </div>
             </div>
 
-            {user.userType === "agencyOwner" && (
+            {user.userType === "Agency" && (
               <div className="mb-4">
                 <label htmlFor="agencyName" className="form-label">
                   Agency Name

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
+import axios from "axios";
 
 export const LogIn = () => {
   const [user, setUser] = useState({
@@ -18,10 +19,21 @@ export const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission, e.g., API call to log in
-    console.log('Submitting form with:', user);
-    // Add your login logic here
+    try {
+      const response = await axios.post(
+        "http://localhost:4004/pelrizhabtho/login",
+        { email: user.email, password: user.password },
+        { withCredentials: true } // Allow credentials (cookies) to be included
+      );
+  
+      if (response.statusText === "OK") {
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Error logging in: " + error);
+    }
   };
+  
 
   return (
     <div className="container">
