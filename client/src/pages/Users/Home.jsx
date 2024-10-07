@@ -1,10 +1,10 @@
-import Herobanner from "../assets/Herobanner.jpg";
-import Dochula from "../assets/Dochula.jpg";
-import PunakhaDzong from "../assets/PunakhaDzong.jpg";
-import Cham from "../assets/Cham.jpg";
-import TigerNest from "../assets/TigerNest.jpg";
-import Highway from "../assets/Highway.jpg";
-import { ContactUsForm } from "../components/ContactUsForm";
+import Herobanner from "../../assets/Herobanner.jpg";
+import Dochula from "../../assets/Dochula.jpg";
+import PunakhaDzong from "../../assets/PunakhaDzong.jpg";
+import Cham from "../../assets/Cham.jpg";
+import TigerNest from "../../assets/TigerNest.jpg";
+import Highway from "../../assets/Highway.jpg";
+// import { ContactUsForm } from "../../components/ContactUsForm";
 
 export const Home = () => {
   return (

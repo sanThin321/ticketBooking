@@ -89,7 +89,7 @@ export const LogIn = () => {
                 Log In
               </button>
               <div className="d-flex gap-3 ">
-                <p>Don't have an account?</p>
+                <p>Don&apos;t have an account?</p>
                 <Link
                   to="/sign-up"
                   style={{ color: "#FF8682", textDecoration: "none" }}

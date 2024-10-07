@@ -1,4 +1,4 @@
-import { ChevronRight, Radius, LifeBuoy, Flag, UserRound, BookCheck, DoorClosed, Ticket, SquareUserRound } from "lucide-react"
+import { ChevronRight, LifeBuoy, Flag, UserRound, BookCheck, DoorClosed, Ticket, SquareUserRound } from "lucide-react"
 
 
 export const Dashboard = () => {

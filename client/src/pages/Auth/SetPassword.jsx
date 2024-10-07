@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import dzong from "../assets/dzong.jpeg";
+import dzong from "../../assets/dzong.jpeg";
 
 export const SetPassword = () => {
   const [user, setUser] = useState({

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import backgroundImage from "../assets/ProfileBackground.png";
-import { Account } from "../components/Profile/Account";
-import { PurchaseHistory } from "../components/Profile/PurchaseHistory";
-import { PaymentMethod } from "../components/Profile/PaymentMethod";
+import backgroundImage from "../../assets/ProfileBackground.png";
+import { Account } from "../../components/Profile/Account";
+import { PurchaseHistory } from "../../components/Profile/PurchaseHistory";
+import { PaymentMethod } from "../../components/Profile/PaymentMethod";
 
 export const UserProfile = () => {
   const [isSelected, setIsSelected] = useState(0);
