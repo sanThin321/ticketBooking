@@ -65,8 +65,38 @@ export const signup = async (req, res) => {
     });
 
     await newUser.save();
+    // Automatically log the user in by generating JWT
+    const payload = {
+      user: {
+        id: newUser.id,
+        role: newUser.userType,
+      },
+    };
 
-    res.status(200).json({ msg: "User registered successfully" });
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
+      (err, token) => {
+        if (err) throw err;
+
+        // Set the token in an HttpOnly cookie
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // Secure in production
+          sameSite: "strict",
+          maxAge: 3600000, // 1 hour
+        });
+
+        res
+          .status(200)
+          .json({
+            role: newUser.userType,
+            message: "Signup successful and logged in",
+          });
+      }
+    );
+    // res.status(200).json({ msg: "User registered successfully" });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");
@@ -127,7 +157,7 @@ export const login = async (req, res) => {
         member: {
           id: member.id,
           agencyId: member.agencyId,
-          role:member.role
+          role: member.role,
         },
       };
       jwt.sign(
@@ -145,12 +175,10 @@ export const login = async (req, res) => {
             maxAge: 3600000, // 1 hour
           });
 
-          res
-            .status(200)
-            .json({
-              role: "registerMember",
-              message: "Login successful as Register Member",
-            });
+          res.status(200).json({
+            role: "registerMember",
+            message: "Login successful as Register Member",
+          });
         }
       );
     }
@@ -229,13 +257,11 @@ export const verifyCode = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "15m" } // Short-lived temporary token
     );
-    res
-      .status(200)
-      .json({
-        message: "Token is valid",
-        tempToken,
-        redirectUrl: "/reset-password",
-      });
+    res.status(200).json({
+      message: "Token is valid",
+      tempToken,
+      redirectUrl: "/reset-password",
+    });
   } catch (err) {
     console.error(err);
     res.status(400).json({ message: "Invalid or expired token" });
