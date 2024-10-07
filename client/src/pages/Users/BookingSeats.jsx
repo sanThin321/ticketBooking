@@ -1,6 +1,6 @@
 import { Armchair } from "lucide-react";
 import { Seats } from "../../components/Seats";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export const BookingSeats = () => {
   const [seatDetails, setSeatDetails] = useState({}); // Store seat selections with names and CIDs
