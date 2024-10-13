@@ -81,16 +81,17 @@ export const signup = async (req, res) => {
         if (err) throw err;
 
         // Set the token in an HttpOnly cookie
-        res.cookie("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production", // Secure in production
-          sameSite: "strict",
-          maxAge: 3600000, // 1 hour
-        });
+        // res.cookie("token", token, {
+        //   httpOnly: true,
+        //   secure: process.env.NODE_ENV === "production", // Secure in production
+        //   sameSite: "strict",
+        //   maxAge: 3600000, // 1 hour
+        // });
 
         res
           .status(200)
           .json({
+            token,
             role: newUser.userType,
             message: "Signup successful and logged in",
           });
@@ -134,17 +135,18 @@ export const login = async (req, res) => {
         (err, token) => {
           if (err) throw err;
 
-          // Set the token in HttpOnly cookie
-          res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Secure in production
-            sameSite: "strict",
-            maxAge: 3600000, // 1 hour
-          });
+          // // Set the token in HttpOnly cookie
+          // res.cookie("token", token, {
+          //   httpOnly: true,
+          //   // secure: process.env.NODE_ENV === "production", // Secure in production
+          //   secure: false,
+          //   sameSite: "lax",
+          //   maxAge: 3600000, // 1 hour
+          // });
 
           res
             .status(200)
-            .json({ role: user.userType, message: "Login successful as User" });
+            .json({ role: user.userType, token: token, message: "Login successful as User" });
         }
       );
     } else {
@@ -167,15 +169,16 @@ export const login = async (req, res) => {
         (err, token) => {
           if (err) throw err;
 
-          // Set the token in HttpOnly cookie
-          res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Secure in production
-            sameSite: "strict",
-            maxAge: 3600000, // 1 hour
-          });
+          // // Set the token in HttpOnly cookie
+          // res.cookie("token", token, {
+          //   httpOnly: false,
+          //   secure: process.env.NODE_ENV === "production", // Secure in production
+          //   sameSite: "strict",
+          //   maxAge: 3600000, // 1 hour
+          // });
 
           res.status(200).json({
+            token: token,
             role: "registerMember",
             message: "Login successful as Register Member",
           });
@@ -188,12 +191,40 @@ export const login = async (req, res) => {
   }
 };
 
+
 // Logout Controller
 export const logout = (req, res) => {
-  // Clear the JWT cookie
-  res.clearCookie("token");
-  res.status(200).json({ message: "Logged out successfully" });
+  res.clearCookie('token', { httpOnly: true, sameSite: 'strict' });
+  res.status(200).send({ message: 'Logged out successfully' });
 };
+
+// Check if the user is logged in
+export const checkLogin = async (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ loggedIn: false, message: "No token found" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Check if user exists
+    const user = await User.findById(decoded.user?.id || decoded.member?.id);
+    if (!user) {
+      return res.status(401).json({ loggedIn: false, message: "User not found" });
+    }
+
+    // If the token is valid and user exists, return login status and role
+    return res.status(200).json({
+      loggedIn: true,
+      role: decoded.user?.role || decoded.member?.role
+    });
+  } catch (error) {
+    return res.status(401).json({ loggedIn: false, message: "Invalid token" });
+  }
+};
+
 
 //
 export const forgotPassword = async (req, res) => {

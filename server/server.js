@@ -11,9 +11,9 @@ const app = express();
 
 // Use CORS middleware
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    credentials: true, // Allow cookies to be sent
+    origin: 'http://localhost:5173', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    credentials: true, 
 }));
 
 app.use(bodyParser.json());
@@ -34,6 +34,7 @@ mongoose.connect(DB, mongooseOptions).then((con) => {
 }).catch(error => console.log(error));
 
 app.use('/pelrizhabtho', authRoutes);
+
 const port = 4004;
 app.listen(port, () => {
     console.log(`App running on port ${port}..`);

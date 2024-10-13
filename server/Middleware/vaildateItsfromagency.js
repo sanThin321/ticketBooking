@@ -31,6 +31,7 @@ export const vaildBus = async (req, res, next) => {
     const bus = await RegisterBus.findOne({
       busNumber: BusNumber,
     });
+    
     if (!bus) {
       return res.status(404).json({ message: "Bus not found" });
     }

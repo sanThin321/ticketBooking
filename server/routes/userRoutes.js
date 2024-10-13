@@ -6,6 +6,8 @@ import {
   forgotPassword,
   verifyCode,
   resetPassword,
+  logout,
+  checkLogin
 } from "../controller/userController.js";
 import { authenticateJWT } from "../Middleware/checkToken.js";
 import { roleBasedRedirect } from "../Middleware/Redriect.js";
@@ -23,6 +25,8 @@ const router = express.Router();
 // Sign-up and Login
 router.post("/signup", signup);
 router.post("/login", login);
+router.post("/logout", logout);
+router.get("/check-login", checkLogin);
 router.get("/redirect", authenticateJWT, roleBasedRedirect);
 router.post("/forgotPassword", forgotPassword);
 router.post("/verifyCode", verifyCode);
