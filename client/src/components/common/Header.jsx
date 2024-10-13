@@ -1,7 +1,11 @@
+import { Link, useNavigate } from "react-router-dom";
 import { Bookmark, CreditCard, LayoutGrid, Tags, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/auth";
 
 const Header = () => {
+  const {isLoggedIn, LogoutUser} = useAuth();
+  const navigate = useNavigate();
+
   return (
     <nav
       className="navbar navbar-expand-lg sticky-top bg-white"
@@ -13,11 +17,13 @@ const Header = () => {
         </Link>
 
         <div className="d-flex gap-3">
-          <Link to="/login" className="d-block d-lg-none">
-            <button className="btn" style={{ backgroundColor: "#8DD3BB" }}>
-              Login
-            </button>
-          </Link>
+        {!isLoggedIn && (
+            <Link to="/login" className="d-block d-lg-none">
+              <button className="btn" style={{ backgroundColor: "#8DD3BB" }}>
+                Login
+              </button>
+            </Link>
+          )}
           <button
             className="navbar-toggler"
             type="button"
@@ -33,64 +39,41 @@ const Header = () => {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {/* Other navigation items */}
             <li className="nav-item me-3">
-              <Link
-                className="nav-link active"
-                aria-current="page"
-                to="/"
-              >
+              <Link className="nav-link active" aria-current="page" to="/">
                 <div className="d-flex gap-1 align-items-center">
                   <Tags size={23} />
                   Book Ticket
                 </div>
               </Link>
             </li>
-
             <li className="nav-item me-3">
-              <Link
-                className="nav-link active"
-                aria-current="page"
-                to="/dashboard"
-              >
+              <Link className="nav-link active" aria-current="page" to="/dashboard">
                 <div className="d-flex gap-1 align-items-center">
                   <LayoutGrid size={20} />
                   Dashboard
                 </div>
               </Link>
             </li>
-
             <li className="nav-item me-3">
-              <Link
-                className="nav-link active"
-                aria-current="page"
-                to="/users"
-              >
+              <Link className="nav-link active" aria-current="page" to="/users">
                 <div className="d-flex gap-1 align-items-center">
                   <Users size={20} />
                   Users
                 </div>
               </Link>
             </li>
-
             <li className="nav-item me-3">
-              <Link
-                className="nav-link active"
-                aria-current="page"
-                to="/booking"
-              >
+              <Link className="nav-link active" aria-current="page" to="/booking">
                 <div className="d-flex gap-1 align-items-center">
                   <Bookmark size={20} />
                   Booking
                 </div>
               </Link>
             </li>
-
             <li className="nav-item me-3">
-              <Link
-                className="nav-link active"
-                aria-current="page"
-                to="/payment"
-              >
+              <Link className="nav-link active" aria-current="page" to="/payment">
                 <div className="d-flex gap-1 align-items-center">
                   <CreditCard size={20} />
                   Payment
@@ -100,15 +83,17 @@ const Header = () => {
           </ul>
 
           <div className="d-flex align-items-center gap-2">
-            {/* <img src="Avatar.png" className="img" alt="Logo" width={50} />
-            <p className="m-0 p-0">
-              <strong>Namgay</strong>
-            </p> */}
-            <Link to="/login" className="d-none d-lg-block">
-              <button className="btn" style={{ backgroundColor: "#8DD3BB" }}>
-                Login
+          {isLoggedIn? (
+              <button className="btn" style={{ backgroundColor: "#8DD3BB" }} onClick={LogoutUser}>
+                Logout
               </button>
-            </Link>
+            ) : (
+              <Link to="/login" className="d-none d-lg-block">
+                <button className="btn" style={{ backgroundColor: "#8DD3BB" }}>
+                  Login
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

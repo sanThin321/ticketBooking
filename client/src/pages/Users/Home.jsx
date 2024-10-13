@@ -5,6 +5,7 @@ import Cham from "../../assets/Cham.jpg";
 import TigerNest from "../../assets/TigerNest.jpg";
 import Highway from "../../assets/Highway.jpg";
 // import { ContactUsForm } from "../../components/ContactUsForm";
+import { SearchTickets } from "../../components/User/SearchTickets";
 
 export const Home = () => {
   return (
@@ -21,6 +22,8 @@ export const Home = () => {
           }}
         />
       </div>
+
+      <SearchTickets />
 
       <div className="container my-5 pb-5 px-0">
         <div>

@@ -1,13 +1,18 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
+import { toast } from "react-toastify";
 import axios from "axios";
+import { useAuth } from "../../auth/auth";
 
 export const LogIn = () => {
-  const [user, setUser] = useState({
+  const [userCredentials, setUser] = useState({
     email: "",
     password: "",
   });
+
+  const { storeToken, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -19,32 +24,27 @@ export const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
     try {
-      const response = await axios.post(
+      const response = axios.post(
         "http://localhost:4004/pelrizhabtho/login",
-        { email: user.email, password: user.password },
-        { withCredentials: true } // Allow credentials (cookies) to be included
+        userCredentials
       );
-  
-      if (response.statusText === "OK") {
-        console.log(response);
+
+      if ((await response).status === 200) {
+        storeToken((await response).data.token);
+        toast.success("Login successful.");
+        navigate("/");
       }
     } catch (error) {
-      console.error("Error logging in: " + error);
+      toast.error("Login failed.");
     }
   };
-  
 
   return (
     <div className="container">
       <div className="row py-5">
         <div className="col-12 col-md-7 col-lg-7 pe-5">
-          {/* <img
-            src="Header-logo.png"
-            className="img-fluid mb-5"
-            alt="Header Logo"
-            width={210}
-          /> */}
           <div className="mb-4">
             <h1>Log In</h1>
             <p>Login to access your Pelri Zhabtho account. </p>
@@ -61,7 +61,7 @@ export const LogIn = () => {
                   name="email"
                   type="email"
                   className="form-control"
-                  value={user.email}
+                  value={userCredentials.email}
                   onChange={handleChange}
                   autoComplete="off"
                 />
@@ -77,7 +77,7 @@ export const LogIn = () => {
                   autoComplete="off"
                   type="password"
                   className="form-control"
-                  value={user.password}
+                  value={userCredentials.password}
                   onChange={handleChange}
                 />
               </div>
@@ -98,7 +98,7 @@ export const LogIn = () => {
                 className="btn mb-3 w-100"
                 style={{ backgroundColor: "#8DD3BB" }}
               >
-                Log In
+                {isLoggedIn ? "Loading..." : "Login"}
               </button>
               <div className="d-flex gap-3 ">
                 <p>Don&apos;t have an account?</p>

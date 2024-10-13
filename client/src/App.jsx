@@ -16,6 +16,8 @@ import { AdminUsers } from "./pages/AdminDashboard/AdminUsers";
 import { AdminPaymentDetails } from "./pages/AdminDashboard/AdminPaymentDetails";
 import { AdminBookings } from "./pages/AdminDashboard/AdminBookings";
 import { SingleBookingDetails } from "./pages/AdminDashboard/SingleBookingDetails";
+import { SearchTickets } from "./pages/Users/SearchTickets";
+import ProtectedRoute from "./auth/ProtectedRoute.jsx"
 
 const App = () => {
   return (
@@ -25,16 +27,24 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/booking-tickets" element={<BookingSeats />} />
+        <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/set-password" element={<SetPassword />} />
-        <Route path="/verify-code" element={<VerifyCode />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/admin-users" element={<AdminUsers />} />
-        <Route path="/admin-payments" element={<AdminPaymentDetails />} />
-        <Route path="/admin-bookings" element={<AdminBookings />} />
-        <Route path="/admin-booking-sigle" element={<SingleBookingDetails />} />
+        <Route path="/search-tickets" element={<SearchTickets />} />
+
+        {/* ProtectedRoutes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/booking-tickets" element={<BookingSeats />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/admin-users" element={<AdminUsers />} />
+          <Route path="/admin-payments" element={<AdminPaymentDetails />} />
+          <Route path="/admin-bookings" element={<AdminBookings />} />
+          <Route
+            path="/admin-booking-sigle"
+            element={<SingleBookingDetails />}
+          />
+        </Route>
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const SignUp = () => {
+  const {navigate} = useNavigate();
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -22,7 +24,7 @@ export const SignUp = () => {
       setUser((prevUser) => ({
         ...prevUser,
         userType: id,
-        agencyName: id === "agencyOwner" ? prevUser.agencyName : "", // Clear agencyName if not "agencyOwner"
+        agencyName: id === "agencyOwner" ? prevUser.agencyName : "",
       }));
     } else {
       setUser((prevUser) => ({
@@ -41,10 +43,11 @@ export const SignUp = () => {
       )
 
       if (response.statusText === "OK") {
-        alert("Success: " + response.data)
+        toast("Sign up successful.")
+        navigate("/signup")
       }
     } catch (error) {
-      console.error("Error while sign up: " + error)
+      toast.error("Sign up failed. Try later.")
     }
   };
 
