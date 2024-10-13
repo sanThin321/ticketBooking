@@ -1,6 +1,7 @@
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ContactUsForm } from "../ContactUsForm";
+import logo from "../../assets/Footer-logo.png";
 
 export const Footer = () => {
   return (
@@ -14,7 +15,7 @@ export const Footer = () => {
           <div className="pt-5 d-flex flex-column gap-5 flex-lg-row flex-md-row flex-sm-row align-items-center align-items-lg-start align-items-md-start align-items-sm-start justify-content-center justify-content-lg-between justify-content-md-between justify-content-sm-between">
             <div className="">
               <img
-                src="Footer-logo.png"
+                src={logo}
                 className="img-fluid mb-5"
                 alt="Logo"
                 width={210}

@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Send } from "lucide-react";
 import dzongkhagsAndDungkhags from "../../data/Dzongkhags";
 
-export const BookTicketsHeader = () => {
+export const BookTicketsHeader = ({to, from, inputDate, onSearch}) => {
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
-  const [selectedFrom, setSelectedFrom] = useState("From");
-  const [selectedTo, setSelectedTo] = useState("To");
+  const [selectedFrom, setSelectedFrom] = useState(from);
+  const [selectedTo, setSelectedTo] = useState(to);
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
+  const [date, setDate] = useState(inputDate);
+
 
   const filteredDzongkhagsFrom = dzongkhagsAndDungkhags.filter((opt) =>
     opt.name.toLowerCase().includes(fromSearch.toLowerCase())
@@ -17,6 +19,18 @@ export const BookTicketsHeader = () => {
   const filteredDzongkhagsTo = dzongkhagsAndDungkhags.filter((opt) =>
     opt.name.toLowerCase().includes(toSearch.toLowerCase())
   );
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(selectedFrom, selectedTo, date);
+  };
+
+  useEffect(() => {
+    handleSearch()
+  }, [])
 
   return (
       <div className="mt-3 container p-3 border rounded bg-white">
@@ -109,16 +123,18 @@ export const BookTicketsHeader = () => {
             </div>
 
             <div className="date-input">
-              <input
-                type="date"
-                className="form-control"
-                aria-label="Date"
-                aria-describedby="basic-addon1"
-              />
-            </div>
+            <input
+              type="date"
+              className="form-control"
+              value={date}
+              onChange={handleDateChange}
+              aria-label="Date"
+              aria-describedby="basic-addon1"
+            />
+          </div>
 
             <div className="d-flex justify-content-end">
-              <button className="btn btn-bg">
+              <button className="btn btn-bg" onClick={handleSearch}>
                 <span className="me-2">
                   <Send size={15} color="#242424" />
                 </span>

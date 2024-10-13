@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Bookmark, CreditCard, LayoutGrid, Tags, Users } from "lucide-react";
+import { Bookmark, CreditCard, LayoutGrid, Search, Tags, UserRound, Users } from "lucide-react";
 import { useAuth } from "../../auth/auth";
-
+import logo from "../../assets/Header-logo.png"
 const Header = () => {
   const {isLoggedIn, LogoutUser} = useAuth();
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Header = () => {
     >
       <div className="container">
         <Link className="navbar-brand" to="/">
-          <img src="Header-logo.png" className="img" alt="Logo" width={130} />
+          <img src={logo} className="img" alt="Logo" width={130} />
         </Link>
 
         <div className="d-flex gap-3">
@@ -49,6 +49,22 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item me-3">
+              <Link className="nav-link active" aria-current="page" to="/profile">
+                <div className="d-flex gap-1 align-items-center">
+                  <UserRound size={20} />
+                  Profile
+                </div>
+              </Link>
+            </li>
+            <li className="nav-item me-3">
+              <Link className="nav-link active" aria-current="page" to="/search-tickets">
+                <div className="d-flex gap-1 align-items-center">
+                  <Search size={20} />
+                  Search Ticket
+                </div>
+              </Link>
+            </li>
+            {/* <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/dashboard">
                 <div className="d-flex gap-1 align-items-center">
                   <LayoutGrid size={20} />
@@ -79,7 +95,7 @@ const Header = () => {
                   Payment
                 </div>
               </Link>
-            </li>
+            </li> */}
           </ul>
 
           <div className="d-flex align-items-center gap-2">

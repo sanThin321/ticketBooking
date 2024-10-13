@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Send } from "lucide-react";
 import dzongkhagsAndDungkhags from "../../data/Dzongkhags";
+import { useNavigate } from "react-router-dom";
 
 export const SearchTickets = () => {
+  const navigate = useNavigate();
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
   const [selectedFrom, setSelectedFrom] = useState("From");
   const [selectedTo, setSelectedTo] = useState("To");
+  const [date, setDate] = useState("");
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
 
@@ -18,8 +21,20 @@ export const SearchTickets = () => {
     opt.name.toLowerCase().includes(toSearch.toLowerCase())
   );
 
+  // Handle button click and pass the "From", "To", and "Date" values as query params
+  const handleOnClick = () => {
+    navigate(`/search-tickets?from=${selectedFrom}&to=${selectedTo}&date=${date}`);
+  };
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
   return (
-    <div className="container d-flex justify-content-center">
+    <div
+      className="container d-flex justify-content-center"
+      style={{ marginTop: "-7rem" }}
+    >
       <div className="d-flex p-3 border flex-column gap-3 search-tickets rounded bg-white container-shadow">
         <div>
           <h4>Where are you travelling?</h4>
@@ -28,10 +43,17 @@ export const SearchTickets = () => {
         <div className="d-flex justify-content-between gap-2 mb-3">
           {/* Custom From dropdown with search */}
           <div className="custom-dropdown">
-            <div className="dropdown-header d-flex justify-content-between" onClick={() => setIsFromOpen(!isFromOpen)}>
+            <div
+              className="dropdown-header d-flex justify-content-between"
+              onClick={() => setIsFromOpen(!isFromOpen)}
+            >
               <span>{selectedFrom}</span>
               <span>
-                {isFromOpen ? <ChevronUp size={20}/> :  <ChevronDown size={20}/>}
+                {isFromOpen ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
               </span>
             </div>
             {isFromOpen && (
@@ -63,10 +85,13 @@ export const SearchTickets = () => {
 
           {/* Custom To dropdown with search */}
           <div className="custom-dropdown">
-            <div className="dropdown-header d-flex justify-content-between" onClick={() => setIsToOpen(!isToOpen)}>
+            <div
+              className="dropdown-header d-flex justify-content-between"
+              onClick={() => setIsToOpen(!isToOpen)}
+            >
               <span>{selectedTo}</span>
               <span>
-                {isToOpen ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+                {isToOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </span>
             </div>
             {isToOpen && (
@@ -96,10 +121,13 @@ export const SearchTickets = () => {
             )}
           </div>
 
+          {/* Date input */}
           <div className="date-input">
             <input
               type="date"
               className="form-control"
+              value={date}
+              onChange={handleDateChange}
               aria-label="Date"
               aria-describedby="basic-addon1"
             />
@@ -107,7 +135,7 @@ export const SearchTickets = () => {
         </div>
 
         <div className="d-flex justify-content-end">
-          <button className="btn btn-bg">
+          <button className="btn btn-bg" onClick={handleOnClick}>
             <span className="me-2">
               <Send size={15} color="#242424" />
             </span>

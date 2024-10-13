@@ -1,20 +1,27 @@
 import { Armchair } from "lucide-react";
 import { Seats } from "../../components/Seats";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useStore } from "../../context/Store";
 
 export const BookingSeats = () => {
-  const [seatDetails, setSeatDetails] = useState({}); // Store seat selections with names and CIDs
-  const [selectedSeats, setSelectedSeats] = useState(new Set()); // Track selected seats
+  const { refreshTickets} = useStore()
+  const { id } = useParams();
+  const [seatDetails, setSeatDetails] = useState({});
+  const [selectedSeats, setSelectedSeats] = useState(new Set());
+  const [ticket, setTicket] = useState({});
 
   const handleSeatSelection = (seatNumber) => {
     const updatedSelectedSeats = new Set(selectedSeats);
     if (updatedSelectedSeats.has(seatNumber)) {
-      updatedSelectedSeats.delete(seatNumber); // Deselect the seat
+      updatedSelectedSeats.delete(seatNumber);
       const newSeatDetails = { ...seatDetails };
-      delete newSeatDetails[seatNumber]; // Remove details if seat is deselected
+      delete newSeatDetails[seatNumber];
       setSeatDetails(newSeatDetails);
     } else {
-      updatedSelectedSeats.add(seatNumber); // Select the seat
+      updatedSelectedSeats.add(seatNumber);
     }
     setSelectedSeats(updatedSelectedSeats);
   };
@@ -22,20 +29,73 @@ export const BookingSeats = () => {
   const handleDetailChange = (seatNumber, name, cid) => {
     setSeatDetails((prevDetails) => ({
       ...prevDetails,
-      [seatNumber]: { name, cid }, // Update details for the specific seat
+      [seatNumber]: { name, cid },
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Fix typo here
-    console.log("Selected Seats with User Details:", seatDetails);
-    // Additional logic for processing the form can be added here
+  const handleSubmit = async (event) => {
+    event.preventDefault(); 
+
+    if (!ticket._id) {
+      console.error("Ticket ID is missing.");
+      return;
+    }
+
+    const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
+      seatNumber,
+      name: seatDetails[seatNumber]?.name || "",
+      cid: seatDetails[seatNumber]?.cid || "",
+    }));
+
+    try {
+      const response = await axios.put(
+        `http://localhost:4004/pelrizhabtho/tickets/${ticket._id}/book`,
+        { seatsBooked: bookedSeats}
+      );
+
+      if (response.status === 200) {
+        toast.success("Seats booked successfully!");
+      
+        setTimeout(() => {
+          window.location.reload(); 
+        }, 1000);
+      
+        handleCancel();
+      }
+      
+      
+    } catch (error) {
+      console.error("Error booking seats:", error.message);
+    }
+
+    console.log("Selected Seats with User Details:", bookedSeats);
   };
 
   const handleCancel = () => {
-    setSelectedSeats(new Set()); // Clear selected seats
-    setSeatDetails({}); // Clear seat details
+    setSelectedSeats(new Set());
+    setSeatDetails({});
   };
+
+  const getTicketDetails = async (ticketId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4004/pelrizhabtho/getticket/${ticketId}`
+      );
+
+      console.log("ticket: " + response.data);
+      if (response.status === 200) {
+        setTicket(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching ticket details:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getTicketDetails(id);
+    }
+  }, [id]);
 
   return (
     <div className="container my-5">
@@ -56,16 +116,16 @@ export const BookingSeats = () => {
                     style={{ borderRight: "1px solid #D7E2EE" }}
                   >
                     <p>Departure Time</p>
-                    <p>Journey Time</p>
+                    <p>Arrival Time</p>
                   </div>
                   <div>
-                    <p>12:00 PM</p>
-                    <p>6:00 Hrs</p>
+                    <p>{ticket.departureTime}</p>
+                    <p>{ticket.arrivalTime}</p>
                   </div>
                 </div>
                 <div>
                   <p>Price</p>
-                  <h5>Nu. 480</h5>
+                  <h5>Nu. {ticket.price}</h5>
                 </div>
               </div>
               <div className="d-flex gap-5 border-left ps-3">
@@ -130,7 +190,7 @@ export const BookingSeats = () => {
                     <div className="d-flex gap-3">
                       <button
                         className="btn btn-outline-secondary px-4"
-                        type="button" 
+                        type="button"
                         onClick={handleCancel}
                       >
                         Cancel
@@ -148,6 +208,7 @@ export const BookingSeats = () => {
         </div>
         <div className="col-4 px-0">
           <Seats
+            booked={ticket.booked}
             onSeatSelection={handleSeatSelection}
             selectedSeats={selectedSeats}
           />

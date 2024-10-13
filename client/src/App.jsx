@@ -17,11 +17,13 @@ import { AdminPaymentDetails } from "./pages/AdminDashboard/AdminPaymentDetails"
 import { AdminBookings } from "./pages/AdminDashboard/AdminBookings";
 import { SingleBookingDetails } from "./pages/AdminDashboard/SingleBookingDetails";
 import { SearchTickets } from "./pages/Users/SearchTickets";
-import ProtectedRoute from "./auth/ProtectedRoute.jsx"
+import ProtectedRoute from "./auth/ProtectedRoute.jsx";
+import ScrollToTop from "./utils/ScrollToTop.jsx";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -35,7 +37,7 @@ const App = () => {
         {/* ProtectedRoutes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/booking-tickets" element={<BookingSeats />} />
+          <Route path="/booking-tickets/:id" element={<BookingSeats />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/admin-users" element={<AdminUsers />} />
           <Route path="/admin-payments" element={<AdminPaymentDetails />} />

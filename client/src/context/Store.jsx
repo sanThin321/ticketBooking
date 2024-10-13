@@ -7,58 +7,35 @@ export const StoreContext = createContext();
 
 export const StoreProvider = ({ children }) => {
   const { authorizationToken } = useAuth();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
 
-  const getAllProducts = async () => {
+  const [tickets, setTickets] = useState([]);
+
+  // get tickets
+  const getTickets = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/products", {
+      const response = await axios.get("http://localhost:4004/pelrizhabtho/getallticket", {
         headers: {
           Authorization: authorizationToken,
         },
       });
 
       if (response.status === 200) {
-        setProducts(response.data);
-        console.log(response.data);
-      }
-    } catch (error) {
-      toast.error("Could not fetch products.");
-    }
-  };
-
-  const refreshProducts = () => {
-    getAllProducts();
-  };
-
-  // get categories
-  const getCategories = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/api/categories", {
-        headers: {
-          Authorization: authorizationToken,
-        },
-      });
-
-      if (response.status === 200) {
-        setCategories(response.data);
+        setTickets(response.data);
       }
     } catch (error) {
       console.error(error.message);
     }
   };
 
-  const refreshCategory = () => {
-    getCategories();
+  const refreshTickets = () => {
+    getTickets();
   };
 
   return (
     <StoreContext.Provider
       value={{
-        products,
-        refreshProducts,
-        categories,
-        refreshCategory,
+        tickets,
+        refreshTickets
       }}
     >
       {children}

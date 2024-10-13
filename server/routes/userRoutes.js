@@ -19,7 +19,7 @@ import {
   deleteMember,
 } from "../controller/memberController.js";
 import { registerBus } from "../controller/busController.js";
-
+import { getallTicket, getTicket, updateBookedTicket } from "../controller/ticketController.js";
 const router = express.Router();
 
 // Sign-up and Login
@@ -40,4 +40,13 @@ router.delete("/deletemember/:memberId", deleteMember);
 
 //Agency Bus
 router.post("/registerbus", validateDriver, registerBus);
+
+
+
+//ticket
+router.get('/getallticket',getallTicket)
+router.get('/getticket/:ticket_id',getTicket)
+router.put("/tickets/:ticket_id/book", updateBookedTicket);
+
+
 export default router;
