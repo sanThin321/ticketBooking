@@ -43,11 +43,21 @@ export const SignUp = () => {
       )
 
       if (response.statusText === "OK") {
-        toast("Sign up successful.")
-        navigate("/signup")
+        toast.success("Sign up successful.")
+        navigate("/signin")
+        setUser({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          confirmPassword: "",
+          userType: "Customer",
+          agencyName: "",
+        })
       }
     } catch (error) {
-      toast.error("Sign up failed. Try later.")
+      console.error("Sign up failed. Try later.")
     }
   };
 
@@ -214,7 +224,7 @@ export const SignUp = () => {
                 className="btn mb-3 w-100"
                 style={{ backgroundColor: "#8DD3BB" }}
               >
-                Login
+                Sing up
               </button>
               <div className="d-flex gap-3 ">
                 <p>Already have an account?</p>

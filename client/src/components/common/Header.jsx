@@ -40,30 +40,32 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {/* Other navigation items */}
-            <li className="nav-item me-3">
+            {isLoggedIn && <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/">
                 <div className="d-flex gap-1 align-items-center">
                   <Tags size={23} />
                   Book Ticket
                 </div>
               </Link>
-            </li>
-            <li className="nav-item me-3">
+            </li>}
+
+           {isLoggedIn && <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/profile">
                 <div className="d-flex gap-1 align-items-center">
                   <UserRound size={20} />
                   Profile
                 </div>
               </Link>
-            </li>
-            <li className="nav-item me-3">
+            </li>}
+
+            {isLoggedIn && <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/search-tickets">
                 <div className="d-flex gap-1 align-items-center">
                   <Search size={20} />
                   Search Ticket
                 </div>
               </Link>
-            </li>
+            </li>}
             {/* <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/dashboard">
                 <div className="d-flex gap-1 align-items-center">

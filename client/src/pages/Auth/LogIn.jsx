@@ -24,6 +24,11 @@ export const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!userCredentials.email || !userCredentials.password) {
+      toast.error("Fields cannot be empty.")
+      return;
+    }
     
     try {
       const response = axios.post(
@@ -36,8 +41,17 @@ export const LogIn = () => {
         toast.success("Login successful.");
         navigate("/");
       }
+
+      if ((await response).status == 401 || (await response).status == 400 ) {
+        toast.error("Invalid email or password.")
+        return;
+      }
+
     } catch (error) {
-      toast.error("Login failed.");
+     
+        toast.error("Invalid email or password.")
+   
+      
     }
   };
 

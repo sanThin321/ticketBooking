@@ -20,7 +20,6 @@ export const signup = async (req, res) => {
   // Validate the request
   if (
     !firstName ||
-    !lastName ||
     !email ||
     !phoneNumber ||
     !userType ||
