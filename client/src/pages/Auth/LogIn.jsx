@@ -37,7 +37,7 @@ export const LogIn = () => {
       );
 
       if ((await response).status === 200) {
-        storeToken((await response).data.token);
+        storeToken((await response).data);
         toast.success("Login successful.");
         navigate("/");
       }
@@ -49,7 +49,7 @@ export const LogIn = () => {
 
     } catch (error) {
      
-        toast.error("Invalid email or password.")
+        console.log(error.message)
    
       
     }

@@ -66,8 +66,8 @@ const Header = () => {
                 </div>
               </Link>
             </li>}
-            {/* <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/dashboard">
+            <li className="nav-item me-3">
+              <Link className="nav-link active" aria-current="page" to="/agency">
                 <div className="d-flex gap-1 align-items-center">
                   <LayoutGrid size={20} />
                   Dashboard
@@ -75,7 +75,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/users">
+              <Link className="nav-link active" aria-current="page" to="/agency/users">
                 <div className="d-flex gap-1 align-items-center">
                   <Users size={20} />
                   Users
@@ -83,7 +83,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/booking">
+              <Link className="nav-link active" aria-current="page" to="/agency/bookings">
                 <div className="d-flex gap-1 align-items-center">
                   <Bookmark size={20} />
                   Booking
@@ -91,13 +91,13 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/payment">
+              <Link className="nav-link active" aria-current="page" to="/agency/payments">
                 <div className="d-flex gap-1 align-items-center">
                   <CreditCard size={20} />
                   Payment
                 </div>
               </Link>
-            </li> */}
+            </li>
           </ul>
 
           <div className="d-flex align-items-center gap-2">

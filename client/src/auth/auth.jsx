@@ -8,13 +8,15 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const [isLoading, setIsLoading] = useState(true);
   const authorizationToken = token ? `Bearer ${token}` : "";
-  const [userRole, setUserRole] = useState("")
+  const [id, setId] = useState(null);
   const [user, setUser] = useState("")
 
-  const storeToken = (serverToken) => {
-    localStorage.setItem("token", serverToken);
-    setToken(serverToken);
-    setIsLoggedIn(!!serverToken);
+  const storeToken = (userDetails) => {
+    localStorage.setItem("token", userDetails.token);
+    localStorage.setItem("agencyId", userDetails.id);
+    setId(userDetails.id)
+    setToken(userDetails.token);
+    setIsLoggedIn(!!userDetails.token);
   };
 
   const LogoutUser = () => {
@@ -41,7 +43,8 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         LogoutUser,
         isLoading,
-        user
+        user,
+        id
       }}
     >
       {children}

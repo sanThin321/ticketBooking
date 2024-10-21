@@ -1,6 +1,6 @@
 import { ChevronRight, Mail, Phone } from "lucide-react";
 import Driver from "../../assets/Driver.png";
-export const UserDetail = () => {
+export const UserDetail = ({data}) => {
   return (
     <div className="bg-white rounded container-shadow py-3 px-4 mb-3">
       <div className="d-flex justify-content-between align-items-center">
@@ -18,8 +18,8 @@ export const UserDetail = () => {
               />
             </div>
             <div>
-              <h5 className="mb-0">Pema Dawa</h5>
-              <p>user</p>
+              <h5 className="mb-0">{data.fullName}</h5>
+              <p>{data.role}</p>
             </div>
           </div>
           <div className="d-flex flex-column gap-2 ms-3">
@@ -32,7 +32,7 @@ export const UserDetail = () => {
               </div>
               <div className="d-flex flex-column">
                 <p className="mb-0"><small>Contact No</small></p>
-                <p className="mb-0">17353725</p>
+                <p className="mb-0">{data.phoneNumber}</p>
               </div>
             </div>
 
@@ -45,7 +45,7 @@ export const UserDetail = () => {
               </div>
               <div className="d-flex flex-column">
                 <p className="mb-0 fs-6"><small>Email</small></p>
-                <p className="mb-0">dorji@gmail.com</p>
+                <p className="mb-0">{data.email}</p>
               </div>
             </div>
           </div>

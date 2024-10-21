@@ -87,13 +87,11 @@ export const signup = async (req, res) => {
         //   maxAge: 3600000, // 1 hour
         // });
 
-        res
-          .status(200)
-          .json({
-            token,
-            role: newUser.userType,
-            message: "Signup successful and logged in",
-          });
+        res.status(200).json({
+          token,
+          role: newUser.userType,
+          message: "Signup successful and logged in",
+        });
       }
     );
     // res.status(200).json({ msg: "User registered successfully" });
@@ -121,6 +119,7 @@ export const login = async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ message: "Wrong password" });
       }
+
       const payload = {
         user: {
           id: user.id,
@@ -145,7 +144,12 @@ export const login = async (req, res) => {
 
           res
             .status(200)
-            .json({ role: user.userType, token: token, message: "Login successful as User" });
+            .json({
+              role: user.userType,
+              token: token,
+              id: user._id,
+              message: "Login successful as User",
+            });
         }
       );
     } else {
@@ -190,11 +194,10 @@ export const login = async (req, res) => {
   }
 };
 
-
 // Logout Controller
 export const logout = (req, res) => {
-  res.clearCookie('token', { httpOnly: true, sameSite: 'strict' });
-  res.status(200).send({ message: 'Logged out successfully' });
+  res.clearCookie("token", { httpOnly: true, sameSite: "strict" });
+  res.status(200).send({ message: "Logged out successfully" });
 };
 
 // Check if the user is logged in
@@ -211,19 +214,20 @@ export const checkLogin = async (req, res) => {
     // Check if user exists
     const user = await User.findById(decoded.user?.id || decoded.member?.id);
     if (!user) {
-      return res.status(401).json({ loggedIn: false, message: "User not found" });
+      return res
+        .status(401)
+        .json({ loggedIn: false, message: "User not found" });
     }
 
     // If the token is valid and user exists, return login status and role
     return res.status(200).json({
       loggedIn: true,
-      role: decoded.user?.role || decoded.member?.role
+      role: decoded.user?.role || decoded.member?.role,
     });
   } catch (error) {
     return res.status(401).json({ loggedIn: false, message: "Invalid token" });
   }
 };
-
 
 //
 export const forgotPassword = async (req, res) => {

@@ -38,7 +38,7 @@ export const registerMember= async(req, res)=>{
 
         const populatedMember = await RegisterMember.findById(newMember._id).populate('agencyId', 'agencyName');
 
-        res.status(200).json({message:"Member registered successfully", member: populatedMember,})
+        res.status(201).json({message:"Member registered successfully", member: populatedMember,})
     }catch(error){
         console.error('Error registering member:', error);
         res.status(500).json({message:'Error registering member', error})

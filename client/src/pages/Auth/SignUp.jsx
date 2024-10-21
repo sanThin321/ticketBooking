@@ -42,6 +42,9 @@ export const SignUp = () => {
         user
       )
 
+      if (response.status === 400) {
+        toast.warning("User alredy registered.")
+      }
       if (response.statusText === "OK") {
         toast.success("Sign up successful.")
         navigate("/signin")
@@ -57,7 +60,11 @@ export const SignUp = () => {
         })
       }
     } catch (error) {
-      console.error("Sign up failed. Try later.")
+      if (error.status === 400) {
+        toast.warning("User alredy registered.")
+      }
+      
+      console.error("Sign up failed. Try later. " + error.message)
     }
   };
 

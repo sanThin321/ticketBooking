@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserDetail } from "../../components/Cards/UserDetail";
 import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
+import { useStore } from "../../context/Store";
 
 export const AdminUsers = () => {
+  let id = localStorage.getItem("agencyId");
+  const { agencyMembers, refreshAgencyMembers } = useStore();
   const [showFilters, setShowFilters] = useState(false);
 
+  if (!id) {
+    return <div>Loading...</div>;
+  }
+
+  useEffect(() => {
+    console.log(id);
+    refreshAgencyMembers(id);
+  }, []);
   return (
     <>
       <AdminHeader
@@ -14,9 +25,9 @@ export const AdminUsers = () => {
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
-            <UserDetail />
-            <UserDetail />
-            <UserDetail />
+            {agencyMembers.map((member, index) => {
+              return <UserDetail key={index} data={member} />;
+            })}
           </div>
           <div
             className={`p-3 border border-secondary-subtle rounded ${
