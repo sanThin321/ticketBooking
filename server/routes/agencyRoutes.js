@@ -17,6 +17,7 @@ import {
   getAllMembers,
   updateMember,
   deleteMember,
+  getAllDriver,
 } from "../controller/memberController.js";
 import { registerBus } from "../controller/busController.js";
 import { createRouteWithSchedule } from "../controller/routeandschedule.js";
@@ -27,7 +28,7 @@ const router = express.Router();
 router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
-
+router.get("/getallDriver",getAllDriver)
 // Agency Bus
 router.post("/registerbus", validateDriver, registerBus);
 router.post("/registerroute", vaildBus, createRouteWithSchedule);
