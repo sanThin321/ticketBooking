@@ -16,9 +16,10 @@ const router = express.Router();
 router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
+router.get("/allmembers/:agencyId", getAllMembers);
 
 // Agency Bus
-router.post("/registerbus", validateDriver, registerBus);
+router.post("/registerbus", registerBus);
 router.post("/registerroute", vaildBus, createRouteWithSchedule);
 
 // Combined GET method for all agency data

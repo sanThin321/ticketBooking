@@ -1,7 +1,7 @@
 import { RegisterBus } from "../model/agencyModel.js";
 
 export const registerBus = async (req, res) => {
-  const { agencyId, driverName, busNumber, totalSeat, imageOfTheBus } =
+  const { agencyId, driverName, busNumber, driverId, totalSeat, imageOfTheBus } =
     req.body;
   const driver = await RegisterBus.findOne({ busNumber });
   if (driver) {
@@ -10,8 +10,7 @@ export const registerBus = async (req, res) => {
   try {
     const newBus = new RegisterBus({
       agencyId,
-      driverId: req.driverId,
-      driverName,
+      driverId,
       busNumber,
       totalSeat,
       imageOfTheBus,

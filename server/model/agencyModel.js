@@ -68,12 +68,12 @@ const registerBusSchema=new mongoose.Schema({
     },
     imageOfTheBus:{
         type:String,
-        required:true
+        required:false
     },
-    driverName:{
-        type:String,
-        required:true
-    }
+    // driverName:{
+    //     type:String,
+    //     required:true
+    // }
 })
 
 //shedule
