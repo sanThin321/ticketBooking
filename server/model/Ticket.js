@@ -6,9 +6,9 @@ const ticketSchema = new mongoose.Schema({
   departureTime: { type: String, required: true },
   arrivalTime: { type: String, required: true },
   price:{type:Number, required:true},
-  agnecy: { type: String, required: true },
-  agencyLogo: { type: String, required: true },
-  totalSeats: { type: Number, required: true },
+  agencyId:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},
+  busNumber:{type:String,required:true},
+  bus:{type:mongoose.Schema.Types.ObjectId,ref:'Register_Bus',required:true},
   availableSeats: { type: Number, required: true },
   booked: [],
   date:{type:String, required:true}

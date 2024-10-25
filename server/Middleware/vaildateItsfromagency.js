@@ -42,3 +42,26 @@ export const vaildBus = async (req, res, next) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+export const validateBus = async (req, res, next) => {
+  const { agencyId, busNumber } = req.body;
+  
+  try {
+    const bus = await RegisterBus.findOne({
+      busNumber:busNumber
+    });
+
+    if (!bus) {
+      return res
+        .status(400)
+        .json({ error: "Bus not found" });
+    }
+    if (agencyId != bus.agencyId) {
+      return res(400).json({ message: "Bus is not from this agency" });
+    }
+    req.busId = bus._id; 
+    req.totalSeat=bus.totalSeat;
+    next(); 
+  }catch(error){
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
