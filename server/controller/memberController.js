@@ -135,7 +135,7 @@ export const getAllMembers = async (req, res) => {
 const getAllDriver = async (req, res) => {
   try {
     const driver = await RegisterMember.find();
-    if (!driver) {////(!driver && driver.agencyId!=req.userId)
+    if (!driver) {////(!driver && driver.agencyId!=req.user.id)
       return res.status(404).json({ message: "Driver not found" });
     }
     if(driver.role=='Ticket Agent'){
