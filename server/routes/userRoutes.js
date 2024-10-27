@@ -1,4 +1,4 @@
-import { getAllSchedules } from "../controller/routeandschedule.js";
+// import { getAllSchedules } from "../controller/routeandschedule.js";
 import express from "express";
 import {
   signup,

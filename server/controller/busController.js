@@ -75,3 +75,26 @@ export const getAllmembers=async(req, res)=>{
 
   }
 }
+
+// Get all buses
+export const getAllBuses = async (req, res) => {
+  try {
+    const buses = await RegisterBus.find(); // Retrieves all buses without filtering by agencyId
+    res.status(200).json(buses);
+  } catch (error) {
+    console.error("Error fetching buses:", error);
+    res.status(500).json({ message: "Error fetching buses", error });
+  }
+};
+
+// Get total bus count
+export const getBusCount = async (req, res) => {
+  try {
+    const busCount = await RegisterBus.countDocuments(); // Counts all buses without filtering by agencyId
+    res.status(200).json({ busCount });
+  } catch (error) {
+    console.error("Error counting buses:", error);
+    res.status(500).json({ message: "Error counting buses", error });
+  }
+};
+
