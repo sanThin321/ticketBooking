@@ -18,6 +18,7 @@ import {
   updateMember,
   deleteMember,
   getAllDriver,
+  getDriverCount,
 } from "../controller/memberController.js";
 import { getAllBuses, registerBus, getBusCount } from "../controller/busController.js";
 // import { createRouteWithSchedule } from "../controller/routeandschedule.js";
@@ -29,6 +30,8 @@ router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
 router.get("/getallDriver",getAllDriver)
+router.get("/getdrivercount",getDriverCount)
+
 
 // Agency Bus
 router.post("/registerbus", validateDriver, registerBus);

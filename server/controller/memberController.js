@@ -132,6 +132,7 @@ export const getAllMembers = async (req, res) => {
     res.status(500).json({ message: "Error fetching members", error });
   }
 };
+
 const getAllDriver = async (req, res) => {
   try {
     const driver = await RegisterMember.find();
@@ -146,3 +147,19 @@ const getAllDriver = async (req, res) => {
   }
 };
 export { getAllDriver };
+
+const getDriverCount = async (req, res) => {
+  try {
+    const driverCount = await RegisterMember.countDocuments({ role: "Driver" });
+    
+    res.status(200).json({ driverCount });
+  } catch (error) {
+    console.error("Error counting drivers:", error);
+    res.status(500).json({ message: "Error counting drivers", error });
+  }
+};
+
+export { getDriverCount };
+
+
+
