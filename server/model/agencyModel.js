@@ -59,12 +59,12 @@ const registerBusSchema=new mongoose.Schema({
     },
     busNumber:{
         type:String,
-        required: true,
+        required: false,
         unique: true
     },
     totalSeat:{
-        type:Number,
-        required:true
+        type:String,
+        required:false
     },
     imageOfTheBus:{
         type:String,
