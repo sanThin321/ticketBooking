@@ -19,8 +19,7 @@ import {
   deleteMember,
   getAllDriver,
 } from "../controller/memberController.js";
-import { registerBus } from "../controller/busController.js";
-import { createRouteWithSchedule } from "../controller/routeandschedule.js";
+import { deleteBus, getAllBus, registerBus, updateBus } from "../controller/busController.js";
 import { processPayment } from "../controller/paymentController.js";
 const router = express.Router();
 
@@ -31,22 +30,20 @@ router.delete("/deletemember/:memberId", deleteMember);
 router.get("/getallDriver",getAllDriver)
 // Agency Bus
 router.post("/registerbus", validateDriver, registerBus);
-router.post("/registerroute", vaildBus, createRouteWithSchedule);
-
+router.get("/getallbus/:agencyId",getAllBus);
+router.put("/updatebus/:busId",updateBus);
+router.delete("/deletebus/:busId",deleteBus);
 // Combined GET method for all agency data
 router.get("/getagencydata/:agencyId", async (req, res) => {
   const { agencyId } = req.params;
 
   try {
-    // Get all schedules
-    const schedules = await getAllSchedules(agencyId);
 
     // Get all members
     const members = await getAllMembers({ params: { agencyId } });
 
     // Combine the data
     const result = {
-      schedules,
       members,
     };
 
