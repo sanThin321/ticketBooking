@@ -53,7 +53,6 @@ const getTicket = async (req, res) => {
     const ticket = await Ticket.findById(ticket_id)
       .populate({ path: "agencyId", select: "agencyName" })
       .populate({ path: "bus", select: "totalSeat" });
-
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
@@ -143,7 +142,7 @@ const updateTicket = async (req, res) => {
     res.status(500).json({ message: "Error updating Ticket", error });
   }
 };
-
+ 0
 export {
   addTicket,
   delateTicket,
