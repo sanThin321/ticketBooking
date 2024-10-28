@@ -1,11 +1,23 @@
 import express from "express";
-import { getallTicket, getTicket, updateBookedTicket } from "../controller/ticketController.js";
-import { validateDriver, vaildBus } from "../Middleware/vaildateItsfromagency.js";
+import {
+  addTicket,
+  delateTicket,
+  getallTicket,
+  getTicket,
+  updateBookedTicket,
+  updateTicket,
+} from "../controller/ticketController.js";
+import {
+  validateDriver,
+  vaildBus,
+  validateBus,
+} from "../Middleware/vaildateItsfromagency.js";
 import {
   registerMember,
   getAllMembers,
   updateMember,
   deleteMember,
+  getAllDriver,
 } from "../controller/memberController.js";
 import { registerBus } from "../controller/busController.js";
 import { createRouteWithSchedule } from "../controller/routeandschedule.js";
@@ -29,16 +41,16 @@ router.get("/getagencydata/:agencyId", async (req, res) => {
   try {
     // Get all schedules
     const schedules = await getAllSchedules(agencyId);
-    
+
     // Get all members
     const members = await getAllMembers({ params: { agencyId } });
-    
+
     // Combine the data
     const result = {
       schedules,
       members,
     };
-    
+
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving data", error });
@@ -47,10 +59,14 @@ router.get("/getagencydata/:agencyId", async (req, res) => {
 
 //payment
 
-router.post('/verify-payment', processPayment);
+router.post("/verify-payment", processPayment);
 
 //ticket
-router.get('/getallticket',getallTicket)
-router.get('/getticket/:ticket_id',getTicket)
+router.post("/addTicket", validateBus, addTicket);
+router.get("/getallticket", getallTicket);
+router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);
+router.delete("/deleteTicket/:ticketId", delateTicket);
+router.put("/updateTicket/:ticketId", validateBus, updateTicket);
+
 export default router;
