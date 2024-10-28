@@ -44,7 +44,7 @@ const AddMemberBtn = () => {
       }
   
       const response = await axios.post(
-        "http://localhost:4004/pelrizhabtho/registermember",
+        "http://localhost:4004/pelrizhabtho/agency/registermember",
         formData
       );
   
