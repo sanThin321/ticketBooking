@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addTicket,
+  bookedDetail,
   delateTicket,
   getallTicket,
   getTicket,
@@ -64,5 +65,5 @@ router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);
 router.delete("/deleteTicket/:ticketId", delateTicket);
 router.put("/updateTicket/:ticketId", validateBus, updateTicket);
-
+router.get("/ticketbooked/:ticketId/bookeddetails",bookedDetail);
 export default router;
