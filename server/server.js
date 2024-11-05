@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import cors from "cors";  // Import CORS
 import authRoutes from './routes/userRoutes.js';
 import cookieParser from "cookie-parser";
+import agencyRoutes from "./routes/agencyRoutes.js"
 
 dotenv.config({ path: './config.env' });
 const app = express();
@@ -33,7 +34,9 @@ mongoose.connect(DB, mongooseOptions).then((con) => {
     console.log('DB connection successful');
 }).catch(error => console.log(error));
 
-app.use('/pelrizhabtho', authRoutes);
+app.use('/pelrizhabtho', authRoutes)
+app.use('/pelrizhabtho/agency', agencyRoutes)
+
 
 const port = 4004;
 app.listen(port, () => {

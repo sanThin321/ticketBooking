@@ -28,3 +28,22 @@ export const sendEmail = async (to, subject, text, htmlContent) => {
         throw new Error('Could not send email');
     }
 };
+
+//Function to send feedback users to Pelri Zhabtho
+export const sendFeedback=async (userEmail,message) => {
+    try{
+        const mailOptions={
+            from:`"Feedback from ${userEmail}"<${process.env.EMAIL_USERNAME}> `,
+            to:process.env.EMAIL_USERNAME,
+            subject:'User Feedback',
+            text:message,
+            html:`<p>Feedback from :<strong>${userEmail}</strong></p><p>${message}</p>`,
+            replyTo:userEmail,
+        }
+        await transporter.sendMail(mailOptions);
+        console.log('Feedback sent successfully');
+    }catch(error){
+        console.error('Error sending feedback:', error);
+        throw new Error('Could not send feedback');
+    } 
+}

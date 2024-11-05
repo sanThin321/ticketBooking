@@ -1,7 +1,7 @@
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendEmail } from "../utils/email.js";
+import { sendEmail, sendFeedback } from "../utils/email.js";
 import crypto from "crypto";
 import { RegisterMember } from "../model/agencyModel.js";
 //signup
@@ -269,6 +269,7 @@ export const forgotPassword = async (req, res) => {
     res.status(500).json({ message: "Error sending password reset token" });
   }
 };
+
 // Verify token
 export const verifyCode = async (req, res) => {
   const { token } = req.body;
@@ -286,21 +287,19 @@ export const verifyCode = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
-    const tempToken = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" } // Short-lived temporary token
-    );
+    const resetUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/pelrizhabtho/resetpassword/${user._id}`;
     res.status(200).json({
       message: "Token is valid",
-      tempToken,
-      redirectUrl: "/reset-password",
+      redirectUrl: resetUrl,
     });
   } catch (err) {
     console.error(err);
     res.status(400).json({ message: "Invalid or expired token" });
   }
 };
+
 
 // Reset password using the temporary token
 export const resetPassword = async (req, res) => {
@@ -333,3 +332,17 @@ export const resetPassword = async (req, res) => {
     res.status(400).json({ message: "Error resetting password" });
   }
 };
+
+export const feedback = async (req, res) => {
+  try {
+    const { email, feedbackText } = req.body;
+    if (!email || !feedbackText) {
+      return res.status(400).send("Email and feedback text are required");
+    }
+    await sendFeedback(email, feedbackText);
+    res.status(200).send("Feedback sent successfully");
+  } catch (error) {
+    return res.status(500).send('Failed to send feedback', error)
+  }
+};
+

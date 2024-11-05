@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import contactUsImage from "../assets/ContactUs.png";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const ContactUsForm = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +15,7 @@ export const ContactUsForm = () => {
     setMessage(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !message) {
@@ -21,8 +23,16 @@ export const ContactUsForm = () => {
       return;
     }
 
-    console.log("Form submitted:", { email, message });
-    alert(`Message send:\nEmail: ${email}\nMessage: ${message}`)
+    const formData = {
+      email,
+      feedbackText: message,
+    };
+
+    const res = axios.post("http://localhost:4004/pelrizhabtho", formData);
+
+    if ((await res).status === 200) {
+      toast.success("Message send successfully.");
+    }
 
     setEmail("");
     setMessage("");
