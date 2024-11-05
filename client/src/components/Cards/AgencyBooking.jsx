@@ -1,11 +1,10 @@
 import { Armchair, CalendarDays, ChevronRight, Minus } from "lucide-react";
 import Bus from "../../assets/Bus.png";
-import AgencyLogo from "../../assets/AgencyLogo.jpeg";
 import { Link } from "react-router-dom";
 
 export const AgencyBooking = () => {
   return (
-    <div className="bg-white rounded border py-3 px-4 mb-3">
+    <div className="bg-white rounded border py-3 px-4 mb-3 hover">
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3">
           <div
@@ -40,8 +39,7 @@ export const AgencyBooking = () => {
           </div>
 
           <div
-            className="d-flex flex-column gap-2 ms-3 pe-5"
-            style={{ borderRight: "1px solid #D7E2EE" }}
+            className="d-flex gap-5 ms-3 pe-5"
           >
             <div className="d-flex gap-3 align-items-center">
               <div
@@ -71,26 +69,6 @@ export const AgencyBooking = () => {
                 </p>
                 <p className="mb-0">24</p>
               </div>
-            </div>
-          </div>
-
-          <div className="d-flex gap-3 pe-5 align-items-center ms-3">
-            <div
-              className="rounded-2 p-1"
-              style={{ border: "1px solid #8DD3BB" }}
-            >
-              <img
-                src={AgencyLogo}
-                className="rounded mx-auto d-block"
-                alt="driver default icons"
-                width={50}
-              />
-            </div>
-            <div className="d-flex flex-column">
-              <p className="mb-0">
-                <small>Agency</small>
-              </p>
-              <p className="mb-0">Meto Transpor</p>
             </div>
           </div>
         </div>

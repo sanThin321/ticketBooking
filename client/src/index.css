@@ -98,3 +98,7 @@ body {
 .custom-search {
   border: 1px solid #ced4da;
 }
+
+.table-hover tbody tr:hover {
+  background-color: #ebf6f2 !important;
+}
