@@ -13,7 +13,6 @@ export const AdminUsers = () => {
   }
 
   useEffect(() => {
-    console.log(id);
     refreshAgencyMembers(id);
   }, []);
 

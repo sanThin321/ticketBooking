@@ -20,7 +20,7 @@ import {
   getAllDriver,
 } from "../controller/memberController.js";
 import { registerBus } from "../controller/busController.js";
-import { createRouteWithSchedule } from "../controller/routeandschedule.js";
+// import { createRouteWithSchedule } from "../controller/routeandschedule.js";
 import { processPayment } from "../controller/paymentController.js";
 const router = express.Router();
 
@@ -32,30 +32,30 @@ router.get("/allmembers/:agencyId", getAllMembers);
 
 // Agency Bus
 router.post("/registerbus", registerBus);
-router.post("/registerroute", vaildBus, createRouteWithSchedule);
+// router.post("/registerroute", vaildBus, createRouteWithSchedule);
 
-// Combined GET method for all agency data
-router.get("/getagencydata/:agencyId", async (req, res) => {
-  const { agencyId } = req.params;
+// // Combined GET method for all agency data
+// router.get("/getagencydata/:agencyId", async (req, res) => {
+//   const { agencyId } = req.params;
 
-  try {
-    // Get all schedules
-    const schedules = await getAllSchedules(agencyId);
+//   try {
+//     // Get all schedules
+//     const schedules = await getAllSchedules(agencyId);
 
-    // Get all members
-    const members = await getAllMembers({ params: { agencyId } });
+//     // Get all members
+//     const members = await getAllMembers({ params: { agencyId } });
 
-    // Combine the data
-    const result = {
-      schedules,
-      members,
-    };
+//     // Combine the data
+//     const result = {
+//       schedules,
+//       members,
+//     };
 
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving data", error });
-  }
-});
+//     res.status(200).json(result);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving data", error });
+//   }
+// });
 
 //payment
 

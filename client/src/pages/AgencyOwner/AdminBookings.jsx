@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { AdminBooking } from "../../components/Cards/AdminBooking";
+import RegisterTicketBtn from "../../components/RegisterTicketBtn";
 
 export const AdminBookings = () => {
   const [showFilters, setShowFilters] = useState(false);
@@ -9,6 +10,7 @@ export const AdminBookings = () => {
       <AdminHeader
         toggleFilters={() => setShowFilters((prev) => !prev)}
         title="Manage Booking"
+        btn={<RegisterTicketBtn />}
       />
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">

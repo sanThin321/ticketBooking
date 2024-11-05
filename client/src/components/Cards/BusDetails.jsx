@@ -7,6 +7,7 @@ import {
 import Bus from "../../assets/Bus.png";
 
 export const BusDetails = () => {
+
   return (
     <div className="bg-white rounded py-3 px-4 mb-3 border">
       <div className="d-flex justify-content-between align-items-center">

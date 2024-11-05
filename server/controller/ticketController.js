@@ -9,9 +9,11 @@ const addTicket = async (req, res) => {
       departureTime,
       arrivalTime,
       price,
-      busNumber,
+      busId,
+      totalSeat,
       date,
     } = req.body;
+    
     const newTicket = new Ticket({
       agencyId,
       from,
@@ -19,19 +21,19 @@ const addTicket = async (req, res) => {
       departureTime,
       arrivalTime,
       price,
-      busNumber,
-      bus: req.busId,
-      availableSeats: req.totalSeat,
+      bus: busId,
+      availableSeats: totalSeat,
       date,
     });
     const ticket = new Ticket(newTicket);
     await ticket.save();
-    res.status(201).json({ message: "Member registered successfully" });
+    res.status(201).json({ message: "Ticket registered successfully" });
   } catch (error) {
     // console.error(error)
-    res.status(500).json({ message: "Error registering member", error });
+    res.status(500).json({ message: "Error registering ticket", error });
   }
 };
+
 const getallTicket = async (req, res) => {
   try {
     const tickets = await Ticket.find()

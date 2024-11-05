@@ -10,40 +10,63 @@ import {
   Bus,
 } from "lucide-react";
 import { BusDetails } from "../../components/Cards/BusDetails";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useStore } from "../../context/Store";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const AgencyOwnerDashboard = () => {
+  const id = localStorage.getItem("agencyId");
+  const { agencyMembers, refreshAgencyMembers } = useStore();
+
   const [formData, setFormData] = useState({
+    agencyId: id,
+    driverId: "",
     busNumber: "",
-    totalSeats: "",
-    driver: "",
+    totalSeat: "",
+    imageOfTheBus: "image.png",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data submitted: ", formData);
-    alert("Bus Registered Successfully!");
+    try {
+      const res = await axios.post(
+        "http://localhost:4004/pelrizhabtho/agency/registerbus",
+        formData // Send the form data in the POST request
+      );
 
-    setFormData({
-      busNumber: "",
-      totalSeats: "",
-      driver: "",
-    });
+      if (res.status === 200) {
+        toast.success("Bus registered successfully.");
+        setFormData({
+          agencyId: id,
+          driverId: "",
+          busNumber: "",
+          totalSeat: "",
+          imageOfTheBus: "image.png",
+        });
+      }
+    } catch (error) {
+      console.error("Error registering bus:", error);
+      toast.error("Failed to register bus. " + error.message);
+    }
   };
+
+  useEffect(() => {
+    refreshAgencyMembers(id);
+  }, [id]);
+
   return (
     <>
       <div className="container my-5">
-        <div>
-          <h3 className="mb-3">General Overview</h3>
-        </div>
+        <h3 className="mb-3">General Overview</h3>
         <div
           className="d-flex justify-content-around collapse navbar-collapse rounded-2"
           id="generalOverview"
@@ -54,25 +77,25 @@ export const AgencyOwnerDashboard = () => {
             <p>6 Buses</p>
           </div>
           <div
-            className=" py-4 px-md-4  mx-md-2 py-4 border-start border-2 h-25 px-sm-0 mx-sm-0"
+            className="py-4 px-md-4 mx-md-2 py-4 border-start border-2"
             style={{ borderColor: "darkgreen" }}
           >
             <Flag />
             <p>3 Registered Routes</p>
           </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2 h-25 px-sm-0 mx-sm-0 ">
+          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
             <BookCheck />
-            <p>200 Daily Passenger</p>
+            <p>200 Daily Passengers</p>
           </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2 h-25 px-sm-0 mx-sm-0">
+          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
             <DoorClosed />
-            <p>9 Employee</p>
+            <p>9 Employees</p>
           </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2 h-25 px-sm-0 mx-sm-0">
+          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
             <Ticket />
             <p>4 Ticket Agents</p>
           </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2 h-25 px-sm-0 mx-sm-0">
+          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
             <SquareUserRound />
             <p>6 Drivers</p>
           </div>
@@ -80,12 +103,9 @@ export const AgencyOwnerDashboard = () => {
       </div>
 
       <div className="container">
-        <div className="d-flex justify-content-between mb-2">
-          <div className="justify-content-start">
-            <h3>Registered Buses</h3>
-          </div>
-
-          <div className="d-flex gap-4 mb-3">
+        <div className="d-flex justify-content-between">
+          <h3>Registered Buses</h3>
+          <div className="d-flex gap-3 mb-1">
             <button
               type="button"
               className="btn btn-bg mx-2 rounded"
@@ -97,17 +117,16 @@ export const AgencyOwnerDashboard = () => {
             <div>
               <input
                 type="search"
-                className="form-control"
+                className="form-control custom-search"
                 placeholder="Search"
                 aria-label="Search"
               />
             </div>
           </div>
         </div>
+        <hr />
+        <BusDetails />
 
-        <div>
-          <BusDetails />
-        </div>
         <div className="d-flex justify-content-end">
           <button className="btn btn-dark text-light rounded-2">
             Show more results
@@ -136,7 +155,6 @@ export const AgencyOwnerDashboard = () => {
                 ></button>
               </div>
               <div className="modal-body">
-                {/* Your form inputs for registering the bus */}
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label htmlFor="busNumber" className="form-label">
@@ -154,34 +172,40 @@ export const AgencyOwnerDashboard = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="totalSeats" className="form-label">
+                    <label htmlFor="totalSeat" className="form-label">
                       Total Seats
                     </label>
                     <input
                       type="number"
                       className="form-control"
-                      id="totalSeats"
-                      name="totalSeats"
-                      value={formData.totalSeats}
+                      id="totalSeat"
+                      name="totalSeat"
+                      value={formData.totalSeat}
                       placeholder="Enter Total Seats"
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="driver" className="form-label">
+                    <label htmlFor="driverId" className="form-label">
                       Driver
                     </label>
                     <select
-                      name="driver"
+                      name="driverId"
                       className="form-select"
                       aria-label="Select Driver"
-                      value={formData.driver}
+                      value={formData.driverId}
                       onChange={handleChange}
                     >
                       <option value="">Select Driver</option>
-                      <option value="Pema">Pema</option>
-                      <option value="Dorji">Dorji</option>
+                      {agencyMembers &&
+                        agencyMembers.map((member, index) =>
+                          member.role === "Driver" ? (
+                            <option key={index} value={member._id}>
+                              {member.fullName}
+                            </option>
+                          ) : null
+                        )}
                     </select>
                   </div>
 
