@@ -20,7 +20,12 @@ import {
   deleteMember,
   getAllDriver,
 } from "../controller/memberController.js";
-import { deleteBus, getAllBus, registerBus, updateBus } from "../controller/busController.js";
+import {
+  deleteBus,
+  getAllBus,
+  registerBus,
+  updateBus,
+} from "../controller/busController.js";
 import { processPayment } from "../controller/paymentController.js";
 const router = express.Router();
 
@@ -28,18 +33,17 @@ const router = express.Router();
 router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
-router.get("/getallDriver",getAllDriver)
+router.get("/getallDriver", getAllDriver);
 // Agency Bus
 router.post("/registerbus", validateDriver, registerBus);
-router.get("/getallbus/:agencyId",getAllBus);
-router.put("/updatebus/:busId",updateBus);
-router.delete("/deletebus/:busId",deleteBus);
+router.get("/getallbus/:agencyId", getAllBus);
+router.put("/updatebus/:busId", updateBus);
+router.delete("/deletebus/:busId", deleteBus);
 // Combined GET method for all agency data
 router.get("/getagencydata/:agencyId", async (req, res) => {
   const { agencyId } = req.params;
 
   try {
-
     // Get all members
     const members = await getAllMembers({ params: { agencyId } });
 
@@ -65,5 +69,5 @@ router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);
 router.delete("/deleteTicket/:ticketId", delateTicket);
 router.put("/updateTicket/:ticketId", validateBus, updateTicket);
-router.get("/ticketbooked/:ticketId/bookeddetails",bookedDetail);
+router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
 export default router;
