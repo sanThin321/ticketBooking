@@ -17,7 +17,12 @@ import { toast } from "react-toastify";
 
 export const AgencyOwnerDashboard = () => {
   const id = localStorage.getItem("agencyId");
-  const { agencyMembers, refreshAgencyMembers } = useStore();
+  const {
+    agencyMembers,
+    refreshAgencyMembers,
+    agencyBuses,
+    refreshAgencyBuses,
+  } = useStore();
 
   const [formData, setFormData] = useState({
     agencyId: id,
@@ -45,6 +50,7 @@ export const AgencyOwnerDashboard = () => {
 
       if (res.status === 200) {
         toast.success("Bus registered successfully.");
+        refreshAgencyBuses(id);
         setFormData({
           agencyId: id,
           driverId: "",
@@ -60,8 +66,18 @@ export const AgencyOwnerDashboard = () => {
   };
 
   useEffect(() => {
+    refreshAgencyBuses(id);
     refreshAgencyMembers(id);
   }, [id]);
+
+  const [selectedBus, setSelectedBus] = useState(null);
+
+  const handleEditClick = (bus) => {
+    setSelectedBus(bus); 
+  };
+
+  useEffect(() => {
+  }, [agencyBuses]);
 
   return (
     <>
@@ -125,7 +141,16 @@ export const AgencyOwnerDashboard = () => {
           </div>
         </div>
         <hr />
-        <BusDetails />
+        {agencyBuses?.map((bus, index) => {
+          return (
+            <BusDetails
+              key={index}
+              data={bus}
+              onEditClick={handleEditClick}
+              selectedBus={selectedBus}
+            />
+          );
+        })}
 
         <div className="d-flex justify-content-end">
           <button className="btn btn-dark text-light rounded-2">
@@ -162,8 +187,9 @@ export const AgencyOwnerDashboard = () => {
                     </label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control custom-search"
                       id="busNumber"
+                      autoComplete="off"
                       name="busNumber"
                       value={formData.busNumber}
                       placeholder="Enter Bus Number"
@@ -177,7 +203,7 @@ export const AgencyOwnerDashboard = () => {
                     </label>
                     <input
                       type="number"
-                      className="form-control"
+                      className="form-control custom-search"
                       id="totalSeat"
                       name="totalSeat"
                       value={formData.totalSeat}
@@ -192,20 +218,19 @@ export const AgencyOwnerDashboard = () => {
                     </label>
                     <select
                       name="driverId"
-                      className="form-select"
+                      className="form-select custom-search"
                       aria-label="Select Driver"
                       value={formData.driverId}
                       onChange={handleChange}
                     >
                       <option value="">Select Driver</option>
-                      {agencyMembers &&
-                        agencyMembers.map((member, index) =>
-                          member.role === "Driver" ? (
-                            <option key={index} value={member._id}>
-                              {member.fullName}
-                            </option>
-                          ) : null
-                        )}
+                      {agencyMembers.map((member, index) =>
+                        member.role === "Driver" ? (
+                          <option key={index} value={member._id}>
+                            {member.fullName}
+                          </option>
+                        ) : null
+                      )}
                     </select>
                   </div>
 
@@ -217,7 +242,7 @@ export const AgencyOwnerDashboard = () => {
                     >
                       Close
                     </button>
-                    <button type="submit" className="btn btn-bg">
+                    <button type="submit" className="btn btn-bg" data-bs-dismiss="modal">
                       Register Bus
                     </button>
                   </div>

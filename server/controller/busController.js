@@ -28,7 +28,7 @@ export const registerBus = async (req, res) => {
 export const updateBus=async(req,res)=>{
   try{
     const{busId}=req.params;
-    const{driverName, busNumber, totalSeat, imageOfTheBus}=req.body;
+    const{driverId, busNumber, totalSeat, imageOfTheBus}=req.body;
 
     const bus=await RegisterBus.findById(busId);
     if(!bus){
@@ -36,7 +36,7 @@ export const updateBus=async(req,res)=>{
     }
 
     //update bus detail
-    if(driverName) bus.driverName=driverName;
+    if(driverId) bus.driverId=driverId;
     if(busNumber) bus.busNumber=busNumber;
     if(totalSeat) bus.totalSeat=totalSeat;
     if(imageOfTheBus) bus.imageOfTheBus=imageOfTheBus;
@@ -66,12 +66,18 @@ export const deleteBus=async(req,res)=>{
 }
 
 //get all the bus
-export const getAllBus=async(req, res)=>{
-  try{
-    const {agencyId}=req.params;
-    const bus=await RegisterBus.find({agencyId})
-    res.status(200).json({bus})
-  }catch(error){
-    res.status(500).json({error});
+export const getAllBus = async (req, res) => {
+  try {
+    const { agencyId } = req.params;
+    const buses = await RegisterBus.find({ agencyId })
+      .populate("driverId", "fullName -_id") // Populate only fullName, exclude _id in driverId
+      .select("-password"); // Optionally exclude sensitive fields if any
+
+    res.status(200).json({ buses });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-}
+};
+
+
+

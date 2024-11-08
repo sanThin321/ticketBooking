@@ -105,7 +105,7 @@ const AddMemberBtn = () => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="form-control"
+                  className="form-control custom-search"
                   type="text"
                   id="fullName"
                   autoComplete="off"
@@ -118,7 +118,7 @@ const AddMemberBtn = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="form-control"
+                  className="form-control custom-search"
                   type="email"
                   id="email"
                   autoComplete="off"
@@ -131,7 +131,7 @@ const AddMemberBtn = () => {
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className="form-control"
+                  className="form-control custom-search"
                   type="text"
                   id="contactNo"
                   autoComplete="off"
@@ -144,7 +144,7 @@ const AddMemberBtn = () => {
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="form-select"
+                  className="form-select custom-search"
                   aria-label="Select Role"
                 >
                   <option value="">Select Role</option>
@@ -160,7 +160,7 @@ const AddMemberBtn = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control custom-search"
                     type="password"
                     id="password"
                   />

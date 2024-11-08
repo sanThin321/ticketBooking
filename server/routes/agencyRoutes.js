@@ -20,7 +20,7 @@ import {
   deleteMember,
   getAllDriver,
 } from "../controller/memberController.js";
-import { registerBus } from "../controller/busController.js";
+import { registerBus, getAllBus, updateBus, deleteBus } from "../controller/busController.js";
 // import { createRouteWithSchedule } from "../controller/routeandschedule.js";
 import { processPayment } from "../controller/paymentController.js";
 const router = express.Router();
@@ -30,23 +30,25 @@ router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
 router.get("/getallDriver", getAllDriver);
+router.get("/allmembers/:agencyId", getAllMembers);
+
 // Agency Bus
-router.post("/registerbus", validateDriver, registerBus);
+router.post("/registerbus", registerBus);
 router.get("/getallbus/:agencyId", getAllBus);
 router.put("/updatebus/:busId", updateBus);
 router.delete("/deletebus/:busId", deleteBus);
 // Combined GET method for all agency data
-router.get("/getagencydata/:agencyId", async (req, res) => {
-  const { agencyId } = req.params;
+// router.get("/getagencydata/:agencyId", async (req, res) => {
+//   const { agencyId } = req.params;
 
-  try {
-    // Get all members
-    const members = await getAllMembers({ params: { agencyId } });
+//   try {
+//     // Get all members
+//     const members = await getAllMembers({ params: { agencyId } });
 
-    // Combine the data
-    const result = {
-      members,
-    };
+//     // Combine the data
+//     const result = {
+//       members,
+//     };
 
 //     res.status(200).json(result);
 //   } catch (error) {
@@ -66,4 +68,5 @@ router.put("/tickets/:ticket_id/book", updateBookedTicket);
 router.delete("/deleteTicket/:ticketId", delateTicket);
 router.put("/updateTicket/:ticketId", validateBus, updateTicket);
 router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
+
 export default router;
