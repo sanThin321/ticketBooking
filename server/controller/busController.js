@@ -66,11 +66,12 @@ export const deleteBus=async(req,res)=>{
 }
 
 //get all the bus
-export const getAllmembers=async(req, res)=>{
+export const getAllBus=async(req, res)=>{
   try{
     const {agencyId}=req.params;
     const bus=await RegisterBus.find({agencyId})
+    res.status(200).json({bus})
   }catch(error){
-
+    res.status(500).json({error});
   }
 }

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addTicket,
+  bookedDetail,
   delateTicket,
   getallTicket,
   getTicket,
@@ -28,28 +29,24 @@ const router = express.Router();
 router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
-router.get("/allmembers/:agencyId", getAllMembers);
-
+router.get("/getallDriver", getAllDriver);
 // Agency Bus
-router.post("/registerbus", registerBus);
-// router.post("/registerroute", vaildBus, createRouteWithSchedule);
+router.post("/registerbus", validateDriver, registerBus);
+router.get("/getallbus/:agencyId", getAllBus);
+router.put("/updatebus/:busId", updateBus);
+router.delete("/deletebus/:busId", deleteBus);
+// Combined GET method for all agency data
+router.get("/getagencydata/:agencyId", async (req, res) => {
+  const { agencyId } = req.params;
 
-// // Combined GET method for all agency data
-// router.get("/getagencydata/:agencyId", async (req, res) => {
-//   const { agencyId } = req.params;
+  try {
+    // Get all members
+    const members = await getAllMembers({ params: { agencyId } });
 
-//   try {
-//     // Get all schedules
-//     const schedules = await getAllSchedules(agencyId);
-
-//     // Get all members
-//     const members = await getAllMembers({ params: { agencyId } });
-
-//     // Combine the data
-//     const result = {
-//       schedules,
-//       members,
-//     };
+    // Combine the data
+    const result = {
+      members,
+    };
 
 //     res.status(200).json(result);
 //   } catch (error) {
@@ -68,5 +65,5 @@ router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);
 router.delete("/deleteTicket/:ticketId", delateTicket);
 router.put("/updateTicket/:ticketId", validateBus, updateTicket);
-
+router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
 export default router;

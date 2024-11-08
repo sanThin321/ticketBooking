@@ -83,22 +83,20 @@ const updateBookedTicket = async (req, res) => {
       return res.status(404).json({ message: "Ticket not found." });
     }
 
-    // Check if the requested seats are available
     if (ticket.availableSeats < seatsBooked.length) {
       return res.status(400).json({ message: "Not enough available seats." });
     }
 
-    // Update the booked array and subtract availableSeats
     const updatedTicket = await Ticket.findByIdAndUpdate(
       ticket_id,
       {
-        $push: { booked: { $each: seatsBooked } }, // Add seats to the booked array
-        $inc: { availableSeats: -seatsBooked.length }, // Decrease the available seats
+        $push: { booked: { $each: seatsBooked } },
+        $inc: { availableSeats: -seatsBooked.length },
       },
-      { new: true } // Return the updated ticket
+      { new: true }
     );
 
-    return res.status(200).json(updatedTicket); // Send back the updated ticket
+    return res.status(200).json(updatedTicket);
   } catch (err) {
     return res
       .status(500)
@@ -144,7 +142,22 @@ const updateTicket = async (req, res) => {
     res.status(500).json({ message: "Error updating Ticket", error });
   }
 };
- 0
+const bookedDetail = async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+
+    const ticket = await Ticket.findById(ticketId).select("booked");
+
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found." });
+    }
+
+    res.status(200).json({ bookedDetails: ticket.booked });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export {
   addTicket,
   delateTicket,
@@ -152,4 +165,5 @@ export {
   updateBookedTicket,
   getTicket,
   getallTicket,
+  bookedDetail,
 };
