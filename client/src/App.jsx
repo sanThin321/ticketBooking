@@ -14,7 +14,7 @@ import { VerifyCode } from "./pages/Auth/VerifyCode";
 import { UserProfile } from "./pages/Users/UserProfile";
 import { AdminUsers } from "./pages/AgencyOwner/AdminUsers";
 import { AdminPaymentDetails } from "./pages/AdminDashboard/AdminPaymentDetails";
-import { AdminBookings } from "./pages/AgencyOwner/AdminBookings";
+import { AgencyBookings } from "./pages/AgencyOwner/AgencyBookings.jsx";
 import { SingleBookingDetails } from "./pages/AgencyOwner/SingleBookingDetails";
 import { AgencyOwnerDashboard } from "./pages/AgencyOwner/AgencyOwnerDashboard.jsx";
 import { SearchTickets } from "./pages/Users/SearchTickets";
@@ -42,10 +42,10 @@ const App = () => {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/agency/users" element={<AdminUsers />} />
           <Route path="/agency/payments" element={<AdminPaymentDetails />} />
-          <Route path="/agency/bookings" element={<AdminBookings />} />
+          <Route path="/agency/bookings" element={<AgencyBookings />} />
           <Route path="/agency/" element={<AgencyOwnerDashboard />} />
           <Route
-            path="/admin-booking-sigle"
+            path="/agency/booking-sigle/:id"
             element={<SingleBookingDetails />}
           />
         </Route>

@@ -20,12 +20,8 @@ import {
   deleteMember,
   getAllDriver,
 } from "../controller/memberController.js";
-import {
-  deleteBus,
-  getAllBus,
-  registerBus,
-  updateBus,
-} from "../controller/busController.js";
+import { registerBus } from "../controller/busController.js";
+// import { createRouteWithSchedule } from "../controller/routeandschedule.js";
 import { processPayment } from "../controller/paymentController.js";
 const router = express.Router();
 
@@ -52,11 +48,11 @@ router.get("/getagencydata/:agencyId", async (req, res) => {
       members,
     };
 
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving data", error });
-  }
-});
+//     res.status(200).json(result);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving data", error });
+//   }
+// });
 
 //payment
 

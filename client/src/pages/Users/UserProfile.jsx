@@ -3,9 +3,11 @@ import backgroundImage from "../../assets/ProfileBackground.png";
 import { Account } from "../../components/Profile/Account";
 import { PurchaseHistory } from "../../components/Profile/PurchaseHistory";
 import { PaymentMethod } from "../../components/Profile/PaymentMethod";
+import { useAuth } from "../../auth/auth";
 
 export const UserProfile = () => {
   const [isSelected, setIsSelected] = useState(0);
+  const { user } = useAuth();
 
   const isActive = {
     borderBottom: "3px solid #8DD3BB",
@@ -41,14 +43,11 @@ export const UserProfile = () => {
       </div>
 
       <div className="d-flex flex-column align-items-center">
-        <h4 className="">Namgay Wangchuk</h4>
-        <p>namgay@gmail.com</p>
+        <h4 className="">{user.firstName + " " + user.lastName}</h4>
+        <p>{user.email}</p>
       </div>
 
-      <div
-        className="rounded my-3 py-3 px-3"
-        style={{ boxShadow: "0 4px 16px rgba(17, 34, 17, 0.05)" }}
-      >
+      <div className="bg-white border rounded my-3 py-3 px-3">
         <ul
           className="d-flex justify-content-around px-0 mb-0"
           style={{ listStyle: "none" }}

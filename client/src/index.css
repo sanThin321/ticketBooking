@@ -82,3 +82,23 @@ body {
 .btn-dark {
   background-color: #112211;
 }
+
+.hover:hover {
+  background-color: #ebf6f2 !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.custom-search:focus {
+  border: 1px solid #8dd3bb !important;
+  box-shadow: none; 
+  transition: background-color 0.3s ease;
+}
+
+.custom-search {
+  border: 1px solid #ced4da;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #ebf6f2 !important;
+}

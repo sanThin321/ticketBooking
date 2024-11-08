@@ -47,21 +47,21 @@ const registerBusSchema=new mongoose.Schema({
     },
     busNumber:{
         type:String,
-        required: true,
+        required: false,
         unique: true
     },
     totalSeat:{
-        type:Number,
-        required:true
+        type:String,
+        required:false
     },
     imageOfTheBus:{
         type:String,
-        required:true
+        required:false
     },
-    driverName:{
-        type:String,
-        required:true
-    }
+    // driverName:{
+    //     type:String,
+    //     required:true
+    // }
 })
 
 const RegisterMember =mongoose.model('Register_member', registerSchema,'Register_member');

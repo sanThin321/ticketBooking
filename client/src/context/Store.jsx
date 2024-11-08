@@ -39,7 +39,7 @@ export const StoreProvider = ({ children }) => {
   const getAgencyMembers = async (id) => {
     try {
       const res = await axios.get(
-        `http://localhost:4004/pelrizhabtho/allmembers/${id}`
+        `http://localhost:4004/pelrizhabtho/agency/allmembers/${id}`
       );
 
       if (res.status === 200) {

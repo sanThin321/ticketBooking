@@ -1,7 +1,7 @@
 import { RegisterBus } from "../model/agencyModel.js";
 
 export const registerBus = async (req, res) => {
-  const { agencyId, driverName, busNumber, totalSeat, imageOfTheBus } =
+  const { agencyId, busNumber, driverId, totalSeat, imageOfTheBus } =
     req.body;
   const driver = await RegisterBus.findOne({ busNumber });
   if (driver) {
@@ -10,8 +10,7 @@ export const registerBus = async (req, res) => {
   try {
     const newBus = new RegisterBus({
       agencyId,
-      driverId: req.driverId,
-      driverName,
+      driverId,
       busNumber,
       totalSeat,
       imageOfTheBus,
@@ -60,7 +59,7 @@ export const deleteBus=async(req,res)=>{
     }
     await RegisterBus.findByIdAndDelete(busId);
     res.status(200).json({message:"Bus deleted successfully"})
-  }catch(error){
+  } catch(error){
     console.error('Error deleting bud', error);
     res.status(500).json({message: "Error deleting bus", error})
   }

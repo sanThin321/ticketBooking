@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
-import { AdminBooking } from "../../components/Cards/AdminBooking";
+import { AgencyBooking } from "../../components/Cards/AgencyBooking";
+import RegisterTicketBtn from "../../components/RegisterTicketBtn";
 
-export const AdminBookings = () => {
+export const AgencyBookings = () => {
   const [showFilters, setShowFilters] = useState(false);
   return (
     <>
       <AdminHeader
         toggleFilters={() => setShowFilters((prev) => !prev)}
         title="Manage Booking"
+        btn={<RegisterTicketBtn />}
       />
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
-            <AdminBooking/>
-            <AdminBooking/>
-            <AdminBooking/>
+            <AgencyBooking />
+            <AgencyBooking />
+            <AgencyBooking />
           </div>
           <div
             className={`p-3 border border-secondary-subtle rounded ${
