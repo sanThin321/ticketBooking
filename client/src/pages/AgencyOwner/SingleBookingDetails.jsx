@@ -26,24 +26,24 @@ export const SingleBookingDetails = () => {
   const departureDateTime = new Date(details?.departureTime).toLocaleString(
     [],
     {
-      year: "numeric", // Full year (e.g., 2024)
-      hour: "2-digit", // Hour in 2-digit format
-      minute: "2-digit", // Minute in 2-digit format
-      month: "short", // Short month (e.g., Jan, Feb)
-      day: "2-digit", // Day of the month (e.g., 11)
+      year: "numeric", 
+      hour: "2-digit", 
+      minute: "2-digit", 
+      month: "short", 
+      day: "2-digit", 
 
-      hour12: true, // AM/PM format
+      hour12: true, 
     }
   );
 
   // Format the arrival date and time
   const arrivalDateTime = new Date(details?.arrivalTime).toLocaleString([], {
-    year: "numeric", // Full year
-    month: "short", // Short month
-    day: "2-digit", // Day of the month
-    hour: "2-digit", // Hour in 2-digit format
-    minute: "2-digit", // Minute in 2-digit format
-    hour12: true, // AM/PM format
+    year: "numeric", 
+    month: "short", 
+    day: "2-digit", 
+    hour: "2-digit",
+    minute: "2-digit", 
+    hour12: true,
   });
 
   useEffect(() => {

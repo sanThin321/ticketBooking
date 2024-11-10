@@ -52,7 +52,7 @@ export const Ticket = ({ ticket }) => {
                   <small>Total seats</small>
                 </p>
                 <p>
-                  <strong className="me-2">{ticket.totalSeats}</strong>
+                  <strong className="me-2">{ticket.bus.totalSeat}</strong>
                   <Armchair color="#8DD3BB" size={20} />
                 </p>
               </div>
