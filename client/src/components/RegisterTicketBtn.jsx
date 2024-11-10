@@ -7,7 +7,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 const RegisterTicketBtn = () => {
   const id = localStorage.getItem("agencyId");
-  const { refreshAgencyMembers, agencyBuses, refreshAgencyBuses } = useStore();
+  const { refreshAgencyMembers, agencyBuses, refreshAgencyBuses, refreshTickets } = useStore();
 
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
@@ -92,7 +92,7 @@ const RegisterTicketBtn = () => {
       );
 
       if (response.status === 201) {
-        refreshAgencyMembers(id);
+        refreshTickets()
         toast.success("Ticket registered successfully.");
       }
 

@@ -14,11 +14,12 @@ export const AgencyBookings = () => {
   };
 
   useEffect(() => {
-  }, [refreshTickets]);
-
-  useEffect(() => {
     refreshTickets();
-  })
+  }, [tickets]);
+
+  useEffect(()=> {
+
+  }, [refreshTickets])
 
   return (
     <>

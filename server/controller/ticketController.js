@@ -3,17 +3,17 @@ import Ticket from "../model/Ticket.js";
 
 const addTicket = async (req, res) => {
   try {
-    const {
-      agencyId,
-      from,
-      to,
-      departureTime,
-      arrivalTime,
-      price,
-      busId,
-      totalSeat,
-    } = req.body;
-    
+    const { agencyId, from, to, departureTime, arrivalTime, price, busId } = req.body;
+
+    // Fetch the bus details using busId to get the total seats
+    const bus = await RegisterBus.findById(busId);
+
+    if (!bus) {
+      return res.status(404).json({ message: "Bus not found." });
+    }
+
+    const availableSeats = bus.totalSeat; // Set availableSeats to totalSeat of the bus
+
     const newTicket = new Ticket({
       agencyId,
       from,
@@ -22,14 +22,12 @@ const addTicket = async (req, res) => {
       arrivalTime,
       price,
       bus: busId,
-      availableSeats: 0,
+      availableSeats, // Use the totalSeat from the bus
     });
 
-    const ticket = new Ticket(newTicket);
-    await ticket.save();
-    res.status(201).json({ message: "Ticket registered successfully" });
+    await newTicket.save();
+    res.status(201).json({ message: "Ticket registered successfully", ticket: newTicket });
   } catch (error) {
-    // console.error(error)
     res.status(500).json({ message: "Error registering ticket", error });
   }
 };
@@ -38,7 +36,7 @@ const getallTicket = async (req, res) => {
   try {
     const tickets = await Ticket.find()
       .populate({ path: "agencyId", select: "agencyName" })
-      .populate({ path: "bus", select: ["totalSeat", "busNumber"]});
+      .populate({ path: "bus", select: ["totalSeat", "busNumber"] });
     if (!tickets.length) {
       return res.status(404).json({ message: "No tickets found" });
     }
@@ -55,10 +53,10 @@ const getTicket = async (req, res) => {
     const { ticket_id } = req.params;
     const ticket = await Ticket.findById(ticket_id)
       .populate({ path: "agencyId", select: "agencyName" })
-      .populate({ 
-        path: "bus", 
+      .populate({
+        path: "bus",
         select: ["totalSeat", "busNumber", "driverId"],
-        populate: { path: "driverId", select: "fullName" } // Populating driverId with fullName
+        populate: { path: "driverId", select: "fullName" }, // Populating driverId with fullName
       });
 
     if (!ticket) {
@@ -73,33 +71,50 @@ const getTicket = async (req, res) => {
   }
 };
 
-
+// Update booked seats and availableSeats
 // Update booked seats and availableSeats
 const updateBookedTicket = async (req, res) => {
   try {
     const { ticket_id } = req.params; // Ticket ID from request params
-    const { seatsBooked } = req.body; // Array of booked seats from request body
+    const { seatsBooked } = req.body; // Array of seats to book from request body
 
     if (!seatsBooked || !seatsBooked.length) {
       return res.status(400).json({ message: "Please provide seats to book." });
     }
 
-    // Find the ticket by ID
-    const ticket = await Ticket.findById(ticket_id);
+    // Find the ticket by ID and populate the associated bus data
+    const ticket = await Ticket.findById(ticket_id).populate("bus");
 
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found." });
     }
 
-    if (ticket.availableSeats < seatsBooked.length) {
-      return res.status(400).json({ message: "Not enough available seats." });
+    const bus = ticket.bus;
+
+    if (!bus) {
+      return res.status(404).json({ message: "Associated bus not found." });
     }
 
+    // Calculate available seats based on totalSeat and currently booked seats
+    const bookedSeatsCount = ticket.booked.length;
+    const availableSeats = bus.totalSeat - bookedSeatsCount;
+
+    if (availableSeats <= 0) {
+      return res.status(400).json({ message: "All seats are booked." });
+    }
+
+    if (seatsBooked.length > availableSeats) {
+      return res
+        .status(400)
+        .json({ message: `Only ${availableSeats} seats are available.` });
+    }
+
+    // Proceed to book seats and update availableSeats
     const updatedTicket = await Ticket.findByIdAndUpdate(
       ticket_id,
       {
         $push: { booked: { $each: seatsBooked } },
-        $inc: { availableSeats: -seatsBooked.length },
+        $inc: { availableSeats: -seatsBooked.length }, // Decrease availableSeats by seats booked
       },
       { new: true }
     );
@@ -111,6 +126,8 @@ const updateBookedTicket = async (req, res) => {
       .json({ message: "Error updating booked tickets", error: err.message });
   }
 };
+
+
 const delateTicket = async (req, res) => {
   try {
     const { ticketId } = req.params;
@@ -153,10 +170,13 @@ const updateTicket = async (req, res) => {
 
     // Save the updated ticket
     await ticket.save();
-    return res.status(200).json({ message: "Ticket updated successfully", ticket });
-
+    return res
+      .status(200)
+      .json({ message: "Ticket updated successfully", ticket });
   } catch (error) {
-    res.status(500).json({ message: "Error updating Ticket", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating Ticket", error: error.message });
   }
 };
 

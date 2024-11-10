@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { useStore } from "../../context/Store";
 
 export const BookingSeats = () => {
-  const { refreshTickets} = useStore()
   const { id } = useParams();
   const [seatDetails, setSeatDetails] = useState({});
   const [selectedSeats, setSelectedSeats] = useState(new Set());
@@ -26,15 +25,15 @@ export const BookingSeats = () => {
     setSelectedSeats(updatedSelectedSeats);
   };
 
-  const handleDetailChange = (seatNumber, name, cid) => {
+  const handleDetailChange = (seatNumber, name, cid, contactNo) => {
     setSeatDetails((prevDetails) => ({
       ...prevDetails,
-      [seatNumber]: { name, cid },
+      [seatNumber]: { name, cid, contactNo },
     }));
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
 
     if (!ticket._id) {
       console.error("Ticket ID is missing.");
@@ -45,25 +44,31 @@ export const BookingSeats = () => {
       seatNumber,
       name: seatDetails[seatNumber]?.name || "",
       cid: seatDetails[seatNumber]?.cid || "",
+      contactNo: seatDetails[seatNumber]?.contactNo || "",
     }));
+
+    for (let seat of bookedSeats) {
+      if (!seat.name || !seat.cid || !seat.contactNo) {
+        toast.error("All fields must be filled for each selected seat.");
+        return;
+      }
+    }
 
     try {
       const response = await axios.put(
-        `http://localhost:4004/pelrizhabtho/tickets/${ticket._id}/book`,
-        { seatsBooked: bookedSeats}
+        `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
+        { seatsBooked: bookedSeats }
       );
 
       if (response.status === 200) {
         toast.success("Seats booked successfully!");
-      
+
         setTimeout(() => {
-          window.location.reload(); 
+          window.location.reload();
         }, 1000);
-      
+
         handleCancel();
       }
-      
-      
     } catch (error) {
       console.error("Error booking seats:", error.message);
     }
@@ -90,6 +95,25 @@ export const BookingSeats = () => {
       console.error("Error fetching ticket details:", error.message);
     }
   };
+
+  const departureDateTime = new Date(ticket.departureTime).toLocaleString([], {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  // Format the arrival date and time to a human-readable format
+  const arrivalDateTime = new Date(ticket.arrivalTime).toLocaleString([], {
+    year: "numeric", // Full year (e.g., 2024)
+    month: "long", // Full month name (e.g., November)
+    day: "2-digit", // Day of the month (e.g., 10)
+    hour: "2-digit", // Hour in 2-digit format (e.g., 06)
+    minute: "2-digit", // Minute in 2-digit format (e.g., 08)
+    hour12: true, // AM/PM format
+  });
 
   useEffect(() => {
     if (id) {
@@ -119,8 +143,8 @@ export const BookingSeats = () => {
                     <p>Arrival Time</p>
                   </div>
                   <div>
-                    <p>{ticket.departureTime}</p>
-                    <p>{ticket.arrivalTime}</p>
+                    <p>{departureDateTime}</p>
+                    <p>{arrivalDateTime}</p>
                   </div>
                 </div>
                 <div>
@@ -177,6 +201,20 @@ export const BookingSeats = () => {
                           handleDetailChange(
                             seatNumber,
                             seatDetails[seatNumber]?.name,
+                            e.target.value
+                          )
+                        }
+                        className="form-control mb-2"
+                      />
+                      <input
+                        type="number"
+                        placeholder="Enter Contact Number"
+                        value={seatDetails[seatNumber]?.contactNo || ""}
+                        onChange={(e) =>
+                          handleDetailChange(
+                            seatNumber,
+                            seatDetails[seatNumber]?.name,
+                            seatDetails[seatNumber]?.cid,
                             e.target.value
                           )
                         }
