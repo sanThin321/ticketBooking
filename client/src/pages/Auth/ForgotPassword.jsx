@@ -26,7 +26,7 @@ export const ForgotPassword = () => {
 
   return (
     <>
-      <div>ForgotPassword</div>
+
       <div className="container">
         <div className="row py-5">
           <div className="col-12 col-md-7 col-lg-7 pe-5">
@@ -37,12 +37,12 @@ export const ForgotPassword = () => {
         width={210}
       /> */}
             <div className="mb-4">
-            <Link
-                  to="/sign-up"
-                  style={{ color: "#FF8682", textDecoration: "none" }}
-                >
-                  Sign Up
-                </Link>
+              <Link
+                to="/sign-up"
+                style={{ color: "#FF8682", textDecoration: "none" }}
+              >
+                Sign Up
+              </Link>
               <h1>Set Password</h1>
               <p>Forgot your password? Dont worry, happens to all of us. Enter your email below to recover your password. </p>
             </div>
