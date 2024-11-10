@@ -13,8 +13,8 @@ export const AgencyBookings = () => {
     setSelectedTicket(ticket);
   };
 
-  // useEffect(() => {
-  // }, [agencyMembers]);
+  useEffect(() => {
+  }, [refreshTickets]);
 
   useEffect(() => {
     refreshTickets();
@@ -31,7 +31,7 @@ export const AgencyBookings = () => {
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
             {tickets.map((ticket, index) => {
-              return <AgencyBooking key={index} data={ticket} onEditClick={handleEditClick} selectedUser={selectedTicket}/>;
+              return <AgencyBooking key={index} data={ticket} onEditClick={handleEditClick} selectedTicket={selectedTicket}/>;
             })}
           </div>
           <div

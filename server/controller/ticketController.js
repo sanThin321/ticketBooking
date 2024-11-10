@@ -1,3 +1,4 @@
+import { RegisterBus } from "../model/agencyModel.js";
 import Ticket from "../model/Ticket.js";
 
 const addTicket = async (req, res) => {
@@ -126,29 +127,39 @@ const delateTicket = async (req, res) => {
 const updateTicket = async (req, res) => {
   try {
     const { ticketId } = req.params;
-    const { from, to, departureTime, arrivalTime, price, busNumber, date } =
-      req.body;
+    const { from, to, departureTime, arrivalTime, price, busId } = req.body;
+
+    // Find the ticket by ID
     const ticket = await Ticket.findById(ticketId);
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
+
+    // Update ticket fields if they are present in the request body
     if (from) ticket.from = from;
     if (to) ticket.to = to;
     if (departureTime) ticket.departureTime = departureTime;
     if (arrivalTime) ticket.arrivalTime = arrivalTime;
     if (price) ticket.price = price;
-    if (busNumber) {
-      ticket.busNumber = busNumber;
-      ticket.bus = req.bus;
-      ticket.availableSeats = req.totalSeat;
-    }
-    if (date) ticket.date = date;
 
+    // Check and update bus details if `busId` is provided
+    if (busId) {
+      const bus = await RegisterBus.findById(busId); // Find the bus by ID
+      if (!bus) {
+        return res.status(404).json({ message: "Bus not found" });
+      }
+      ticket.bus = busId; // Set the bus reference
+    }
+
+    // Save the updated ticket
     await ticket.save();
+    return res.status(200).json({ message: "Ticket updated successfully", ticket });
+
   } catch (error) {
-    res.status(500).json({ message: "Error updating Ticket", error });
+    res.status(500).json({ message: "Error updating Ticket", error: error.message });
   }
 };
+
 const bookedDetail = async (req, res) => {
   try {
     const { ticketId } = req.params;

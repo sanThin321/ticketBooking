@@ -79,7 +79,7 @@ export const BookingSeats = () => {
   const getTicketDetails = async (ticketId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4004/pelrizhabtho/getticket/${ticketId}`
+        `http://localhost:4004/pelrizhabtho/agency/getticket/${ticketId}`
       );
 
       console.log("ticket: " + response.data);

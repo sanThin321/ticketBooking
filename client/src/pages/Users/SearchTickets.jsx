@@ -71,9 +71,9 @@ export const SearchTickets = () => {
                 <h5>No ticket available.</h5>
               </div>
             ) : (
-              filteredTickets.slice(0, visibleTickets).map((ticket) => (
+              filteredTickets.slice(0, visibleTickets).map((ticket, index) => (
                 <div
-                  key={ticket.id}
+                  key={index}
                   onClick={() => handleTicketClick(ticket._id)}
                 >
                   <Ticket ticket={ticket} />

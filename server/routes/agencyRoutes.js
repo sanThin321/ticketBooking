@@ -67,7 +67,9 @@ router.get("/getallticket", getallTicket);
 router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);
 router.delete("/deleteTicket/:ticketId", delateTicket);
-router.put("/updateTicket/:ticketId", validateBus, updateTicket);
+// router.put("/updateTicket/:ticketId", validateBus, updateTicket);
+router.put("/updateTicket/:ticketId", updateTicket);
+
 router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
 
 export default router;

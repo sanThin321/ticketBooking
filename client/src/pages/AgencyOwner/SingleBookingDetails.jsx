@@ -3,6 +3,7 @@ import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { Table } from "../../components/Table/Table";
 import axios from "axios";
 import { useEffect, useState } from "react";
+
 export const SingleBookingDetails = () => {
   const { id } = useParams();
 
