@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { AgencyBooking } from "../../components/Cards/AgencyBooking";
 import RegisterTicketBtn from "../../components/RegisterTicketBtn";
+import { useStore } from "../../context/Store";
 
 export const AgencyBookings = () => {
+  const { tickets, refreshTickets } = useStore();
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+
+  const handleEditClick = (ticket) => {
+    setSelectedTicket(ticket);
+  };
+
+  // useEffect(() => {
+  // }, [agencyMembers]);
+
+  useEffect(() => {
+    refreshTickets();
+  })
+
   return (
     <>
       <AdminHeader
@@ -15,9 +30,9 @@ export const AgencyBookings = () => {
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
-            <AgencyBooking />
-            <AgencyBooking />
-            <AgencyBooking />
+            {tickets.map((ticket, index) => {
+              return <AgencyBooking key={index} data={ticket} onEditClick={handleEditClick} selectedUser={selectedTicket}/>;
+            })}
           </div>
           <div
             className={`p-3 border border-secondary-subtle rounded ${

@@ -11,7 +11,6 @@ const addTicket = async (req, res) => {
       price,
       busId,
       totalSeat,
-      date,
     } = req.body;
     
     const newTicket = new Ticket({
@@ -22,9 +21,9 @@ const addTicket = async (req, res) => {
       arrivalTime,
       price,
       bus: busId,
-      availableSeats: totalSeat,
-      date,
+      availableSeats: 0,
     });
+
     const ticket = new Ticket(newTicket);
     await ticket.save();
     res.status(201).json({ message: "Ticket registered successfully" });
@@ -38,7 +37,7 @@ const getallTicket = async (req, res) => {
   try {
     const tickets = await Ticket.find()
       .populate({ path: "agencyId", select: "agencyName" })
-      .populate({ path: "bus", select: "totalSeat" });
+      .populate({ path: "bus", select: ["totalSeat", "busNumber"]});
     if (!tickets.length) {
       return res.status(404).json({ message: "No tickets found" });
     }
@@ -49,15 +48,22 @@ const getallTicket = async (req, res) => {
       .json({ message: "Could not retrieve tickets", error: err.message });
   }
 };
+
 const getTicket = async (req, res) => {
   try {
     const { ticket_id } = req.params;
     const ticket = await Ticket.findById(ticket_id)
       .populate({ path: "agencyId", select: "agencyName" })
-      .populate({ path: "bus", select: "totalSeat" });
+      .populate({ 
+        path: "bus", 
+        select: ["totalSeat", "busNumber", "driverId"],
+        populate: { path: "driverId", select: "fullName" } // Populating driverId with fullName
+      });
+
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
+
     return res.status(200).json(ticket);
   } catch (err) {
     return res
@@ -65,6 +71,7 @@ const getTicket = async (req, res) => {
       .json({ message: "Could not retrieve the ticket", error: err.message });
   }
 };
+
 
 // Update booked seats and availableSeats
 const updateBookedTicket = async (req, res) => {

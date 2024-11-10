@@ -15,7 +15,7 @@ export const StoreProvider = ({ children }) => {
   const getTickets = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4004/pelrizhabtho/getallticket",
+        "http://localhost:4004/pelrizhabtho/agency/getallticket",
         {
           headers: {
             Authorization: authorizationToken,

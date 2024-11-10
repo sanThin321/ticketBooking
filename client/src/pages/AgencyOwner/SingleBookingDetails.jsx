@@ -1,6 +1,48 @@
+import { useParams } from "react-router-dom";
 import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { Table } from "../../components/Table/Table";
+import axios from "axios";
+import { useEffect, useState } from "react";
 export const SingleBookingDetails = () => {
+  const { id } = useParams();
+
+  const [details, setDetails] = useState();
+
+  const getTicketDetails = async (id) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:4004/pelrizhabtho/agency/getticket/${id}`
+      );
+
+      if (res.status === 200) {
+        setDetails(res.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const departureTime = new Date(details?.departureTime).toLocaleTimeString(
+    [],
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }
+  );
+
+  const arrivalTime = new Date(details?.arrivalTime).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  const departureDate = new Date(details?.departureTime).toLocaleDateString(
+    "en-GB"
+  );
+
+  useEffect(() => {
+    getTicketDetails(id);
+  }, [id]);
+
   return (
     <>
       <AdminHeader title="Bookings / Details" />
@@ -8,11 +50,13 @@ export const SingleBookingDetails = () => {
         <div className="row">
           <div className="col p-3 me-2 container-background-color rounded border">
             <p className="mb-0">Bus</p>
-            <h3>Meto Transport</h3>
+            <h3>{details?.bus.busNumber}</h3>
           </div>
           <div className="col ms-2 p-3 container-background-color rounded border">
             <p className="mb-0">Route</p>
-            <h3>Thimphu - Phuntsholing</h3>
+            <h3>
+              {details?.from} - {details?.to}
+            </h3>
           </div>
         </div>
       </div>
@@ -20,29 +64,29 @@ export const SingleBookingDetails = () => {
         <div className="row">
           <div className="col">
             <p className="mb-0">Driver</p>
-            <h3>Pema Dorji</h3>
+            <h3>{details?.bus.driverId.fullName}</h3>
           </div>
           <div className="col">
             <p className="mb-0">Date</p>
-            <h3>01-03-2024</h3>
+            <h3>{departureDate}</h3>
           </div>
           <div className="col">
             <p className="mb-0">Total Seats</p>
-            <h3>24</h3>
+            <h3>{details?.bus.totalSeat}</h3>
           </div>
         </div>
         <div className="row mt-3">
           <div className="col">
             <p className="mb-0">Depature Time</p>
-            <h3>11:00 am</h3>
+            <h3>{departureTime}</h3>
           </div>
           <div className="col">
             <p className="mb-0">Arrival Time</p>
-            <h3>5:00 pm</h3>
+            <h3>{arrivalTime}</h3>
           </div>
           <div className="col">
             <p className="mb-0">Booked Seats</p>
-            <h3>20</h3>
+            <h3>{details?.booked.length}</h3>
           </div>
         </div>
       </div>

@@ -61,7 +61,8 @@ router.delete("/deletebus/:busId", deleteBus);
 router.post("/verify-payment", processPayment);
 
 //ticket
-router.post("/addTicket", validateBus, addTicket);
+// router.post("/addTicket", validateBus, addTicket);
+router.post("/addTicket", addTicket);
 router.get("/getallticket", getallTicket);
 router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);

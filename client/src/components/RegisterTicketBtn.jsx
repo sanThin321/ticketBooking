@@ -1,24 +1,62 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from "../context/Store";
 import { toast } from "react-toastify";
+import dzongkhagsAndDungkhags from "../data/Dzongkhags";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const RegisterTicketBtn = () => {
   const id = localStorage.getItem("agencyId");
-  const { refreshAgencyMembers } = useStore();
+  const { refreshAgencyMembers, agencyBuses, refreshAgencyBuses } = useStore();
 
+  const [fromSearch, setFromSearch] = useState("");
+  const [toSearch, setToSearch] = useState("");
+  const [selectedFrom, setSelectedFrom] = useState("From");
+  const [selectedTo, setSelectedTo] = useState("To");
+  const [isFromOpen, setIsFromOpen] = useState(false);
+  const [isToOpen, setIsToOpen] = useState(false);
   const [formData, setFormData] = useState({
     agencyId: id || "",
     from: "",
     to: "",
     departureTime: "",
     arrivalTime: "",
-    price: "",
-    busNumber: "",
-    date: "",
-    availableSeats: "",
+    price: 0,
+    busId: "",
     booked: [],
+    date: "",
   });
+
+  useEffect(() => {
+    refreshAgencyBuses(id);
+  }, [id]);
+
+  const filteredDzongkhagsFrom = dzongkhagsAndDungkhags.filter((opt) =>
+    opt.name.toLowerCase().includes(fromSearch.toLowerCase())
+  );
+
+  const filteredDzongkhagsTo = dzongkhagsAndDungkhags.filter((opt) =>
+    opt.name.toLowerCase().includes(toSearch.toLowerCase())
+  );
+
+  // Update selected locations in formData when dropdown selections are made
+  const handleFromSelection = (name) => {
+    setSelectedFrom(name);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      from: name,
+    }));
+    setIsFromOpen(false);
+  };
+
+  const handleToSelection = (name) => {
+    setSelectedTo(name);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      to: name,
+    }));
+    setIsToOpen(false);
+  };
 
   // Handle change for form fields
   const handleChange = (e) => {
@@ -32,35 +70,24 @@ const RegisterTicketBtn = () => {
   // Handle form submission
   const handleSubmit = async () => {
     try {
-      const {
-        agencyId,
-        from,
-        to,
-        departureTime,
-        arrivalTime,
-        price,
-        busNumber,
-        date,
-        availableSeats,
-      } = formData;
+      const { agencyId, from, to, departureTime, arrivalTime, price, busId } =
+        formData;
 
       if (
         !agencyId ||
-        !from ||
-        !to ||
+        from === "From" ||
+        to === "To" ||
         !departureTime ||
         !arrivalTime ||
         !price ||
-        !busNumber ||
-        !date ||
-        !availableSeats
+        !busId
       ) {
         toast.error("All fields are required.");
         return;
       }
 
       const response = await axios.post(
-        "http://localhost:4004/pelrizhabtho/agency/registerticket",
+        "http://localhost:4004/pelrizhabtho/agency/addTicket",
         formData
       );
 
@@ -69,18 +96,20 @@ const RegisterTicketBtn = () => {
         toast.success("Ticket registered successfully.");
       }
 
+      // Reset form after successful submission
       setFormData({
         agencyId: id || "",
         from: "",
         to: "",
         departureTime: "",
         arrivalTime: "",
-        price: "",
-        busNumber: "",
-        date: "",
-        availableSeats: "",
+        price: 0,
+        busId: "",
+        totalSeat: "",
         booked: [],
       });
+      setSelectedFrom("From");
+      setSelectedTo("To");
     } catch (error) {
       console.log("Error registering ticket. " + error.message);
       toast.error("Error registering ticket.");
@@ -122,30 +151,81 @@ const RegisterTicketBtn = () => {
               ></button>
             </div>
             <div className="modal-body">
-              {/* Ticket Form Fields */}
-              <div className="mb-3">
-                <label htmlFor="from">From</label>
-                <input
-                  name="from"
-                  value={formData.from}
-                  onChange={handleChange}
-                  className="form-control"
-                  type="text"
-                  id="from"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="to">To</label>
-                <input
-                  name="to"
-                  value={formData.to}
-                  onChange={handleChange}
-                  className="form-control"
-                  type="text"
-                  id="to"
-                  autoComplete="off"
-                />
+              <div className="mb-3 d-flex gap-2">
+                <div className="custom-dropdown">
+                  <div
+                    className="dropdown-header d-flex justify-content-between"
+                    onClick={() => setIsFromOpen(!isFromOpen)}
+                  >
+                    <span>{selectedFrom}</span>
+                    <span>
+                      {isFromOpen ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
+                    </span>
+                  </div>
+                  {isFromOpen && (
+                    <div className="dropdown-list p-1">
+                      <input
+                        type="search"
+                        className="form-control"
+                        placeholder="Search From"
+                        value={fromSearch}
+                        onChange={(e) => setFromSearch(e.target.value)}
+                      />
+                      <div className="dropdown-options">
+                        {filteredDzongkhagsFrom.map((opt) => (
+                          <div
+                            key={opt.id}
+                            className="dropdown-item"
+                            onClick={() => handleFromSelection(opt.name)}
+                          >
+                            {opt.name}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="custom-dropdown">
+                  <div
+                    className="dropdown-header d-flex justify-content-between"
+                    onClick={() => setIsToOpen(!isToOpen)}
+                  >
+                    <span>{selectedTo}</span>
+                    <span>
+                      {isToOpen ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
+                    </span>
+                  </div>
+                  {isToOpen && (
+                    <div className="dropdown-list p-1">
+                      <input
+                        type="search"
+                        className="form-control"
+                        placeholder="Search To"
+                        value={toSearch}
+                        onChange={(e) => setToSearch(e.target.value)}
+                      />
+                      <div className="dropdown-options">
+                        {filteredDzongkhagsTo.map((opt) => (
+                          <div
+                            key={opt.id}
+                            className="dropdown-item"
+                            onClick={() => handleToSelection(opt.name)}
+                          >
+                            {opt.name}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="mb-3">
                 <label htmlFor="departureTime">Departure Time</label>
@@ -153,35 +233,46 @@ const RegisterTicketBtn = () => {
                   name="departureTime"
                   value={formData.departureTime}
                   onChange={handleChange}
-                  className="form-control"
+                  className="form-control custom-search"
                   type="datetime-local"
                   id="departureTime"
                   autoComplete="off"
+                  min={new Date().toISOString().slice(0, 16)}
                 />
               </div>
+
               <div className="mb-3">
                 <label htmlFor="arrivalTime">Arrival Time</label>
                 <input
                   name="arrivalTime"
                   value={formData.arrivalTime}
                   onChange={handleChange}
-                  className="form-control"
+                  className="form-control custom-search"
                   type="datetime-local"
                   id="arrivalTime"
                   autoComplete="off"
+                  min={new Date().toISOString().slice(0, 16)}
                 />
               </div>
+
               <div className="mb-3">
-                <label htmlFor="date">Date</label>
-                <input
-                  name="date"
-                  value={formData.date}
+                <label htmlFor="busId" className="form-label">
+                  Bus
+                </label>
+                <select
+                  name="busId"
+                  className="form-select custom-search"
+                  aria-label="Select Driver"
+                  value={formData.busId}
                   onChange={handleChange}
-                  className="form-control"
-                  type="date"
-                  id="date"
-                  autoComplete="off"
-                />
+                >
+                  <option value="">Select Bus</option>
+                  {agencyBuses.map((bus, index) => (
+                    <option key={index} value={bus._id}>
+                      {bus.busNumber}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-3">
                 <label htmlFor="price">Price</label>
@@ -189,33 +280,9 @@ const RegisterTicketBtn = () => {
                   name="price"
                   value={formData.price}
                   onChange={handleChange}
-                  className="form-control"
+                  className="form-control custom-search"
                   type="number"
                   id="price"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="busNumber">Bus Number</label>
-                <input
-                  name="busNumber"
-                  value={formData.busNumber}
-                  onChange={handleChange}
-                  className="form-control"
-                  type="text"
-                  id="busNumber"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="availableSeats">Available Seats</label>
-                <input
-                  name="availableSeats"
-                  value={formData.availableSeats}
-                  onChange={handleChange}
-                  className="form-control"
-                  type="number"
-                  id="availableSeats"
                   autoComplete="off"
                 />
               </div>
