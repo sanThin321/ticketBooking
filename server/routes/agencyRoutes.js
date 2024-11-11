@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addTicket,
+  bookedDetail,
   delateTicket,
   getallTicket,
   getTicket,
@@ -42,38 +43,38 @@ router.get("/getAllBuses", getAllBuses);
 
 
 // Combined GET method for all agency data
-router.get("/getagencydata/:agencyId", async (req, res) => {
-  const { agencyId } = req.params;
+// router.get("/getagencydata/:agencyId", async (req, res) => {
+//   const { agencyId } = req.params;
 
-  try {
-    // Get all schedules
-    const schedules = await getAllSchedules(agencyId);
+//   try {
+//     // Get all members
+//     const members = await getAllMembers({ params: { agencyId } });
 
-    // Get all members
-    const members = await getAllMembers({ params: { agencyId } });
+//     // Combine the data
+//     const result = {
+//       members,
+//     };
 
-    // Combine the data
-    const result = {
-      schedules,
-      members,
-    };
-
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving data", error });
-  }
-});
+//     res.status(200).json(result);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving data", error });
+//   }
+// });
 
 //payment
 
 router.post("/verify-payment", processPayment);
 
 //ticket
-router.post("/addTicket", validateBus, addTicket);
+// router.post("/addTicket", validateBus, addTicket);
+router.post("/addTicket", addTicket);
 router.get("/getallticket", getallTicket);
 router.get("/getticket/:ticket_id", getTicket);
 router.put("/tickets/:ticket_id/book", updateBookedTicket);
 router.delete("/deleteTicket/:ticketId", delateTicket);
-router.put("/updateTicket/:ticketId", validateBus, updateTicket);
+// router.put("/updateTicket/:ticketId", validateBus, updateTicket);
+router.put("/updateTicket/:ticketId", updateTicket);
+
+router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
 
 export default router;

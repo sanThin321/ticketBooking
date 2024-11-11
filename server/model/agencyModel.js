@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-//Register member
+// Register member schema
 const registerSchema = new mongoose.Schema({
     agencyId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'User',
+        ref: 'User',
         required: true
     },
     fullName: {
@@ -33,38 +33,35 @@ const registerSchema = new mongoose.Schema({
     }
 });
 
-//register bus
-const registerBusSchema=new mongoose.Schema({
+// Register bus schema
+const registerBusSchema = new mongoose.Schema({
     agencyId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    driverId:{
+    driverId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'RegisterMember',
-        required:true
+        ref: 'Register_member',  // Ensure this matches the model name exactly
+        required: true
     },
-    busNumber:{
-        type:String,
-        required: true,
+    busNumber: {
+        type: String,
+        required: false,
         unique: true
     },
-    totalSeat:{
-        type:Number,
-        required:true
+    totalSeat: {
+        type: String,
+        required: false
     },
-    imageOfTheBus:{
-        type:String,
-        required:true
-    },
-    driverName:{
-        type:String,
-        required:true
+    imageOfTheBus: {
+        type: String,
+        required: false
     }
-})
+});
 
-const RegisterMember =mongoose.model('Register_member', registerSchema,'Register_member');
-const RegisterBus=mongoose.model('Register_Bus', registerBusSchema, 'Register_Bus');
-export {RegisterMember, RegisterBus};
+// Register models
+const RegisterMember = mongoose.model('Register_member', registerSchema);
+const RegisterBus = mongoose.model('Register_Bus', registerBusSchema);
 
+export { RegisterMember, RegisterBus };

@@ -1,10 +1,11 @@
 import { Armchair, CalendarDays, ChevronRight, Minus } from "lucide-react";
 import Bus from "../../assets/Bus.png";
 import AgencyLogo from "../../assets/AgencyLogo.jpeg";
+import { Link } from "react-router-dom";
 
-export const AdminBooking = () => {
+export const AgencyBooking = () => {
   return (
-    <div className="bg-white rounded container-shadow py-3 px-4 mb-3">
+    <div className="bg-white rounded border py-3 px-4 mb-3">
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3">
           <div
@@ -95,12 +96,14 @@ export const AdminBooking = () => {
         </div>
 
         <div>
-          <button
-            className="btn px-2"
-            style={{ border: "1.5px solid #8DD3BB" }}
-          >
-            <ChevronRight />
-          </button>
+          <Link to={`/agency/booking-sigle/3`}>
+            <button
+              className="btn px-2 hover"
+              style={{ border: "1.5px solid #8DD3BB" }}
+            >
+              <ChevronRight />
+            </button>
+          </Link>
         </div>
       </div>
     </div>

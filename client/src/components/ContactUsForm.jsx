@@ -57,7 +57,7 @@ export const ContactUsForm = () => {
             <div className="mb-3">
               <input
                 type="email"
-                className="form-control"
+                className="form-control custom-search"
                 placeholder="Your email address"
                 value={email}
                 onChange={handleEmailChange}
@@ -65,7 +65,7 @@ export const ContactUsForm = () => {
             </div>
             <div className="mb-3">
               <textarea
-                className="form-control"
+                className="form-control custom-search"
                 rows="6"
                 placeholder="Message"
                 value={message}

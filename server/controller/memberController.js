@@ -146,6 +146,27 @@ const getAllDriver = async (req, res) => {
   } catch (error) {
   }
 };
+
+// export const getMember = async (req, res) => {
+//   try {
+//     const { Id } = req.params;
+
+//     const member = await RegisterMember.find({ agencyId })
+//       .populate("agencyId", "agencyName")
+//       .select("-password");
+
+//     if (members.length === 0) {
+//       return res
+//         .status(404)
+//         .json({ message: "No members found for this agency" });
+//     }
+
+//     res.status(200).json({ members });
+//   } catch (error) {
+//     console.error("Error fetching members by agency ID:", error);
+//     res.status(500).json({ message: "Error fetching members", error });
+//   }
+// };
 export { getAllDriver };
 
 const getDriverCount = async (req, res) => {

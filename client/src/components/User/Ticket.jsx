@@ -2,6 +2,19 @@ import { Armchair } from "lucide-react";
 import agencyLogo from "../../assets/AgencyLogo.jpeg";
 
 export const Ticket = ({ ticket }) => {
+    // Format the departure and arrival times
+    const departureTime = new Date(ticket?.departureTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  
+    const arrivalTime = new Date(ticket?.arrivalTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  
   return (
     <div className="container border p-3 rounded mb-2">
       <div className="row">
@@ -19,7 +32,7 @@ export const Ticket = ({ ticket }) => {
                     <small>{ticket.from}</small>
                   </p>
                   <h6>
-                    <strong>{ticket.departureTime}</strong>
+                    <strong>{departureTime}</strong>
                   </h6>
                 </div>
 
@@ -28,7 +41,7 @@ export const Ticket = ({ ticket }) => {
                     <small>{ticket.to}</small>
                   </p>
                   <h6>
-                    <strong>{ticket.arrivalTime}</strong>
+                    <strong>{arrivalTime}</strong>
                   </h6>
                 </div>
               </div>
@@ -39,7 +52,7 @@ export const Ticket = ({ ticket }) => {
                   <small>Total seats</small>
                 </p>
                 <p>
-                  <strong className="me-2">{ticket.totalSeats}</strong>
+                  <strong className="me-2">{ticket.bus.totalSeat}</strong>
                   <Armchair color="#8DD3BB" size={20} />
                 </p>
               </div>

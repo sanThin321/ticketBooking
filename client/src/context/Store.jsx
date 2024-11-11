@@ -9,12 +9,13 @@ export const StoreProvider = ({ children }) => {
   const { authorizationToken} = useAuth();
   const [tickets, setTickets] = useState([]);
   const [agencyMembers, setAgencyMembers] = useState([]);
+  const [agencyBuses, setAgencyBuses] = useState([])
 
   // get tickets
   const getTickets = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4004/pelrizhabtho/getallticket",
+        "http://localhost:4004/pelrizhabtho/agency/getallticket",
         {
           headers: {
             Authorization: authorizationToken,
@@ -39,7 +40,7 @@ export const StoreProvider = ({ children }) => {
   const getAgencyMembers = async (id) => {
     try {
       const res = await axios.get(
-        `http://localhost:4004/pelrizhabtho/allmembers/${id}`
+        `http://localhost:4004/pelrizhabtho/agency/allmembers/${id}`
       );
 
       if (res.status === 200) {
@@ -56,13 +57,31 @@ export const StoreProvider = ({ children }) => {
     getAgencyMembers(id);
   };
 
+  const getAgencyBus = async (agencyId) => {
+    try {
+      const res = await axios.get(`http://localhost:4004/pelrizhabtho/agency/getallbus/${agencyId}`)
+      if (res.status === 200) {
+        setAgencyBuses(res.data.buses)
+      }
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  const refreshAgencyBuses = (id) => {
+    getAgencyBus(id);
+  };
+
   return (
     <StoreContext.Provider
       value={{
         tickets,
         refreshTickets,
         agencyMembers,
-        refreshAgencyMembers
+        refreshAgencyMembers,
+        refreshAgencyBuses,
+        agencyBuses
+
       }}
     >
       {children}

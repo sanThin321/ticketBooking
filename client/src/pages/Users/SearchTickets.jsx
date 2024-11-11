@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "../../context/Store";
 
 export const SearchTickets = () => {
-  const {tickets, refreshTickets} = useStore();
+  const { tickets, refreshTickets } = useStore();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -17,18 +17,29 @@ export const SearchTickets = () => {
 
   const [filteredTickets, setFilteredTickets] = useState(tickets);
   const [visibleTickets, setVisibleTickets] = useState(3);
-  const [from, setFrom] = useState(pfrom ? pfrom:"From");
-  const [to, setTo] = useState(pto? pto : "To");
+  const [from, setFrom] = useState(pfrom ? pfrom : "From");
+  const [to, setTo] = useState(pto ? pto : "To");
   const [date, setDate] = useState(pdate ? pdate : "Date");
 
   const filterTickets = (searchFrom, searchTo, searchDate) => {
-    const filtered = tickets.filter(
-      (ticket) =>
+    console.log("search date: " + searchDate);
+
+    const filtered = tickets.filter((ticket) => {
+      const ticketDate = new Date(ticket?.departureTime)
+        .toISOString()
+        .split("T")[0];
+      const formattedSearchDate = new Date(searchDate && searchDate)
+        .toISOString()
+        .split("T")[0];
+
+      return (
         (!searchFrom ||
           ticket.from.toLowerCase() === searchFrom.toLowerCase()) &&
         (!searchTo || ticket.to.toLowerCase() === searchTo.toLowerCase()) &&
-        (!searchDate || ticket.date === searchDate)
-    );
+        (!searchDate || ticketDate == formattedSearchDate)
+      );
+    });
+
     setFilteredTickets(filtered);
   };
 
@@ -49,7 +60,7 @@ export const SearchTickets = () => {
 
   useEffect(() => {
     refreshTickets();
-  })
+  });
 
   return (
     <>
@@ -71,12 +82,9 @@ export const SearchTickets = () => {
                 <h5>No ticket available.</h5>
               </div>
             ) : (
-              filteredTickets.slice(0, visibleTickets).map((ticket) => (
-                <div
-                  key={ticket.id}
-                  onClick={() => handleTicketClick(ticket._id)}
-                >
-                  <Ticket ticket={ticket} />
+              filteredTickets.slice(0, visibleTickets).map((ticket, index) => (
+                <div key={index} onClick={() => handleTicketClick(ticket._id)}>
+                  <Ticket key={index} ticket={ticket} />
                 </div>
               ))
             )}
