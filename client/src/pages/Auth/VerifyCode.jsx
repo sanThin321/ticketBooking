@@ -69,7 +69,7 @@ export const VerifyCode = () => {
                     id="code"
                     name="code"
                     type="text"
-                    className="form-control"
+                    className="form-control custom-search"
                     value={user.code}
                     onChange={handleChange}
                     autoComplete="off"
