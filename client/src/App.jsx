@@ -21,6 +21,7 @@ import { SearchTickets } from "./pages/Users/SearchTickets";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 
+//main function 
 const App = () => {
   return (
     <BrowserRouter>

@@ -42,8 +42,6 @@ export const VerifyCode = () => {
 
   return (
     <>
-      <div>VerifyCode</div>
-
       <div className="container">
         <div className="row py-5">
           <div className="col-12 col-md-7 col-lg-7 pe-5">
@@ -71,7 +69,7 @@ export const VerifyCode = () => {
                     id="code"
                     name="code"
                     type="text"
-                    className="form-control"
+                    className="form-control custom-search"
                     value={user.code}
                     onChange={handleChange}
                     autoComplete="off"

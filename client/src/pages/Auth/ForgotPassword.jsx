@@ -46,7 +46,7 @@ export const ForgotPassword = () => {
 
   return (
     <>
-      <div>ForgotPassword</div>
+
       <div className="container">
         <div className="row py-5">
           <div className="col-12 col-md-7 col-lg-7 pe-5">
