@@ -19,8 +19,9 @@ import {
   updateMember,
   deleteMember,
   getAllDriver,
+  getDriverCount,
 } from "../controller/memberController.js";
-import { registerBus, getAllBus, updateBus, deleteBus } from "../controller/busController.js";
+import { getAllBuses, registerBus, getBusCount } from "../controller/busController.js";
 // import { createRouteWithSchedule } from "../controller/routeandschedule.js";
 import { processPayment } from "../controller/paymentController.js";
 const router = express.Router();
@@ -29,14 +30,18 @@ const router = express.Router();
 router.post("/registermember", registerMember);
 router.put("/updatemember/:memberId", updateMember);
 router.delete("/deletemember/:memberId", deleteMember);
-router.get("/getallDriver", getAllDriver);
-router.get("/allmembers/:agencyId", getAllMembers);
+router.get("/getallDriver",getAllDriver)
+router.get("/getdrivercount",getDriverCount)
+
 
 // Agency Bus
-router.post("/registerbus", registerBus);
-router.get("/getallbus/:agencyId", getAllBus);
-router.put("/updatebus/:busId", updateBus);
-router.delete("/deletebus/:busId", deleteBus);
+router.post("/registerbus", validateDriver, registerBus);
+// router.post("/registerroute", vaildBus, createRouteWithSchedule);
+router.get("/bus-count", getBusCount);
+router.get("/getAllBuses", getAllBuses);
+
+
+
 // Combined GET method for all agency data
 // router.get("/getagencydata/:agencyId", async (req, res) => {
 //   const { agencyId } = req.params;
