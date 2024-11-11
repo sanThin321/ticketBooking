@@ -80,7 +80,7 @@ export const ForgotPassword = () => {
                     id="email"
                     name="email"
                     type="email"
-                    className="form-control"
+                    className="form-control custom-search"
                     value={user.email}
                     onChange={handleChange}
                     autoComplete="off"

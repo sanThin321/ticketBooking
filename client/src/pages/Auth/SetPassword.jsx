@@ -89,7 +89,7 @@ export const SetPassword = () => {
                     id="password"
                     name="password"
                     type="password"
-                    className="form-control"
+                    className="form-control custom-search"
                     value={user.password}
                     onChange={handleChange}
                     autoComplete="off"

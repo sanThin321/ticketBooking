@@ -16,14 +16,13 @@ export const Seats = ({ onSeatSelection, selectedSeats, booked = [] }) => {
     <div className="d-flex justify-content-end">
       {columns.map((columnSeats, colIndex) => (
         <div
-          className={`${
-            colIndex < 2 ? "me-0" : colIndex === 2 ? "ms-5 ps-3" : "ms-0"
-          }`}
+          className={`${colIndex < 2 ? "me-0" : colIndex === 2 ? "ms-5 ps-3" : "ms-0"
+            }`}
           key={colIndex}
         >
           {columnSeats.map((seatNumber) => {
-            const isBooked = isSeatBooked(seatNumber); 
-            const isSelected = selectedSeats.has(seatNumber); 
+            const isBooked = isSeatBooked(seatNumber);
+            const isSelected = selectedSeats.has(seatNumber);
 
             return (
               <button

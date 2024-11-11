@@ -29,7 +29,7 @@ export const LogIn = () => {
       toast.error("Fields cannot be empty.")
       return;
     }
-    
+
     try {
       const response = axios.post(
         "http://localhost:4004/pelrizhabtho/login",
@@ -42,19 +42,19 @@ export const LogIn = () => {
         navigate("/");
       }
 
-      if ((await response).status == 401 || (await response).status == 400 ) {
+      if ((await response).status == 401 || (await response).status == 400) {
         toast.error("Invalid email or password.")
         return;
       }
 
     } catch (error) {
-      if ((await error).status == 401 || (await error).status == 400 ) {
+      if ((await error).status == 401 || (await error).status == 400) {
         toast.error("Invalid email or password.")
         return;
       }
-        console.log(error.message)
-   
-      
+      console.log(error.message)
+
+
     }
   };
 
@@ -93,7 +93,7 @@ export const LogIn = () => {
                   name="password"
                   autoComplete="off"
                   type="password"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={userCredentials.password}
                   onChange={handleChange}
                 />

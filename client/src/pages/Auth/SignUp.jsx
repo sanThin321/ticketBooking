@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const SignUp = () => {
-  const {navigate} = useNavigate();
+  const { navigate } = useNavigate();
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -64,7 +64,7 @@ export const SignUp = () => {
         toast.warning("User alredy registered.")
         return;
       }
-      
+
       console.error("Sign up failed. Try later. " + error.message)
     }
   };
@@ -99,7 +99,7 @@ export const SignUp = () => {
                   id="firstName"
                   type="text"
                   autoComplete="off"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.firstName}
                   onChange={handleChange}
                 />
@@ -112,7 +112,7 @@ export const SignUp = () => {
                 <input
                   id="lastName"
                   type="text"
-                  className="form-control"
+                  className="form-control custom-search"
                   autoComplete="off"
                   value={user.lastName}
                   onChange={handleChange}
@@ -128,7 +128,7 @@ export const SignUp = () => {
                 <input
                   id="email"
                   type="email"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.email}
                   onChange={handleChange}
                   autoComplete="off"
@@ -142,7 +142,7 @@ export const SignUp = () => {
                 <input
                   id="phoneNumber"
                   type="text"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.phoneNumber}
                   onChange={handleChange}
                   autoComplete="off"
@@ -159,7 +159,7 @@ export const SignUp = () => {
                   id="password"
                   autoComplete="off"
                   type="password"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.password}
                   onChange={handleChange}
                 />
@@ -173,7 +173,7 @@ export const SignUp = () => {
                   id="confirmPassword"
                   type="password"
                   autoComplete="off"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.confirmPassword}
                   onChange={handleChange}
                 />
@@ -183,7 +183,7 @@ export const SignUp = () => {
             <div className="col-auto mb-4 d-flex gap-5">
               <div className="form-check">
                 <input
-                  className="form-check-input"
+                  className="form-check-input custom-search"
                   type="radio"
                   name="userType"
                   id="Customer"
@@ -196,7 +196,7 @@ export const SignUp = () => {
               </div>
               <div className="form-check">
                 <input
-                  className="form-check-input"
+                  className="form-check-input custom-search"
                   type="radio"
                   name="userType"
                   id="Agency"
@@ -218,7 +218,7 @@ export const SignUp = () => {
                 <input
                   id="agencyName"
                   type="text"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.agencyName}
                   onChange={handleChange}
                   placeholder="Tashi Transport"
