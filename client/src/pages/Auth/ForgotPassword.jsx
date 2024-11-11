@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export const ForgotPassword = () => {
   const [user, setUser] = useState({
-    email: ""
+    email: "",
   });
-
+  const navigate = useNavigate();
   const handleChange = (event) => {
     const { name, value } = event.target;
     setUser((prevUser) => ({
@@ -16,11 +17,30 @@ export const ForgotPassword = () => {
     }));
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Handle form submission, e.g., API call to log in
-    console.log('Submitting form with:', user);
+    if (!user.email) {
+      toast.error("Fields cannot be empty.");
+      return;
+    }
+    try {
+      const response = axios.post(
+        "http://localhost:4004/pelrizhabtho/forgotPassword",
+        user
+      );
+      if ((await response).status == 200) {
+        toast.success("Verify code have been send successful.");
+        navigate("/verify-code");
+      }
+      if ((await response).status == 401 || (await response).status == 400) {
+        toast.error("Invalid email");
+        return;
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+    console.log("Submitting form with:", user);
     // Add your login logic here
   };
 
@@ -44,7 +64,10 @@ export const ForgotPassword = () => {
                 Sign Up
               </Link>
               <h1>Set Password</h1>
-              <p>Forgot your password? Dont worry, happens to all of us. Enter your email below to recover your password. </p>
+              <p>
+                Forgot your password? Dont worry, happens to all of us. Enter
+                your email below to recover your password.{" "}
+              </p>
             </div>
 
             <form className="g-3 pe-5" onSubmit={handleSubmit}>
@@ -63,7 +86,6 @@ export const ForgotPassword = () => {
                     autoComplete="off"
                   />
                 </div>
-
               </div>
 
               <div className="col-auto w-100">
@@ -81,8 +103,7 @@ export const ForgotPassword = () => {
             <img src={dzong} className="img-fluid rounded" alt="dzong" />
           </div>
         </div>
-      </div >
+      </div>
     </>
-  )
-}
-
+  );
+};

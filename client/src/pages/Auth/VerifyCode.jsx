@@ -1,12 +1,14 @@
 import { useState } from "react";
 import dzong from "../../assets/dzong.jpeg";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const VerifyCode = () => {
-
   const [user, setUser] = useState({
-    code: ""
+    code: "",
   });
-
+  const navigate = useNavigate();
   const handleChange = (event) => {
     const { name, value } = event.target;
     setUser((prevUser) => ({
@@ -15,12 +17,27 @@ export const VerifyCode = () => {
     }));
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission, e.g., API call to log in
-    console.log('Submitting form with:', user);
-    // Add your login logic here
+    if (!user.code) {
+      toast.error("Fields cannot be empty.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:4004/pelrizhabtho/verifyCode",
+        { code: user.code }
+      );
+
+      if (response.status === 200) {
+        const { redirectUrl } = response.data;
+        localStorage.setItem("userId", redirectUrl); // Store userId in local storage
+        toast.success("Code verified! Redirecting to reset password...");
+        navigate("/set-password");
+      }
+    } catch (error) {
+      toast.error("Invalid or expired token.");
+    }
   };
 
   return (
@@ -37,9 +54,8 @@ export const VerifyCode = () => {
         width={210}
       /> */}
             <div className="mb-4">
-              <ol><li
-                style={{ listStyleType: 'none' }}>
-                Back to login</li>
+              <ol>
+                <li style={{ listStyleType: "none" }}>Back to login</li>
               </ol>
               <h1>Verify Code</h1>
               <p> An authentication code has been sent to your email.</p>
@@ -56,12 +72,11 @@ export const VerifyCode = () => {
                     name="code"
                     type="text"
                     className="form-control"
-                    value={user.email}
+                    value={user.code}
                     onChange={handleChange}
                     autoComplete="off"
                   />
                 </div>
-
               </div>
 
               <div className="col-auto w-100">
@@ -79,7 +94,7 @@ export const VerifyCode = () => {
             <img src={dzong} className="img-fluid rounded" alt="dzong" />
           </div>
         </div>
-      </div >
+      </div>
     </>
-  )
-}
+  );
+};
