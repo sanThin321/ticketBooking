@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 export const SetPassword = () => {
   const [user, setUser] = useState({
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const handleChange = (event) => {
@@ -15,12 +16,41 @@ export const SetPassword = () => {
       [name]: value,
     }));
   };
-
-
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!user.password || !user.confirmPassword) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    if (user.password !== user.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `http://localhost:4004/pelrizhabtho/resetPassword/${userId}`,
+        {
+          newPassword: user.password,
+          confirmPassword: user.confirmPassword,
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Password reset successful!");
+        localStorage.removeItem("userId"); // Clear userId from local storage
+        navigate("/login");
+      } else {
+        toast.error("Failed to reset password.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while resetting the password.");
+    }
     // Handle form submission, e.g., API call to log in
-    console.log('Submitting form with:', user);
+    console.log("Submitting form with:", user);
     // Add your login logic here
   };
 
@@ -44,7 +74,10 @@ export const SetPassword = () => {
                 back to login
               </Link>
               <h1>Set a Password</h1>
-              <p>Your previous password has been reset. Please set a new password for your account. </p>
+              <p>
+                Your previous password has been reset. Please set a new password
+                for your account.{" "}
+              </p>
             </div>
 
             <form className="g-3 pe-5" onSubmit={handleSubmit}>
@@ -77,7 +110,6 @@ export const SetPassword = () => {
                     onChange={handleChange}
                   />
                 </div>
-
               </div>
 
               <div className="col-auto w-100">
@@ -95,7 +127,7 @@ export const SetPassword = () => {
             <img src={dzong} className="img-fluid rounded" alt="dzong" />
           </div>
         </div>
-      </div >
+      </div>
     </>
-  )
-}
+  );
+};
