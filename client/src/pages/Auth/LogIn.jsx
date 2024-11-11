@@ -48,7 +48,10 @@ export const LogIn = () => {
       }
 
     } catch (error) {
-     
+      if ((await error).status == 401 || (await error).status == 400 ) {
+        toast.error("Invalid email or password.")
+        return;
+      }
         console.log(error.message)
    
       
@@ -74,7 +77,7 @@ export const LogIn = () => {
                   id="email"
                   name="email"
                   type="email"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={userCredentials.email}
                   onChange={handleChange}
                   autoComplete="off"
