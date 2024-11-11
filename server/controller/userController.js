@@ -317,7 +317,7 @@ export const resetPassword = async (req, res) => {
     }
 
     // Update the user's password
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword
     user.resetPasswordToken = undefined; // Clear reset token
     user.resetPasswordExpire = undefined; // Clear token expiration
     await user.save();
