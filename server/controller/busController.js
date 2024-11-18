@@ -24,7 +24,7 @@ export const registerBus = async (req, res) => {
   }
 };
 
-//update
+//update bus info
 export const updateBus=async(req,res)=>{
   try{
     const{busId}=req.params;
