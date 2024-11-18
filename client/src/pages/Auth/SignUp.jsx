@@ -72,7 +72,7 @@ export const SignUp = () => {
   return (
     <div className="container">
       <div className="row py-5">
-        <div className="col-12 col-md-5 col-lg-5">
+        <div className="col-12 col-md-5 col-lg-5 d-none d-md-block">
           <img src={dzong} className="img-fluid rounded" alt="dzong" />
         </div>
         <div className="col-12 col-md-7 col-lg-7 ps-5">
@@ -232,7 +232,7 @@ export const SignUp = () => {
                 className="btn mb-3 w-100"
                 style={{ backgroundColor: "#8DD3BB" }}
               >
-                Sing up
+                Sign up
               </button>
               <div className="d-flex gap-3 ">
                 <p>Already have an account?</p>

@@ -99,7 +99,7 @@ export const ForgotPassword = () => {
               </div>
             </form>
           </div>
-          <div className="col-12 col-md-5 col-lg-5">
+          <div className="col-12 col-md-5 col-lg-5 d-none d-md-block">
             <img src={dzong} className="img-fluid rounded" alt="dzong" />
           </div>
         </div>
