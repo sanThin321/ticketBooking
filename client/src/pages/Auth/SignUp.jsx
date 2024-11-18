@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const SignUp = () => {
-  const {navigate} = useNavigate();
+  const { navigate } = useNavigate();
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -42,10 +42,7 @@ export const SignUp = () => {
         user
       )
 
-      if (response.status === 400) {
-        toast.warning("User alredy registered.")
-      }
-      if (response.statusText === "OK") {
+      if (response.status === 200) {
         toast.success("Sign up successful.")
         navigate("/signin")
         setUser({
@@ -60,10 +57,14 @@ export const SignUp = () => {
         })
       }
     } catch (error) {
+      if (error.status === 404) {
+        toast.warning("User alredy registered. Login.")
+      }
       if (error.status === 400) {
         toast.warning("User alredy registered.")
+        return;
       }
-      
+
       console.error("Sign up failed. Try later. " + error.message)
     }
   };
@@ -71,7 +72,7 @@ export const SignUp = () => {
   return (
     <div className="container">
       <div className="row py-5">
-        <div className="col-12 col-md-5 col-lg-5">
+        <div className="col-12 col-md-5 col-lg-5 d-none d-md-block">
           <img src={dzong} className="img-fluid rounded" alt="dzong" />
         </div>
         <div className="col-12 col-md-7 col-lg-7 ps-5">
@@ -98,7 +99,7 @@ export const SignUp = () => {
                   id="firstName"
                   type="text"
                   autoComplete="off"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.firstName}
                   onChange={handleChange}
                 />
@@ -111,7 +112,7 @@ export const SignUp = () => {
                 <input
                   id="lastName"
                   type="text"
-                  className="form-control"
+                  className="form-control custom-search"
                   autoComplete="off"
                   value={user.lastName}
                   onChange={handleChange}
@@ -127,7 +128,7 @@ export const SignUp = () => {
                 <input
                   id="email"
                   type="email"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.email}
                   onChange={handleChange}
                   autoComplete="off"
@@ -141,7 +142,7 @@ export const SignUp = () => {
                 <input
                   id="phoneNumber"
                   type="text"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.phoneNumber}
                   onChange={handleChange}
                   autoComplete="off"
@@ -158,7 +159,7 @@ export const SignUp = () => {
                   id="password"
                   autoComplete="off"
                   type="password"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.password}
                   onChange={handleChange}
                 />
@@ -172,7 +173,7 @@ export const SignUp = () => {
                   id="confirmPassword"
                   type="password"
                   autoComplete="off"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.confirmPassword}
                   onChange={handleChange}
                 />
@@ -182,7 +183,7 @@ export const SignUp = () => {
             <div className="col-auto mb-4 d-flex gap-5">
               <div className="form-check">
                 <input
-                  className="form-check-input"
+                  className="form-check-input custom-search"
                   type="radio"
                   name="userType"
                   id="Customer"
@@ -195,7 +196,7 @@ export const SignUp = () => {
               </div>
               <div className="form-check">
                 <input
-                  className="form-check-input"
+                  className="form-check-input custom-search"
                   type="radio"
                   name="userType"
                   id="Agency"
@@ -217,7 +218,7 @@ export const SignUp = () => {
                 <input
                   id="agencyName"
                   type="text"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={user.agencyName}
                   onChange={handleChange}
                   placeholder="Tashi Transport"
@@ -231,7 +232,7 @@ export const SignUp = () => {
                 className="btn mb-3 w-100"
                 style={{ backgroundColor: "#8DD3BB" }}
               >
-                Sing up
+                Sign up
               </button>
               <div className="d-flex gap-3 ">
                 <p>Already have an account?</p>

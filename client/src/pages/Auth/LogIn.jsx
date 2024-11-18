@@ -29,7 +29,7 @@ export const LogIn = () => {
       toast.error("Fields cannot be empty.")
       return;
     }
-    
+
     try {
       const response = axios.post(
         "http://localhost:4004/pelrizhabtho/login",
@@ -42,16 +42,19 @@ export const LogIn = () => {
         navigate("/");
       }
 
-      if ((await response).status == 401 || (await response).status == 400 ) {
+      if ((await response).status == 401 || (await response).status == 400) {
         toast.error("Invalid email or password.")
         return;
       }
 
     } catch (error) {
-     
-        console.log(error.message)
-   
-      
+      if ((await error).status == 401 || (await error).status == 400) {
+        toast.error("Invalid email or password.")
+        return;
+      }
+      console.log(error.message)
+
+
     }
   };
 
@@ -74,7 +77,7 @@ export const LogIn = () => {
                   id="email"
                   name="email"
                   type="email"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={userCredentials.email}
                   onChange={handleChange}
                   autoComplete="off"
@@ -90,7 +93,7 @@ export const LogIn = () => {
                   name="password"
                   autoComplete="off"
                   type="password"
-                  className="form-control"
+                  className="form-control custom-search"
                   value={userCredentials.password}
                   onChange={handleChange}
                 />
@@ -126,7 +129,7 @@ export const LogIn = () => {
             </div>
           </form>
         </div>
-        <div className="col-12 col-md-5 col-lg-5">
+        <div className="col-12 col-md-5 col-lg-5 d-none d-md-block">
           <img src={dzong} className="img-fluid rounded" alt="dzong" />
         </div>
       </div>

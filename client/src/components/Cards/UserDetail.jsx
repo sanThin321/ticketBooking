@@ -222,7 +222,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
                         id="fullName"
                         name="fullName"
                         placeholder="Enter details"
-                        className="form-control"
+                        className="form-control custom-search"
                         value={formData.fullName}
                         onChange={handleChange}
                       />
@@ -235,7 +235,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
                         id="phoneNumber"
                         name="phoneNumber"
                         placeholder="Enter contact number"
-                        className="form-control"
+                        className="form-control custom-search"
                         value={formData.phoneNumber}
                         onChange={handleChange}
                       />
@@ -248,7 +248,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
                         id="email"
                         name="email"
                         placeholder="Enter email"
-                        className="form-control"
+                        className="form-control custom-search"
                         value={formData.email}
                         onChange={handleChange}
                       />
@@ -277,7 +277,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
                           name="password"
                           value={formData.password}
                           onChange={handleChange}
-                          className="form-control"
+                          className="form-control custom-search"
                           type="password"
                           id="password"
                         />

@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 export const AgencyBooking = ({ data, onEditClick, selectedTicket }) => {
-  const { agencyBuses, refreshAgencyBuses, refreshTickets} = useStore();
+  const { agencyBuses, refreshAgencyBuses, refreshTickets } = useStore();
   const aid = localStorage.getItem("agencyId");
 
   const [formData, setFormData] = useState({
@@ -319,7 +319,7 @@ export const AgencyBooking = ({ data, onEditClick, selectedTicket }) => {
                           <div className="dropdown-list p-1">
                             <input
                               type="search"
-                              className="form-control"
+                              className="form-control custom-search"
                               placeholder="Search From"
                               value={fromSearch}
                               onChange={(e) => setFromSearch(e.target.value)}
@@ -356,7 +356,7 @@ export const AgencyBooking = ({ data, onEditClick, selectedTicket }) => {
                           <div className="dropdown-list p-1">
                             <input
                               type="search"
-                              className="form-control"
+                              className="form-control custom-search"
                               placeholder="Search To"
                               value={toSearch}
                               onChange={(e) => setToSearch(e.target.value)}

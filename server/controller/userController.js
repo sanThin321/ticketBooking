@@ -272,11 +272,11 @@ export const forgotPassword = async (req, res) => {
 
 // Verify token
 export const verifyCode = async (req, res) => {
-  const { token } = req.body;
+  const { code } = req.body;
 
   try {
     // Hash the provided token
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const hashedToken = crypto.createHash("sha256").update(code).digest("hex");
 
     // Find user with the hashed token and check if token is still valid
     const user = await User.findOne({
@@ -287,12 +287,9 @@ export const verifyCode = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
-    const resetUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/pelrizhabtho/resetpassword/${user._id}`;
     res.status(200).json({
       message: "Token is valid",
-      redirectUrl: resetUrl,
+      redirectUrl: user._id,
     });
   } catch (err) {
     console.error(err);
@@ -303,25 +300,24 @@ export const verifyCode = async (req, res) => {
 
 // Reset password using the temporary token
 export const resetPassword = async (req, res) => {
-  const { tempToken, newPassword, confirmPassword } = req.body;
+  const { newPassword, confirmPassword } = req.body;
+  const { userId } = req.params;
 
   try {
+    // Check if passwords match
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    // Verify the temporary token
-    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
-
-    // Find user by ID from the temporary token
-    const user = await User.findById(decoded.userId);
+    // Find user by ID
+    const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Set the new password
-    user.password = await bcrypt.hash(newPassword, 10);
+    // Update the user's password
+    user.password = newPassword
     user.resetPasswordToken = undefined; // Clear reset token
     user.resetPasswordExpire = undefined; // Clear token expiration
     await user.save();
@@ -329,7 +325,7 @@ export const resetPassword = async (req, res) => {
     res.status(200).json({ message: "Password reset successful" });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ message: "Error resetting password" });
+    res.status(500).json({ message: "Error resetting password" });
   }
 };
 
