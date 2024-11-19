@@ -30,7 +30,7 @@ export const BookTicketsHeader = ({ to, from, inputDate, onSearch }) => {
 
   useEffect(() => {
     handleSearch()
-  }, [])
+  }, [fromSearch])
 
   return (
     <div className="mt-3 container p-3 border rounded bg-white">
@@ -130,17 +130,20 @@ export const BookTicketsHeader = ({ to, from, inputDate, onSearch }) => {
               onChange={handleDateChange}
               aria-label="Date"
               aria-describedby="basic-addon1"
+              min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
             />
+
           </div>
 
-          <div className="d-flex justify-content-end">
-            <button className="btn btn-bg" onClick={handleSearch}>
-              <span className="me-2">
-                <Send size={15} color="#242424" />
-              </span>
-              Search Tickets
-            </button>
-          </div>
+
+        </div>
+        <div className="d-flex justify-content-end">
+          <button className="btn btn-bg" onClick={handleSearch}>
+            <span className="me-2">
+              <Send size={15} color="#242424" />
+            </span>
+            Search Tickets
+          </button>
         </div>
       </div>
     </div>

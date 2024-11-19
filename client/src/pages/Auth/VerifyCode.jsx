@@ -45,12 +45,6 @@ export const VerifyCode = () => {
       <div className="container">
         <div className="row py-5">
           <div className="col-12 col-md-7 col-lg-7 pe-5">
-            {/* <img
-        src="Header-logo.png"
-        className="img-fluid mb-5"
-        alt="Header Logo"
-        width={210}
-      /> */}
             <div className="mb-4">
               <ol>
                 <li style={{ listStyleType: "none" }}>Back to login</li>

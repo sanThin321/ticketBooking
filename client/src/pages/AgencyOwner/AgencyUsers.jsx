@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { UserDetail } from "../../components/Cards/UserDetail";
-import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { useStore } from "../../context/Store";
 import AddMemberBtn from "../../components/AddMemberBtn";
 

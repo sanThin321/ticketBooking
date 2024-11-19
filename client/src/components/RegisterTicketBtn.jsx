@@ -7,8 +7,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 const RegisterTicketBtn = () => {
   const id = localStorage.getItem("agencyId");
-  const { refreshAgencyMembers, agencyBuses, refreshAgencyBuses, refreshAgencyTickets } = useStore();
-
+  const { agencyBuses, refreshAgencyBuses, refreshAgencyTickets } = useStore();
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
   const [selectedFrom, setSelectedFrom] = useState("From");
@@ -237,7 +236,7 @@ const RegisterTicketBtn = () => {
                   type="datetime-local"
                   id="departureTime"
                   autoComplete="off"
-                  min={new Date().toISOString().slice(0, 16)}
+                  min={new Date().toISOString().slice(0, 16)} // Restricts to current date and time
                 />
               </div>
 
@@ -251,9 +250,10 @@ const RegisterTicketBtn = () => {
                   type="datetime-local"
                   id="arrivalTime"
                   autoComplete="off"
-                  min={new Date().toISOString().slice(0, 16)}
+                  min={formData.departureTime || new Date().toISOString().slice(0, 16)} // Defaults to now if departureTime isn't set
                 />
               </div>
+
 
               <div className="mb-3">
                 <label htmlFor="busId" className="form-label">
@@ -275,7 +275,7 @@ const RegisterTicketBtn = () => {
                 </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="price">Price</label>
+                <label htmlFor="price">Price($)</label>
                 <input
                   name="price"
                   value={formData.price}
