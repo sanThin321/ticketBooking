@@ -1,11 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Bookmark, LayoutGrid, UserRound, Users } from "lucide-react";
 import { useAuth } from "../../auth/auth";
-import logo from "../../assets/Header-logo.png"
+import logo from "../../assets/Header-logo.png";
+
 const Header = () => {
   const { isLoggedIn, LogoutUser } = useAuth();
   const userString = localStorage.getItem("user");
-  const role = JSON.parse(userString).role
+  const role = JSON.parse(userString).role;
+  const location = useLocation();
+
+  // Function to determine if a link is active
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav
@@ -40,76 +45,74 @@ const Header = () => {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {/* Other navigation items */}
-            {/* {isLoggedIn && <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/">
-                <div className="d-flex gap-1 align-items-center">
-                  <Tags size={23} />
-                  Book Ticket
-                </div>
-              </Link>
-            </li>} */}
+            {isLoggedIn && (
+              <li className="nav-item me-3">
+                <Link
+                  className={`nav-link ${isActive("/profile") ? "active" : ""}`}
+                  aria-current="page"
+                  to="/profile"
+                >
+                  <div className="d-flex gap-1 align-items-center">
+                    <UserRound size={20} />
+                    Profile
+                  </div>
+                </Link>
+              </li>
+            )}
 
-            {isLoggedIn && <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/profile">
-                <div className="d-flex gap-1 align-items-center">
-                  <UserRound size={20} />
-                  Profile
-                </div>
-              </Link>
-            </li>}
-
-            {/* {isLoggedIn && <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/search-tickets">
-                <div className="d-flex gap-1 align-items-center">
-                  <Search size={20} />
-                  Search Ticket
-                </div>
-              </Link>
-            </li>} */}
-            {
-              isLoggedIn && role == "Agency" ?
+            {isLoggedIn && role === "Agency" && (
+              <>
                 <li className="nav-item me-3">
-                  <Link className="nav-link active" aria-current="page" to="/agency">
+                  <Link
+                    className={`nav-link ${isActive("/agency") ? "active" : ""}`}
+                    aria-current="page"
+                    to="/agency"
+                  >
                     <div className="d-flex gap-1 align-items-center">
                       <LayoutGrid size={20} />
                       Manage Bus
                     </div>
                   </Link>
                 </li>
-                : ""
-            }
-
-            {isLoggedIn && role === "Agency" ? <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/agency/users">
-                <div className="d-flex gap-1 align-items-center">
-                  <Users size={20} />
-                  Manage Employee
-                </div>
-              </Link>
-            </li> : ""
-            }
-           {isLoggedIn && role === "Agency" ? <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/agency/bookings">
-                <div className="d-flex gap-1 align-items-center">
-                  <Bookmark size={20} />
-                  Manage Tickets
-                </div>
-              </Link>
-            </li> : ""}
-            {/* <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/agency/payments">
-                <div className="d-flex gap-1 align-items-center">
-                  <CreditCard size={20} />
-                  Payment
-                </div>
-              </Link>
-            </li> */}
+                <li className="nav-item me-3">
+                  <Link
+                    className={`nav-link ${
+                      isActive("/agency/users") ? "active" : ""
+                    }`}
+                    aria-current="page"
+                    to="/agency/users"
+                  >
+                    <div className="d-flex gap-1 align-items-center">
+                      <Users size={20} />
+                      Manage Employee
+                    </div>
+                  </Link>
+                </li>
+                <li className="nav-item me-3">
+                  <Link
+                    className={`nav-link ${
+                      isActive("/agency/bookings") ? "active" : ""
+                    }`}
+                    aria-current="page"
+                    to="/agency/bookings"
+                  >
+                    <div className="d-flex gap-1 align-items-center">
+                      <Bookmark size={20} />
+                      Manage Tickets
+                    </div>
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
 
           <div className="d-flex align-items-center gap-2">
             {isLoggedIn ? (
-              <button className="btn" style={{ backgroundColor: "#8DD3BB" }} onClick={LogoutUser}>
+              <button
+                className="btn"
+                style={{ backgroundColor: "#8DD3BB" }}
+                onClick={LogoutUser}
+              >
                 Logout
               </button>
             ) : (

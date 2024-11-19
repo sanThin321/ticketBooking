@@ -5,21 +5,21 @@ import RegisterTicketBtn from "../../components/RegisterTicketBtn";
 import { useStore } from "../../context/Store";
 
 export const AgencyBookings = () => {
-  const { tickets, refreshTickets } = useStore();
+  const agencyId = localStorage.getItem("agencyId");  
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
-
+  const {refreshAgencyTickets, agencyTickets} = useStore();
   const handleEditClick = (ticket) => {
     setSelectedTicket(ticket);
   };
 
   useEffect(() => {
-    refreshTickets();
-  }, [tickets]);
+    refreshAgencyTickets(agencyId);
+  }, [agencyId]);
 
-  useEffect(()=> {
+  useEffect(() => {
 
-  }, [refreshTickets])
+  }, [agencyTickets])
 
   return (
     <>
@@ -31,14 +31,13 @@ export const AgencyBookings = () => {
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
-            {tickets.map((ticket, index) => {
-              return <AgencyBooking key={index} data={ticket} onEditClick={handleEditClick} selectedTicket={selectedTicket}/>;
+            {agencyTickets.map((ticket, index) => {
+              return <AgencyBooking key={index} data={ticket} onEditClick={handleEditClick} selectedTicket={selectedTicket} />;
             })}
           </div>
           <div
-            className={`p-3 border border-secondary-subtle rounded ${
-              showFilters ? "d-block" : "d-none"
-            }`}
+            className={`p-3 border border-secondary-subtle rounded ${showFilters ? "d-block" : "d-none"
+              }`}
           >
             <h5>Filters</h5>
             <hr />

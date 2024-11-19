@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "../auth/auth";
-import { toast } from "react-toastify";
 import axios from "axios";
 
 export const StoreContext = createContext();
@@ -10,7 +9,8 @@ export const StoreProvider = ({ children }) => {
   const [tickets, setTickets] = useState([]);
   const [agencyMembers, setAgencyMembers] = useState([]);
   const [agencyBuses, setAgencyBuses] = useState([])
-
+  const agencyId = localStorage.getItem("agencyId");
+  const [agencyTickets, setAgencyTickets] = useState([])
   // get tickets
   const getTickets = async () => {
     try {
@@ -72,6 +72,21 @@ export const StoreProvider = ({ children }) => {
     getAgencyBus(id);
   };
 
+  const getAgencyTickets = async (agencyId) => {
+    try {
+      const res = await axios.get(`http://localhost:4004/pelrizhabtho/agency/getallTicketByagency/${agencyId}`)
+      if (res.status === 200) {
+        setAgencyTickets(res.data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const refreshAgencyTickets = (agencyId) => {
+    getAgencyTickets(agencyId);
+  }
+
   return (
     <StoreContext.Provider
       value={{
@@ -80,7 +95,9 @@ export const StoreProvider = ({ children }) => {
         agencyMembers,
         refreshAgencyMembers,
         refreshAgencyBuses,
-        agencyBuses
+        agencyBuses,
+        refreshAgencyTickets,
+        agencyTickets
 
       }}
     >

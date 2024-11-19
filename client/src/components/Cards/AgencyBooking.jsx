@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 export const AgencyBooking = ({ data, onEditClick, selectedTicket }) => {
-  const { agencyBuses, refreshAgencyBuses, refreshTickets } = useStore();
+  const { agencyBuses, refreshAgencyBuses, refreshAgencyTickets } = useStore();
   const aid = localStorage.getItem("agencyId");
 
   const [formData, setFormData] = useState({
@@ -122,7 +122,7 @@ export const AgencyBooking = ({ data, onEditClick, selectedTicket }) => {
 
       if (res.status === 200) {
         toast.success("Ticket deleted successfully.");
-        refreshTickets()
+        refreshAgencyTickets(aid)
       }
     } catch (error) {
       toast.error("Unable to delete ticket.");

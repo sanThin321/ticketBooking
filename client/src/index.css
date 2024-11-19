@@ -102,3 +102,12 @@ body {
 .table-hover tbody tr:hover {
   background-color: #ebf6f2 !important;
 }
+
+.nav-link.active {
+  color: #8DD3BB; 
+  text-decoration: underline; 
+  text-underline-offset: 4px; 
+  text-decoration-thickness: 2px; 
+  text-decoration-color: #112211; 
+}
+
