@@ -244,7 +244,8 @@ export const SignUp = () => {
                   onChange={handleChange}
                   placeholder="Tashi Transport"
                 />
-                <label htmlFor="agencyLogo" className="form-label">
+               <div className="mt-3">
+               <label htmlFor="agencyLogo" className="form-label">
                   Agency Logo
                 </label>
                 <input
@@ -254,6 +255,7 @@ export const SignUp = () => {
                   className="form-control custom-search"
                   onChange={handleChange}
                 />
+               </div>
               </div>
             )}
             <hr className="mt-5" />
