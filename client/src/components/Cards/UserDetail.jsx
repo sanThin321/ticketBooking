@@ -7,7 +7,7 @@ import { useStore } from "../../context/Store";
 
 export const UserDetail = ({ data, onEditClick, selectedUser }) => {
   const aId = localStorage.getItem("agencyId")
-  const { refreshAllMembers } = useStore();
+  const { refreshAgencyMembers } = useStore();
   const [formData, setFormData] = useState({
     agencyId: selectedUser?.agencyId || "",
     fullName: selectedUser?.fullName || "",
@@ -57,12 +57,12 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:4004/pelrizhabtho/admin/deleteUser/${id}`
+        `http://localhost:4004/pelrizhabtho/agency/deletemember/${id}`
       );
 
       if (res.status === 200) {
         toast.success("User deleted successfully.");
-        refreshAllMembers();
+        refreshAgencyMembers(aId);
       }
     } catch (error) {
       toast.error("Unable to delete user.");
@@ -87,7 +87,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
             </div>
             <div style={{ width: "12rem" }}>
               <h5 className="mb-0">{data.fullName}</h5>
-              <p>{data.role}</p>
+              <p className="mb-0">{data.role}</p>
             </div>
           </div>
           <div className="d-flex flex-row gap-4 gap-lg-5 ms-3">

@@ -50,7 +50,7 @@ export const AdminUsers = () => {
                             placeholder="Search..."
                             aria-label="Search"
                             value={searchTerm}
-                            onChange={handleSearchChange} // Update search term on change
+                            onChange={handleSearchChange} 
                         />
                     </div>
                 </div>

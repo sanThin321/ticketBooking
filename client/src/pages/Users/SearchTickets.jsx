@@ -81,9 +81,9 @@ export const SearchTickets = () => {
 
       <div className="container mt-5 pb-5">
         <div className="row">
-          <div className="col-4">
+          {/* <div className="col-4">
             <Filter />
-          </div>
+          </div> */}
           <div className="col border-left">
             {filteredTickets.length === 0 ? (
               <div className="text-center">
