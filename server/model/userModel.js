@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import crypto from 'crypto';
+import { type } from "os";
 
 
 const userSchema=new mongoose.Schema({
@@ -34,6 +35,10 @@ const userSchema=new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    agencyLogo:{
+        type:String,
+        required: function() { return this.userType === 'Agency'; },
     },
     resetPasswordToken:String,
     resetPasswordExpire:Date,

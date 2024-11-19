@@ -19,7 +19,7 @@ export const Ticket = ({ ticket }) => {
     <div className="container border p-3 rounded mb-2">
       <div className="row">
         <div className="d-flex col-3 justify-content-center align-items-center">
-          <img src={ticket.agencyLogo} alt="agency logo" width={150} />
+          <img src={ticket?.agencyLogo} alt="agency logo" width={150} />
         </div>
         <div className="col-9 d-flex flex-column gap-3 justify-content-center">
           <h4>{ticket.agency}</h4>
