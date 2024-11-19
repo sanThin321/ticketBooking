@@ -17,6 +17,7 @@ export const signup = async (req, res) => {
     password,
     confirmPassword,
     agencyName,
+    agencyLogo, // Base64 string of the image
   } = req.body;
 
   // Validate the request
@@ -41,6 +42,7 @@ export const signup = async (req, res) => {
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
+
     if (userType === "Agency") {
       if (!agencyName || agencyName.trim() === "") {
         return res
@@ -52,51 +54,78 @@ export const signup = async (req, res) => {
       if (existingAgency) {
         return res.status(400).json({ msg: "Agency already exists" });
       }
-    }
-    // Create and save the user
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      userType,
-      // Only include agencyName if userType is 'Agency'
-      agencyName: userType === "Agency" ? agencyName : undefined,
-      password,
-    });
 
-    await newUser.save();
-    // Automatically log the user in by generating JWT
-    const payload = {
-      user: {
-        id: newUser.id,
-        role: newUser.userType,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" },
-      (err, token) => {
-        if (err) throw err;
-
-        // Set the token in an HttpOnly cookie
-        // res.cookie("token", token, {
-        //   httpOnly: true,
-        //   secure: process.env.NODE_ENV === "production", // Secure in production
-        //   sameSite: "strict",
-        //   maxAge: 3600000, // 1 hour
-        // });
-
-        res.status(200).json({
-          token,
-          role: newUser.userType,
-          message: "Signup successful and logged in",
-        });
+      // Validate Base64 image
+      if (!agencyLogo || typeof agencyLogo !== "string") {
+        return res.status(400).json({ msg: "Valid Base64 image is required" });
       }
-    );
-    // res.status(200).json({ msg: "User registered successfully" });
+
+      // Create and save the user
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        userType,
+        agencyName,
+        password,
+        agencyLogo: agencyLogo, // Save the Base64 string directly
+      });
+
+      await newUser.save();
+      // Automatically log the user in by generating JWT
+      const payload = {
+        user: {
+          id: newUser.id,
+          role: newUser.userType,
+        },
+      };
+
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+        (err, token) => {
+          if (err) throw err;
+          res.status(200).json({
+            token,
+            role: newUser.userType,
+            message: "Signup successful and logged in",
+          });
+        }
+      );
+    } else {
+      // Handle non-Agency user signup
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        userType,
+        password,
+      });
+      await newUser.save();
+      const payload = {
+        user: {
+          id: newUser.id,
+          role: newUser.userType,
+        },
+      };
+
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+        (err, token) => {
+          if (err) throw err;
+          res.status(200).json({
+            token,
+            role: newUser.userType,
+            message: "Signup successful and logged in",
+          });
+        }
+      );
+    }
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");

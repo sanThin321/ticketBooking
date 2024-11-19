@@ -11,11 +11,6 @@ import {
   getallTicketByAgency
 } from "../controller/ticketController.js";
 import {
-  validateDriver,
-  vaildBus,
-  validateBus,
-} from "../Middleware/vaildateItsfromagency.js";
-import {
   registerMember,
   getAllMembers,
   updateMember,
