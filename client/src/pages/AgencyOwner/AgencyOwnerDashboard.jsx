@@ -113,7 +113,6 @@ export const AgencyOwnerDashboard = () => {
           );
         })}
 
-        {/* Register Bus Modal */}
         <div
           className="modal fade"
           id="registerBusModal"

@@ -52,7 +52,9 @@ export const SingleBookingDetails = () => {
 
   return (
     <>
-      <AdminHeader title="Bookings / Details" />
+      <div className="container mt-3 d-flex align-items-center justify-content-between bg-white border p-3 rounded mb-3">
+        <h4 className="mb-0">Ticket</h4>
+      </div>
       <div className="container mb-3">
         <div className="row">
           <div className="col p-3 me-2 container-background-color rounded border">
