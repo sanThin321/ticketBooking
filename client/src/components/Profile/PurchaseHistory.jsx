@@ -55,7 +55,7 @@ export const PurchaseHistory = () => {
         return (
           <div className="my-1w bg-white" key={index}>
             <div className="d-flex align-items-center justify-content-between px-3 py-3 mb-3 rounded border">
-              <div className="d-flex align-items-center gap-3">
+              <div className="d-flex flex-sm-column flex-lg-row align-items-center gap-3">
                 <img src={AgencyLogo} alt="agency logo" width={70} />
                 <div>
                   <div className="d-flex align-items-center gap-3 pe-5" style={{ borderRight: "1.5px solid #8DD3BB" }}>
@@ -74,7 +74,7 @@ export const PurchaseHistory = () => {
                     </div>
                   </div>
                 </div>
-
+                  <br />
                 <div className="d-flex gap-5 ms-4">
                   <div className="d-flex gap-3">
                     <div className="rounded px-2 d-flex align-items-center justify-content-center" style={{ backgroundColor: "#EBF6F2" }}>
