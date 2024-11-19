@@ -4,8 +4,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-const storedData = localStorage.getItem('user'); 
-const userId = JSON.parse(storedData).id;
+const storedData = localStorage.getItem('user');
+let userId = null;
+
+try {
+  userId = storedData ? JSON.parse(storedData)?.id : null;
+} catch (error) {
+  console.error('Error parsing storedData:', error);
+}
+
 import { loadStripe } from '@stripe/stripe-js';
 
 export const BookingSeats = () => {

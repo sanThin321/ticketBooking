@@ -124,6 +124,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
         </div>
 
         <div style={{ position: "relative" }}>
+          {/* button  */}
           <button
             className="btn px-2"
             style={{ border: "1.5px solid #8DD3BB" }}

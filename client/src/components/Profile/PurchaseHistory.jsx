@@ -6,7 +6,13 @@ import { jsPDF } from "jspdf";
 
 export const PurchaseHistory = () => {
   const storedData = localStorage.getItem('user');
-  const userId = JSON.parse(storedData).id;
+  let userId = null;
+  
+  try {
+    userId = storedData ? JSON.parse(storedData)?.id : null;
+  } catch (error) {
+    console.error('Error parsing storedData:', error);
+  }
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
