@@ -15,6 +15,7 @@ import { getUserProfile, updateEmail, updateNames, updatePassword, updatePhone }
 const router = express.Router();
 // Sign-up and Login
 router.post("/login", login);
+router.post("/signup", signup);
 router.get("/redirect", authenticateJWT, roleBasedRedirect);
 router.post("/forgotPassword", forgotPassword);
 router.post("/verifyCode", verifyCode);
