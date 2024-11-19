@@ -20,7 +20,8 @@ import { AgencyOwnerDashboard } from "./pages/AgencyOwner/AgencyOwnerDashboard.j
 import { SearchTickets } from "./pages/Users/SearchTickets";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
-
+import {Success} from "./pages/Users/Success.jsx"
+import {Canceled} from "./pages/Users/Canceled.jsx"
 //main function 
 const App = () => {
   return (
@@ -35,6 +36,9 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/set-password" element={<SetPassword />} />
         <Route path="/search-tickets" element={<SearchTickets />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Canceled />} />
+
 
         {/* ProtectedRoutes */}
         <Route element={<ProtectedRoute />}>

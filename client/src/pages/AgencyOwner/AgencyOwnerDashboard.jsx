@@ -1,14 +1,3 @@
-import {
-  ChevronRight,
-  LifeBuoy,
-  Flag,
-  UserRound,
-  BookCheck,
-  DoorClosed,
-  Ticket,
-  SquareUserRound,
-  Bus,
-} from "lucide-react";
 import { BusDetails } from "../../components/Cards/BusDetails";
 import { useEffect, useState } from "react";
 import { useStore } from "../../context/Store";
@@ -32,6 +21,8 @@ export const AgencyOwnerDashboard = () => {
     imageOfTheBus: "image.png",
   });
 
+  const [searchQuery, setSearchQuery] = useState(""); // State to store the search input
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -40,12 +31,16 @@ export const AgencyOwnerDashboard = () => {
     }));
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value); // Update the search query
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(
         "http://localhost:4004/pelrizhabtho/agency/registerbus",
-        formData // Send the form data in the POST request
+        formData
       );
 
       if (res.status === 200) {
@@ -73,54 +68,19 @@ export const AgencyOwnerDashboard = () => {
   const [selectedBus, setSelectedBus] = useState(null);
 
   const handleEditClick = (bus) => {
-    setSelectedBus(bus); 
+    setSelectedBus(bus);
   };
 
-  useEffect(() => {
-  }, [agencyBuses]);
+  // Filter buses based on search query
+  const filteredBuses = agencyBuses?.filter((bus) =>
+    bus.busNumber.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
-      <div className="container my-5">
-        <h3 className="mb-3">General Overview</h3>
-        <div
-          className="d-flex justify-content-around collapse navbar-collapse rounded-2"
-          id="generalOverview"
-          style={{ backgroundColor: "rgba(205, 234, 225, 1)" }}
-        >
-          <div className="px-2 py-4">
-            <LifeBuoy />
-            <p>6 Buses</p>
-          </div>
-          <div
-            className="py-4 px-md-4 mx-md-2 py-4 border-start border-2"
-            style={{ borderColor: "darkgreen" }}
-          >
-            <Flag />
-            <p>3 Registered Routes</p>
-          </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
-            <BookCheck />
-            <p>200 Daily Passengers</p>
-          </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
-            <DoorClosed />
-            <p>9 Employees</p>
-          </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
-            <Ticket />
-            <p>4 Ticket Agents</p>
-          </div>
-          <div className="px-md-4 py-4 mx-md-2 border-start border-2">
-            <SquareUserRound />
-            <p>6 Drivers</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="container">
-        <div className="d-flex justify-content-between">
-          <h3>Registered Buses</h3>
+      <div className="container my-4 pb-4">
+        <div className="d-flex justify-content-between bg-white border p-3 rounded mb-3">
+          <h3 className="">Registered Buses</h3>
           <div className="d-flex gap-3 mb-1">
             <button
               type="button"
@@ -134,14 +94,15 @@ export const AgencyOwnerDashboard = () => {
               <input
                 type="search"
                 className="form-control custom-search"
-                placeholder="Search"
+                placeholder="Search by Bus Number"
                 aria-label="Search"
+                value={searchQuery} // Bind searchQuery state
+                onChange={handleSearchChange} // Handle input change
               />
             </div>
           </div>
         </div>
-        <hr />
-        {agencyBuses?.map((bus, index) => {
+        {filteredBuses?.map((bus, index) => {
           return (
             <BusDetails
               key={index}
@@ -152,13 +113,7 @@ export const AgencyOwnerDashboard = () => {
           );
         })}
 
-        <div className="d-flex justify-content-end">
-          <button className="btn btn-dark text-light rounded-2">
-            Show more results
-          </button>
-        </div>
-
-        {/* Modal Component */}
+        {/* Register Bus Modal */}
         <div
           className="modal fade"
           id="registerBusModal"

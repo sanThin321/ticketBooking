@@ -5,8 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const SignUp = () => {
-  const { navigate } = useNavigate();
-  const [user, setUser] = useState({
+  const navigate = useNavigate(); 
+    const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -44,7 +44,7 @@ export const SignUp = () => {
 
       if (response.status === 200) {
         toast.success("Sign up successful.")
-        navigate("/signin")
+        navigate("/login")
         setUser({
           firstName: "",
           lastName: "",

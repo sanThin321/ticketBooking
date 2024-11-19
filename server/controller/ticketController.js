@@ -196,6 +196,47 @@ const bookedDetail = async (req, res) => {
   }
 };
 
+const getTicketByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params; // Get userId from URL params
+
+    // Find tickets where the userId exists in the booked array
+    const tickets = await Ticket.find({
+      "booked.userId": userId,
+    });
+
+    if (!tickets || tickets.length === 0) {
+      return res.status(404).json({ message: "No tickets found for this user." });
+    }
+
+    // Flatten the tickets and create a separate ticket entry for each booked seat
+    const response = [];
+
+    tickets.forEach(ticket => {
+      ticket.booked.forEach(seat => {
+        if (seat.userId === userId) {
+          response.push({
+            _id: ticket._id,
+            from: ticket.from,
+            to: ticket.to,
+            departureTime: ticket.departureTime,
+            arrivalTime: ticket.arrivalTime,
+            price: ticket.price,
+            agencyId: ticket.agencyId._id,  // Only include the agency's _id
+            bus: ticket.bus._id,            // Only include the bus's _id
+            bookedSeats: seat // Return the booked seat object
+          });
+        }
+      });
+    });
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching ticket by userId:", error);
+    return res.status(500).json({ message: "Server error, please try again later." });
+  }
+};
+
 export {
   addTicket,
   delateTicket,
@@ -204,4 +245,5 @@ export {
   getTicket,
   getallTicket,
   bookedDetail,
+  getTicketByUserId
 };

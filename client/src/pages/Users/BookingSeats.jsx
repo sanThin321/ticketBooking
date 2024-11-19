@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useStore } from "../../context/Store";
+const storedData = localStorage.getItem('user'); 
+const userId = JSON.parse(storedData).id;
+import { loadStripe } from '@stripe/stripe-js';
 
 export const BookingSeats = () => {
   const { id } = useParams();
@@ -32,49 +34,48 @@ export const BookingSeats = () => {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    if (!ticket._id) {
-      console.error("Ticket ID is missing.");
-      return;
-    }
+  //   if (!ticket._id) {
+  //     console.error("Ticket ID is missing.");
+  //     return;
+  //   }
 
-    const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
-      seatNumber,
-      name: seatDetails[seatNumber]?.name || "",
-      cid: seatDetails[seatNumber]?.cid || "",
-      contactNo: seatDetails[seatNumber]?.contactNo || "",
-    }));
+  //   const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
+  //     seatNumber,
+  //     name: seatDetails[seatNumber]?.name || "",
+  //     cid: seatDetails[seatNumber]?.cid || "",
+  //     contactNo: seatDetails[seatNumber]?.contactNo || "",
+  //   }));
 
-    for (let seat of bookedSeats) {
-      if (!seat.name || !seat.cid || !seat.contactNo) {
-        toast.error("All fields must be filled for each selected seat.");
-        return;
-      }
-    }
+  //   for (let seat of bookedSeats) {
+  //     if (!seat.name || !seat.cid || !seat.contactNo) {
+  //       toast.error("All fields must be filled for each selected seat.");
+  //       return;
+  //     }
+  //   }
 
-    try {
-      const response = await axios.put(
-        `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
-        { seatsBooked: bookedSeats }
-      );
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
+  //       { seatsBooked: bookedSeats }
+  //     );
 
-      if (response.status === 200) {
-        toast.success("Seats booked successfully!");
+  //     if (response.status === 200) {
+  //       toast.success("Seats booked successfully!");
+  //       setTimeout(() => {
+  //         window.location.reload();
+  //       }, 1000);
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+  //       handleCancel();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error booking seats:", error.message);
+  //   }
 
-        handleCancel();
-      }
-    } catch (error) {
-      console.error("Error booking seats:", error.message);
-    }
-
-    console.log("Selected Seats with User Details:", bookedSeats);
-  };
+  //   console.log("Selected Seats with User Details:", bookedSeats);
+  // };
 
   const handleCancel = () => {
     setSelectedSeats(new Set());
@@ -114,6 +115,68 @@ export const BookingSeats = () => {
     minute: "2-digit", // Minute in 2-digit format (e.g., 08)
     hour12: true, // AM/PM format
   });
+
+  const makePayment = async (event) => {
+    event.preventDefault();
+    const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
+      seatNumber,
+      name: seatDetails[seatNumber]?.name || "",
+      cid: seatDetails[seatNumber]?.cid || "",
+      contactNo: seatDetails[seatNumber]?.contactNo || "",
+      price: ticket.price,
+      userId
+    }));
+
+    // Check if all necessary fields are filled
+    for (let seat of bookedSeats) {
+      if (!seat.name || !seat.cid || !seat.contactNo) {
+        toast.error("All fields must be filled for each selected seat.");
+        return;
+      }
+    }
+
+    try {
+      const stripe = await loadStripe("pk_test_51QMr5UChEc4w1h3ZJle3FaPE2IBx9kchCGineAwFcpzem5RBBrOLG2Q5oMfWCZy5UIisBkBz5GHRgJqLG1JLgE2100I533kKGm");
+
+      if (!stripe) {
+        throw new Error("Stripe failed to load.");
+      }
+
+      const response = await axios.post(
+        "http://localhost:4004/pelrizhabtho/create-checkout-session",
+        { bookedDetails: bookedSeats },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const session = response.data;
+      await bookSeatsAfterPayment(bookedSeats);
+      const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+
+      if (result.error) {
+        console.error("Error during redirect:", result.error.message);
+      }
+    } catch (error) {
+      console.error("Payment failed:", error.message || error);
+    }
+  };
+
+  // Function to book seats after payment
+  const bookSeatsAfterPayment = async (bookedSeats) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
+        { seatsBooked: bookedSeats }
+      );
+
+      if (response.status === 200) {
+        console.log("Seats booked successfully!");
+      }
+    } catch (error) {
+      console.error("Error booking seats:", error.message);
+    }
+  };
+
 
   useEffect(() => {
     if (id) {
@@ -170,7 +233,7 @@ export const BookingSeats = () => {
           </div>
 
           <div className="mb-3 mt-4">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={makePayment}>
               <div>
                 <h5>Enter your details:</h5>
                 {selectedSeats.size === 0 ? <p>Select a seat.</p> : null}
@@ -250,6 +313,7 @@ export const BookingSeats = () => {
             onSeatSelection={handleSeatSelection}
             selectedSeats={selectedSeats}
           />
+          <button className="btn btn-dark" onClick={makePayment}>Pay</button>
         </div>
       </div>
     </div>

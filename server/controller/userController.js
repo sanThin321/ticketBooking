@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { sendEmail, sendFeedback } from "../utils/email.js";
 import crypto from "crypto";
 import { RegisterMember } from "../model/agencyModel.js";
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET);
 //signup
 export const signup = async (req, res) => {
   const {
@@ -342,3 +344,41 @@ export const feedback = async (req, res) => {
   }
 };
 
+
+export const makeCheckOut = async (req, res) => {
+  try {
+    const { bookedDetails } = req.body;
+    console.log("bookings", bookedDetails)
+    if (!bookedDetails || !Array.isArray(bookedDetails) || bookedDetails.length === 0) {
+      return res.status(400).json({ error: "Invalid ticket data" });
+    }
+
+    // Create line items for Stripe
+    const line_items = bookedDetails.map((ticket) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: ticket.name || `Seat: ${ticket.seatNumber}`,
+          description: `CID: ${ticket.cid}, Contact No: ${ticket.contactNo}, Seat No: ${ticket.seatNumber}`,
+        },
+        unit_amount: ticket.price * 100,
+      },
+      quantity: 1,
+    }));
+
+    // Create the Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items,
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/cancel",
+    });
+
+    console.log("Stripe Session Created:", session.id);
+    res.status(200).json({ id: session.id });
+  } catch (error) {
+    console.error("Error creating checkout session:", error.message);
+    res.status(500).json({ error: "Failed to create checkout session" });
+  }
+}

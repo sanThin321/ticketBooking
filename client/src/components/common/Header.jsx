@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Bookmark, CreditCard, LayoutGrid, Search, Tags, UserRound, Users } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Bookmark, LayoutGrid, UserRound, Users } from "lucide-react";
 import { useAuth } from "../../auth/auth";
 import logo from "../../assets/Header-logo.png"
 const Header = () => {
-  const {isLoggedIn, LogoutUser} = useAuth();
-  const navigate = useNavigate();
+  const { isLoggedIn, LogoutUser } = useAuth();
+  const userString = localStorage.getItem("user");
+  const role = JSON.parse(userString).role
 
   return (
     <nav
@@ -17,7 +18,7 @@ const Header = () => {
         </Link>
 
         <div className="d-flex gap-3">
-        {!isLoggedIn && (
+          {!isLoggedIn && (
             <Link to="/login" className="d-block d-lg-none">
               <button className="btn" style={{ backgroundColor: "#8DD3BB" }}>
                 Login
@@ -40,16 +41,16 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {/* Other navigation items */}
-            {isLoggedIn && <li className="nav-item me-3">
+            {/* {isLoggedIn && <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/">
                 <div className="d-flex gap-1 align-items-center">
                   <Tags size={23} />
                   Book Ticket
                 </div>
               </Link>
-            </li>}
+            </li>} */}
 
-           {isLoggedIn && <li className="nav-item me-3">
+            {isLoggedIn && <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/profile">
                 <div className="d-flex gap-1 align-items-center">
                   <UserRound size={20} />
@@ -58,50 +59,56 @@ const Header = () => {
               </Link>
             </li>}
 
-            {isLoggedIn && <li className="nav-item me-3">
+            {/* {isLoggedIn && <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/search-tickets">
                 <div className="d-flex gap-1 align-items-center">
                   <Search size={20} />
                   Search Ticket
                 </div>
               </Link>
-            </li>}
-            <li className="nav-item me-3">
-              <Link className="nav-link active" aria-current="page" to="/agency">
-                <div className="d-flex gap-1 align-items-center">
-                  <LayoutGrid size={20} />
-                  Dashboard
-                </div>
-              </Link>
-            </li>
-            <li className="nav-item me-3">
+            </li>} */}
+            {
+              isLoggedIn && role == "Agency" ?
+                <li className="nav-item me-3">
+                  <Link className="nav-link active" aria-current="page" to="/agency">
+                    <div className="d-flex gap-1 align-items-center">
+                      <LayoutGrid size={20} />
+                      Manage Bus
+                    </div>
+                  </Link>
+                </li>
+                : ""
+            }
+
+            {isLoggedIn && role === "Agency" ? <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/agency/users">
                 <div className="d-flex gap-1 align-items-center">
                   <Users size={20} />
-                  Users
+                  Manage Employee
                 </div>
               </Link>
-            </li>
-            <li className="nav-item me-3">
+            </li> : ""
+            }
+           {isLoggedIn && role === "Agency" ? <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/agency/bookings">
                 <div className="d-flex gap-1 align-items-center">
                   <Bookmark size={20} />
-                  Booking
+                  Manage Tickets
                 </div>
               </Link>
-            </li>
-            <li className="nav-item me-3">
+            </li> : ""}
+            {/* <li className="nav-item me-3">
               <Link className="nav-link active" aria-current="page" to="/agency/payments">
                 <div className="d-flex gap-1 align-items-center">
                   <CreditCard size={20} />
                   Payment
                 </div>
               </Link>
-            </li>
+            </li> */}
           </ul>
 
           <div className="d-flex align-items-center gap-2">
-          {isLoggedIn? (
+            {isLoggedIn ? (
               <button className="btn" style={{ backgroundColor: "#8DD3BB" }} onClick={LogoutUser}>
                 Logout
               </button>

@@ -7,6 +7,7 @@ import {
   getTicket,
   updateBookedTicket,
   updateTicket,
+  getTicketByUserId
 } from "../controller/ticketController.js";
 import {
   validateDriver,
@@ -71,5 +72,6 @@ router.delete("/deleteTicket/:ticketId", delateTicket);
 router.put("/updateTicket/:ticketId", updateTicket);
 
 router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
+router.get("/ticket/:userId", getTicketByUserId);
 
 export default router;
