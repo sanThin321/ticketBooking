@@ -4,8 +4,15 @@ import { useAuth } from "../../auth/auth";
 import logo from "../../assets/Header-logo.png"
 const Header = () => {
   const { isLoggedIn, LogoutUser } = useAuth();
-  const userString = localStorage.getItem("user");
-  const role = JSON.parse(userString).role
+  const storedData = localStorage.getItem('user');
+  let role = null;
+  
+  try {
+    role = storedData ? JSON.parse(storedData)?.role : null;
+  } catch (error) {
+    console.error('Error parsing storedData:', error);
+  }
+  
 
   return (
     <nav
