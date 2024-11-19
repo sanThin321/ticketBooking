@@ -81,7 +81,7 @@ export const AgencyOwnerDashboard = () => {
       <div className="container my-4 pb-4">
         <div className="d-flex justify-content-between bg-white border p-3 rounded mb-3">
           <h3 className="">Registered Buses</h3>
-          <div className="d-flex gap-3 mb-1">
+          <div className="d-flex gap-3">
             <button
               type="button"
               className="btn btn-bg mx-2 rounded"
