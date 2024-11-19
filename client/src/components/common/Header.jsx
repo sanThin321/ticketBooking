@@ -5,18 +5,19 @@ import logo from "../../assets/Header-logo.png";
 
 const Header = () => {
   const { isLoggedIn, LogoutUser } = useAuth();
-
-  // Function to determine if a link is active
-  const isActive = (path) => location.pathname === path;
-  const storedData = localStorage.getItem('user');
+  const location = useLocation();
+  const storedData = localStorage.getItem("user");
   let role = null;
-  
+
+  // Safely parse role from localStorage
   try {
     role = storedData ? JSON.parse(storedData)?.role : null;
   } catch (error) {
-    console.error('Error parsing storedData:', error);
+    console.error("Error parsing user data:", error);
   }
-  
+
+  // Function to determine if a link is active
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav
@@ -58,7 +59,10 @@ const Header = () => {
                   aria-current="page"
                   to="/profile"
                 >
-                  <div className="d-flex gap-1 align-items-center">
+                  <div
+                    className={`d-flex gap-1 align-items-center ${isActive("/profile") ? "underline" : ""
+                      }`}
+                  >
                     <UserRound size={20} />
                     Profile
                   </div>
@@ -74,7 +78,10 @@ const Header = () => {
                     aria-current="page"
                     to="/agency"
                   >
-                    <div className="d-flex gap-1 align-items-center">
+                    <div
+                      className={`d-flex gap-1 align-items-center ${isActive("/agency") ? "underline" : ""
+                        }`}
+                    >
                       <LayoutGrid size={20} />
                       Manage Bus
                     </div>
@@ -82,13 +89,15 @@ const Header = () => {
                 </li>
                 <li className="nav-item me-3">
                   <Link
-                    className={`nav-link ${
-                      isActive("/agency/users") ? "active" : ""
-                    }`}
+                    className={`nav-link ${isActive("/agency/users") ? "active" : ""
+                      }`}
                     aria-current="page"
                     to="/agency/users"
                   >
-                    <div className="d-flex gap-1 align-items-center">
+                    <div
+                      className={`d-flex gap-1 align-items-center ${isActive("/agency/users") ? "underline" : ""
+                        }`}
+                    >
                       <Users size={20} />
                       Manage Employee
                     </div>
@@ -96,15 +105,55 @@ const Header = () => {
                 </li>
                 <li className="nav-item me-3">
                   <Link
-                    className={`nav-link ${
-                      isActive("/agency/bookings") ? "active" : ""
-                    }`}
+                    className={`nav-link ${isActive("/agency/bookings") ? "active" : ""
+                      }`}
                     aria-current="page"
                     to="/agency/bookings"
                   >
-                    <div className="d-flex gap-1 align-items-center">
+                    <div
+                      className={`d-flex gap-1 align-items-center ${isActive("/agency/bookings") ? "underline" : ""
+                        }`}
+                    >
                       <Bookmark size={20} />
                       Manage Tickets
+                    </div>
+                  </Link>
+                </li>
+
+              </>
+            )}
+
+            {isLoggedIn && role === "Admin" && (
+              <>
+                <li className="nav-item me-3">
+                  <Link
+                    className={`nav-link ${isActive("/admin/users") ? "active" : ""}`}
+                    aria-current="page"
+                    to="/admin/users"
+                  >
+                    <div
+                      className={`d-flex gap-1 align-items-center ${isActive("/admin/users") ? "underline" : ""
+                        }`}
+                    >
+                      <LayoutGrid size={20} />
+                      Manage User
+                    </div>
+                  </Link>
+                </li>
+           
+                <li className="nav-item me-3">
+                  <Link
+                    className={`nav-link ${isActive("/admin/agency-owners") ? "active" : ""
+                      }`}
+                    aria-current="page"
+                    to="/admin/agency-owners"
+                  >
+                    <div
+                      className={`d-flex gap-1 align-items-center ${isActive("/admin/agency-owners") ? "underline" : ""
+                        }`}
+                    >
+                      <Bookmark size={20} />
+                      Agency Owners
                     </div>
                   </Link>
                 </li>

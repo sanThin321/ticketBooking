@@ -7,7 +7,7 @@ import { useStore } from "../../context/Store";
 
 export const UserDetail = ({ data, onEditClick, selectedUser }) => {
   const aId = localStorage.getItem("agencyId")
-  const { refreshAgencyMembers } = useStore();
+  const { refreshAllMembers } = useStore();
   const [formData, setFormData] = useState({
     agencyId: selectedUser?.agencyId || "",
     fullName: selectedUser?.fullName || "",
@@ -57,12 +57,12 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:4004/pelrizhabtho/agency/deletemember/${id}`
+        `http://localhost:4004/pelrizhabtho/admin/deleteUser/${id}`
       );
 
       if (res.status === 200) {
         toast.success("User deleted successfully.");
-        refreshAgencyMembers(aId);
+        refreshAllMembers();
       }
     } catch (error) {
       toast.error("Unable to delete user.");
@@ -70,7 +70,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
   };
 
   return (
-    <div className="hover bg-white rounded border py-3 px-4 mb-3">
+    <div className="hover bg-white rounded border py-2 px-4 mb-3">
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3">
           <div
@@ -82,7 +82,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
                 src={Driver}
                 className="rounded mx-auto d-block"
                 alt="driver default icon"
-                width={100}
+                width={70}
               />
             </div>
             <div style={{ width: "12rem" }}>

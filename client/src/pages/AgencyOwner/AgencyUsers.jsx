@@ -4,7 +4,7 @@ import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { useStore } from "../../context/Store";
 import AddMemberBtn from "../../components/AddMemberBtn";
 
-export const AdminUsers = () => {
+export const AgencyUsers = () => {
   let id = localStorage.getItem("agencyId");
   const { agencyMembers, refreshAgencyMembers } = useStore();
 

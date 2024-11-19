@@ -12,8 +12,9 @@ import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { SetPassword } from "./pages/Auth/SetPassword";
 import { VerifyCode } from "./pages/Auth/VerifyCode";
 import { UserProfile } from "./pages/Users/UserProfile";
-import { AdminUsers } from "./pages/AgencyOwner/AdminUsers";
-import { AdminPaymentDetails } from "./pages/AdminDashboard/AdminPaymentDetails";
+import { AgencyUsers } from "./pages/AgencyOwner/AgencyUsers";
+import { AdminUsers } from "./pages/AdminDashboard/AdminUsers";
+import { AgencyOwner } from "./pages/AdminDashboard/AdminAgencyOwner";
 import { AgencyBookings } from "./pages/AgencyOwner/AgencyBookings.jsx";
 import { SingleBookingDetails } from "./pages/AgencyOwner/SingleBookingDetails";
 import { AgencyOwnerDashboard } from "./pages/AgencyOwner/AgencyOwnerDashboard.jsx";
@@ -22,6 +23,7 @@ import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 import {Success} from "./pages/Users/Success.jsx"
 import {Canceled} from "./pages/Users/Canceled.jsx"
+
 //main function 
 const App = () => {
   return (
@@ -39,14 +41,14 @@ const App = () => {
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Canceled />} />
 
-
         {/* ProtectedRoutes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/booking-tickets/:id" element={<BookingSeats />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/agency/users" element={<AdminUsers />} />
-          <Route path="/agency/payments" element={<AdminPaymentDetails />} />
+          <Route path="/agency/users" element={<AgencyUsers />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/agency-owners" element={<AgencyOwner />} />
           <Route path="/agency/bookings" element={<AgencyBookings />} />
           <Route path="/agency/" element={<AgencyOwnerDashboard />} />
           <Route

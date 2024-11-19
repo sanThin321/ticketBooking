@@ -5,12 +5,13 @@ import axios from "axios";
 export const StoreContext = createContext();
 
 export const StoreProvider = ({ children }) => {
-  const { authorizationToken} = useAuth();
+  const { authorizationToken } = useAuth();
   const [tickets, setTickets] = useState([]);
   const [agencyMembers, setAgencyMembers] = useState([]);
   const [agencyBuses, setAgencyBuses] = useState([])
   const agencyId = localStorage.getItem("agencyId");
   const [agencyTickets, setAgencyTickets] = useState([])
+  const [allMembers, setAllMembers] = useState([])
   // get tickets
   const getTickets = async () => {
     try {
@@ -44,6 +45,7 @@ export const StoreProvider = ({ children }) => {
       );
 
       if (res.status === 200) {
+        console.log("mem", allMembers)
         setAgencyMembers(res.data.members);
       }
 
@@ -87,6 +89,20 @@ export const StoreProvider = ({ children }) => {
     getAgencyTickets(agencyId);
   }
 
+  const getAllMembers = async () => {
+    try {
+      const res = await axios.get("http://localhost:4004/pelrizhabtho/admin/");
+      if (res.status === 200) {
+        setAllMembers(res.data.data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const refreshAllMembers = () => {
+    getAllMembers();
+  }
   return (
     <StoreContext.Provider
       value={{
@@ -97,7 +113,9 @@ export const StoreProvider = ({ children }) => {
         refreshAgencyBuses,
         agencyBuses,
         refreshAgencyTickets,
-        agencyTickets
+        agencyTickets,
+        allMembers,
+        refreshAllMembers
 
       }}
     >
