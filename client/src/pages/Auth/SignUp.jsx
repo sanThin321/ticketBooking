@@ -5,8 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const SignUp = () => {
-  const navigate = useNavigate(); 
-    const [user, setUser] = useState({
+  const navigate = useNavigate();
+  const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -17,15 +17,29 @@ export const SignUp = () => {
     agencyName: "",
   });
 
-  const handleChange = (e) => {
-    const { id, value, type } = e.target;
+  const handleChange = async (e) => {
+    const { id, value, type, files } = e.target;
 
     if (type === "radio") {
       setUser((prevUser) => ({
         ...prevUser,
         userType: id,
-        agencyName: id === "agencyOwner" ? prevUser.agencyName : "",
+        agencyName: id === "Agency" ? prevUser.agencyName : "",
       }));
+    } else if (type === "file") {
+      if (files && files[0]) {
+        const file = files[0];
+
+        // Convert file to Base64 string
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setUser((prevUser) => ({
+            ...prevUser,
+            agencyLogo: reader.result, // Store Base64 string
+          }));
+        };
+        reader.readAsDataURL(file); // Convert file to Base64
+      }
     } else {
       setUser((prevUser) => ({
         ...prevUser,
@@ -34,17 +48,24 @@ export const SignUp = () => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(
         "http://localhost:4004/pelrizhabtho/signup",
-        user
-      )
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 200) {
-        toast.success("Sign up successful.")
-        navigate("/login")
+        toast.success("Sign up successful.");
+        navigate("/login");
         setUser({
           firstName: "",
           lastName: "",
@@ -54,18 +75,18 @@ export const SignUp = () => {
           confirmPassword: "",
           userType: "Customer",
           agencyName: "",
-        })
+          agencyLogo: "",
+        });
       }
     } catch (error) {
-      if (error.status === 404) {
-        toast.warning("User alredy registered. Login.")
+      if (error.response?.status === 404) {
+        toast.warning("User already registered. Login.");
+      } else if (error.response?.status === 400) {
+        toast.warning("Invalid data. Please check your inputs.");
+      } else {
+        console.error("Sign up failed. Try later. " + error.message);
+        toast.error("An unexpected error occurred.");
       }
-      if (error.status === 400) {
-        toast.warning("User alredy registered.")
-        return;
-      }
-
-      console.error("Sign up failed. Try later. " + error.message)
     }
   };
 
@@ -222,6 +243,16 @@ export const SignUp = () => {
                   value={user.agencyName}
                   onChange={handleChange}
                   placeholder="Tashi Transport"
+                />
+                <label htmlFor="agencyLogo" className="form-label">
+                  Agency Logo
+                </label>
+                <input
+                  id="agencyLogo"
+                  type="file"
+                  accept="image/*"
+                  className="form-control custom-search"
+                  onChange={handleChange}
                 />
               </div>
             )}

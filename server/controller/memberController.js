@@ -38,7 +38,7 @@ export const registerMember = async (req, res) => {
 
     const populatedMember = await RegisterMember.findById(
       newMember._id
-    ).populate("agencyId", "agencyName");
+    ).populate({ path: "agencyId", select: ["agencyName","agencyLogo"] })
 
     res
       .status(201)
@@ -117,7 +117,7 @@ export const getAllMembers = async (req, res) => {
     const { agencyId } = req.params; // Get agencyId from the URL parameter
 
     const members = await RegisterMember.find({ agencyId })
-      .populate("agencyId", "agencyName") // Populate agencyName from agencyId reference
+    .populate({ path: "agencyId", select: ["agencyName","agencyLogo"] })// Populate agencyName from agencyId reference
       .select("-password"); // Exclude password for security
 
     if (members.length === 0) {
@@ -135,7 +135,7 @@ export const getAllMembers = async (req, res) => {
 
 const getAllDriver = async (req, res) => {
   try {
-    const driver = await RegisterMember.find();
+    const driver = await RegisterMember.find().populate({ path: "agencyId", select: ["agencyName","agencyLogo"] });
     if (!driver) {////(!driver && driver.agencyId!=req.user.id)
       return res.status(404).json({ message: "Driver not found" });
     }

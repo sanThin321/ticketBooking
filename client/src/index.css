@@ -102,3 +102,10 @@ body {
 .table-hover tbody tr:hover {
   background-color: #ebf6f2 !important;
 }
+
+.underline{
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  color: #8dd3bb;
+}

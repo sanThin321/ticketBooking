@@ -6,6 +6,7 @@ import cors from "cors";  // Import CORS
 import authRoutes from './routes/userRoutes.js';
 import cookieParser from "cookie-parser";
 import agencyRoutes from "./routes/agencyRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js"
 
 dotenv.config({ path: './config.env' });
 const app = express();
@@ -36,7 +37,7 @@ mongoose.connect(DB, mongooseOptions).then((con) => {
 
 app.use('/pelrizhabtho', authRoutes)
 app.use('/pelrizhabtho/agency', agencyRoutes)
-
+app.use('/pelrizhabtho/admin', adminRoutes)
 
 const port = 4004;
 app.listen(port, () => {
