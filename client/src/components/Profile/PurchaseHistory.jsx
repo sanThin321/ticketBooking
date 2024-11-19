@@ -67,19 +67,6 @@ export const PurchaseHistory = () => {
   return (
     <div className="px-0">
       <h3 className="mt-4 mb-2 mb-lg-4">Tickets / Bookings</h3>
-      {tickets?.map((ticket, index) => {
-        return (
-          <div className="my-1w bg-white" key={index}>
-            <div className="d-flex align-items-center justify-content-between px-3 py-3 mb-3 rounded border">
-              <div className="d-flex flex-sm-column flex-lg-row align-items-center gap-3">
-                <img src={AgencyLogo} alt="agency logo" width={70} />
-                <div>
-                  <div className="d-flex align-items-center gap-3 pe-5" style={{ borderRight: "1.5px solid #8DD3BB" }}>
-                    <div>
-                      <p>{ticket.from}</p>
-                      <h6>
-                        <strong>{new Date(ticket.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
-                      </h6>
       {tickets.length === 0 ? ( // Check if tickets array is empty
         <div className="text-center my-5">
           <h5>No tickets available.</h5>
@@ -158,31 +145,6 @@ export const PurchaseHistory = () => {
                     </div>
                   </div>
                 </div>
-                  <br />
-                <div className="d-flex gap-5 ms-4">
-                  <div className="d-flex gap-3">
-                    <div className="rounded px-2 d-flex align-items-center justify-content-center" style={{ backgroundColor: "#EBF6F2" }}>
-                      <CalendarDays color="#8DD3BB" />
-                    </div>
-                    <div>
-                      <p className="mb-0">Date</p>
-                      <p className="mb-0">
-                        <strong>{new Date(ticket.departureTime).toLocaleDateString()}</strong>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="d-flex gap-3">
-                    <div className="rounded px-2 py-0 d-flex align-items-center justify-content-center" style={{ backgroundColor: "#EBF6F2" }}>
-                      <Armchair color="#8DD3BB" />
-                    </div>
-                    <div>
-                      <p className="mb-0">Seat No</p>
-                      <p className="mb-0">
-                        <strong>{ticket.bookedSeats?.seatNumber}</strong>
-                      </p>
-                    </div>
-                  </div>
 
                 <div className="d-flex gap-3">
                   <button
