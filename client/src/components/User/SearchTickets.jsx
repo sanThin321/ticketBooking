@@ -60,7 +60,7 @@ export const SearchTickets = () => {
               <div className="dropdown-list p-1">
                 <input
                   type="search"
-                  className="form-control"
+                  className="form-control custom-search"
                   placeholder="Search From"
                   value={fromSearch}
                   onChange={(e) => setFromSearch(e.target.value)}
@@ -98,7 +98,7 @@ export const SearchTickets = () => {
               <div className="dropdown-list p-1">
                 <input
                   type="search"
-                  className="form-control"
+                  className="form-control custom-search"
                   placeholder="Search To"
                   value={toSearch}
                   onChange={(e) => setToSearch(e.target.value)}

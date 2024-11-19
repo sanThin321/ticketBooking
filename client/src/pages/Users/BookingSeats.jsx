@@ -223,7 +223,7 @@ export const BookingSeats = () => {
                 </div>
               </div>
               <hr />
-              <div className="d-flex justify-content-between ps-3">
+              <div className="d-flex gap-5 ps-3">
                 <div>
                   <p className="mb-0">Available</p>
                   <Armchair color="#8DD3BB" size={45} />
