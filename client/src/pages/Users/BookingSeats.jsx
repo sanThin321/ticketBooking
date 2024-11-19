@@ -187,12 +187,12 @@ export const BookingSeats = () => {
   return (
     <div className="container my-5">
       <div className="row">
-        <div className="col-12 col-lg-8">
+        <div className="col-12 col-lg-7">
           <div className="rounded border p-3">
             <h5>
               <strong>Book Seat</strong>
             </h5>
-            <div className="d-flex justify-content-between">
+            <div className="d-flex flex-column justify-content-between">
               <div className="d-flex gap-3">
                 <div
                   className="d-flex gap-3 pe-3"
@@ -215,18 +215,19 @@ export const BookingSeats = () => {
                   <h5>Nu. {ticket.price}</h5>
                 </div>
               </div>
-              <div className="d-flex gap-5 border-left ps-3">
+              <hr />
+              <div className="d-flex justify-content-between ps-3">
                 <div>
-                  <p>Available</p>
-                  <Armchair color="#8DD3BB" size={50} />
+                  <p className="mb-0">Available</p>
+                  <Armchair color="#8DD3BB" size={45} />
                 </div>
                 <div>
-                  <p>Selected</p>
-                  <Armchair color="#AFAFAF" size={50} />
+                  <p className="mb-0">Selected</p>
+                  <Armchair color="#AFAFAF" size={45} />
                 </div>
                 <div>
-                  <p>Booked</p>
-                  <Armchair color="#FF6F61" size={50} />
+                  <p className="mb-0">Booked</p>
+                  <Armchair color="#FF6F61" size={45} />
                 </div>
               </div>
             </div>
@@ -254,7 +255,7 @@ export const BookingSeats = () => {
                             seatDetails[seatNumber]?.cid
                           )
                         }
-                        className="form-control mb-2"
+                        className="form-control mb-2 custom-search"
                       />
                       <input
                         type="number"
@@ -267,12 +268,14 @@ export const BookingSeats = () => {
                             e.target.value
                           )
                         }
-                        className="form-control mb-2"
+                        min={0}
+                        className="form-control mb-2 custom-search"
                       />
                       <input
                         type="number"
-                        placeholder="Enter Contact Number"
+                        placeholder="Contact Number"
                         value={seatDetails[seatNumber]?.contactNo || ""}
+                        min={0}
                         onChange={(e) =>
                           handleDetailChange(
                             seatNumber,
@@ -281,7 +284,7 @@ export const BookingSeats = () => {
                             e.target.value
                           )
                         }
-                        className="form-control mb-2"
+                        className="form-control mb-2 custom-search"
                       />
                     </div>
                   </div>
@@ -307,13 +310,12 @@ export const BookingSeats = () => {
             </form>
           </div>
         </div>
-        <div className="col-4 px-0">
+        <div className="col-5 px-0">
           <Seats
             booked={ticket.booked}
             onSeatSelection={handleSeatSelection}
             selectedSeats={selectedSeats}
           />
-          <button className="btn btn-dark" onClick={makePayment}>Pay</button>
         </div>
       </div>
     </div>

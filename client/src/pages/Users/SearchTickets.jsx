@@ -59,8 +59,16 @@ export const SearchTickets = () => {
   };
 
   useEffect(() => {
+    // Refresh tickets on load
     refreshTickets();
-  });
+  }, [refreshTickets]);
+
+  // This effect ensures search is triggered when the query params change
+  useEffect(() => {
+    if (pfrom || pto || pdate) {
+      handleSearchTickets(pfrom || "From", pto || "To", pdate || "Date");
+    }
+  }, [pfrom, pto, pdate]); // Runs whenever query parameters change
 
   return (
     <>
