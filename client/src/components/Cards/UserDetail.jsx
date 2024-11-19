@@ -70,7 +70,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
   };
 
   return (
-    <div className="hover bg-white rounded border py-3 px-4 mb-3">
+    <div className="hover bg-white rounded border py-2 px-4 mb-3">
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3">
           <div
@@ -82,12 +82,12 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
                 src={Driver}
                 className="rounded mx-auto d-block"
                 alt="driver default icon"
-                width={100}
+                width={70}
               />
             </div>
             <div style={{ width: "12rem" }}>
               <h5 className="mb-0">{data.fullName}</h5>
-              <p>{data.role}</p>
+              <p className="mb-0">{data.role}</p>
             </div>
           </div>
           <div className="d-flex flex-row gap-4 gap-lg-5 ms-3">
@@ -124,6 +124,7 @@ export const UserDetail = ({ data, onEditClick, selectedUser }) => {
         </div>
 
         <div style={{ position: "relative" }}>
+          {/* button  */}
           <button
             className="btn px-2"
             style={{ border: "1.5px solid #8DD3BB" }}

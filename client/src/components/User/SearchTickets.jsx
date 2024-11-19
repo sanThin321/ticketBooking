@@ -130,6 +130,7 @@ export const SearchTickets = () => {
               onChange={handleDateChange}
               aria-label="Date"
               aria-describedby="basic-addon1"
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
         </div>

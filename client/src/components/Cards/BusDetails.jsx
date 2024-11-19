@@ -10,8 +10,9 @@ export const BusDetails = ({ data, onEditClick, selectedBus }) => {
   const { refreshAgencyBuses, agencyMembers, refreshAgencyMembers } =
     useStore();
   const [formData, setFormData] = useState({
+    // eslint-disable-next-line react/prop-types
     agencyId: selectedBus?.agencyId || "",
-    driverId: selectedBus?.driverId.fullName || "",
+    driverId: selectedBus?.driverId || "",
     busNumber: selectedBus?.busNumber || "",
     totalSeat: selectedBus?.totalSeat || "",
     imageOfTheBus: selectedBus?.imageOfTheBus || "image.png",

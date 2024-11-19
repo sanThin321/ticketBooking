@@ -1,70 +1,71 @@
 import { useEffect, useState } from "react";
-import { AdminHeader } from "../../components/PageHeaders/AdminHeader";
 import { AgencyBooking } from "../../components/Cards/AgencyBooking";
 import RegisterTicketBtn from "../../components/RegisterTicketBtn";
 import { useStore } from "../../context/Store";
 
 export const AgencyBookings = () => {
-  const { tickets, refreshTickets } = useStore();
-  const [showFilters, setShowFilters] = useState(false);
+  const agencyId = localStorage.getItem("agencyId");
   const [selectedTicket, setSelectedTicket] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Single search term
+  const [filteredTickets, setFilteredTickets] = useState([]); // Filtered tickets
+
+  const { refreshAgencyTickets, agencyTickets } = useStore();
+
+  useEffect(() => {
+    refreshAgencyTickets(agencyId);
+  }, [agencyId]);
+
+  // Filter tickets based on the search term
+  useEffect(() => {
+    const filtered = agencyTickets.filter((ticket) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        ticket.from.toLowerCase().includes(searchLower) || 
+        ticket.to.toLowerCase().includes(searchLower)
+      );
+    });
+    setFilteredTickets(filtered);
+  }, [searchTerm, agencyTickets]);
 
   const handleEditClick = (ticket) => {
     setSelectedTicket(ticket);
   };
 
-  useEffect(() => {
-    refreshTickets();
-  }, [tickets]);
-
-  useEffect(()=> {
-
-  }, [refreshTickets])
-
   return (
     <>
-      <AdminHeader
-        toggleFilters={() => setShowFilters((prev) => !prev)}
-        title="Manage Booking"
-        btn={<RegisterTicketBtn />}
-      />
+      <div className="container mt-3 d-flex align-items-center justify-content-between bg-white border p-3 rounded mb-3">
+        <h4 className="mb-0">Manage Tickets</h4>
+        <div className="d-flex gap-3 align-items-center">
+          <RegisterTicketBtn />
+          <div className="d-flex align-items-center">
+            <input
+              type="search"
+              className="form-control custom-search"
+              placeholder="Search by From/To"
+              aria-label="Search by From/To"
+              value={searchTerm} // Bind input to state
+              onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+            />
+          </div>
+        </div>
+      </div>
       <div className="container px-0">
         <div className="d-flex justify-content-between gap-4">
           <div className="w-100">
-            {tickets.map((ticket, index) => {
-              return <AgencyBooking key={index} data={ticket} onEditClick={handleEditClick} selectedTicket={selectedTicket}/>;
-            })}
-          </div>
-          <div
-            className={`p-3 border border-secondary-subtle rounded ${
-              showFilters ? "d-block" : "d-none"
-            }`}
-          >
-            <h5>Filters</h5>
-            <hr />
-            <div className="mb-3">
-              <select
-                className="form-select"
-                aria-label="Filter by name and email"
-              >
-                <option defaultValue>Name</option>
-                <option value="1">Name</option>
-                <option value="2">Email</option>
-              </select>
-            </div>
-
-            <div className="mb-3"></div>
-
-            <div>
-              <select
-                className="form-select"
-                aria-label="Filter by name and email"
-              >
-                <option defaultValue>Acency</option>
-                <option value="1">JD Transport</option>
-                <option value="2">Pelyab Transport</option>
-              </select>
-            </div>
+            {filteredTickets.length > 0 ? (
+              filteredTickets.map((ticket, index) => (
+                <AgencyBooking
+                  key={index}
+                  data={ticket}
+                  onEditClick={handleEditClick}
+                  selectedTicket={selectedTicket}
+                />
+              ))
+            ) : (
+              <div className="text-center mt-5">
+                <h5>No tickets found.</h5>
+              </div>
+            )}
           </div>
         </div>
       </div>

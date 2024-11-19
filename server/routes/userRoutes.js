@@ -7,16 +7,15 @@ import {
   verifyCode,
   resetPassword,
   feedback,
+  makeCheckOut,
 } from "../controller/userController.js";
 import { authenticateJWT } from "../Middleware/checkToken.js";
 import { roleBasedRedirect } from "../Middleware/Redriect.js";
 import { getUserProfile, updateEmail, updateNames, updatePassword, updatePhone } from "../controller/accountController.js";
-
 const router = express.Router();
-
 // Sign-up and Login
-router.post("/signup", signup);
 router.post("/login", login);
+router.post("/signup", signup);
 router.get("/redirect", authenticateJWT, roleBasedRedirect);
 router.post("/forgotPassword", forgotPassword);
 router.post("/verifyCode", verifyCode);
@@ -26,6 +25,9 @@ router.put('/update-names/:userId', updateNames);
 router.put('/update-email/:userId', updateEmail);
 router.put('/update-phone/:userId', updatePhone);
 router.put('/update-password/:userId', updatePassword);
-router.post('/',feedback)
+router.post('/', feedback)
+router.post("/create-checkout-session", makeCheckOut);
+
+
 export default router;
 

@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { sendEmail, sendFeedback } from "../utils/email.js";
 import crypto from "crypto";
 import { RegisterMember } from "../model/agencyModel.js";
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET);
 //signup
 export const signup = async (req, res) => {
   const {
@@ -15,6 +17,7 @@ export const signup = async (req, res) => {
     password,
     confirmPassword,
     agencyName,
+    agencyLogo, // Base64 string of the image
   } = req.body;
 
   // Validate the request
@@ -39,6 +42,7 @@ export const signup = async (req, res) => {
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
+
     if (userType === "Agency") {
       if (!agencyName || agencyName.trim() === "") {
         return res
@@ -50,51 +54,78 @@ export const signup = async (req, res) => {
       if (existingAgency) {
         return res.status(400).json({ msg: "Agency already exists" });
       }
-    }
-    // Create and save the user
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      userType,
-      // Only include agencyName if userType is 'Agency'
-      agencyName: userType === "Agency" ? agencyName : undefined,
-      password,
-    });
 
-    await newUser.save();
-    // Automatically log the user in by generating JWT
-    const payload = {
-      user: {
-        id: newUser.id,
-        role: newUser.userType,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" },
-      (err, token) => {
-        if (err) throw err;
-
-        // Set the token in an HttpOnly cookie
-        // res.cookie("token", token, {
-        //   httpOnly: true,
-        //   secure: process.env.NODE_ENV === "production", // Secure in production
-        //   sameSite: "strict",
-        //   maxAge: 3600000, // 1 hour
-        // });
-
-        res.status(200).json({
-          token,
-          role: newUser.userType,
-          message: "Signup successful and logged in",
-        });
+      // Validate Base64 image
+      if (!agencyLogo || typeof agencyLogo !== "string") {
+        return res.status(400).json({ msg: "Valid Base64 image is required" });
       }
-    );
-    // res.status(200).json({ msg: "User registered successfully" });
+
+      // Create and save the user
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        userType,
+        agencyName,
+        password,
+        agencyLogo: agencyLogo, // Save the Base64 string directly
+      });
+
+      await newUser.save();
+      // Automatically log the user in by generating JWT
+      const payload = {
+        user: {
+          id: newUser.id,
+          role: newUser.userType,
+        },
+      };
+
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+        (err, token) => {
+          if (err) throw err;
+          res.status(200).json({
+            token,
+            role: newUser.userType,
+            message: "Signup successful and logged in",
+          });
+        }
+      );
+    } else {
+      // Handle non-Agency user signup
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        userType,
+        password,
+      });
+      await newUser.save();
+      const payload = {
+        user: {
+          id: newUser.id,
+          role: newUser.userType,
+        },
+      };
+
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+        (err, token) => {
+          if (err) throw err;
+          res.status(200).json({
+            token,
+            role: newUser.userType,
+            message: "Signup successful and logged in",
+          });
+        }
+      );
+    }
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");
@@ -342,3 +373,65 @@ export const feedback = async (req, res) => {
   }
 };
 
+
+export const makeCheckOut = async (req, res) => {
+  try {
+    const { bookedDetails } = req.body;
+    console.log("bookings", bookedDetails)
+    if (!bookedDetails || !Array.isArray(bookedDetails) || bookedDetails.length === 0) {
+      return res.status(400).json({ error: "Invalid ticket data" });
+    }
+
+    // Create line items for Stripe
+    const line_items = bookedDetails.map((ticket) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: ticket.name || `Seat: ${ticket.seatNumber}`,
+          description: `CID: ${ticket.cid}, Contact No: ${ticket.contactNo}, Seat No: ${ticket.seatNumber}`,
+        },
+        unit_amount: ticket.price * 100,
+      },
+      quantity: 1,
+    }));
+
+    // Create the Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items,
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/cancel",
+    });
+
+    console.log("Stripe Session Created:", session.id);
+    res.status(200).json({ id: session.id });
+  } catch (error) {
+    console.error("Error creating checkout session:", error.message);
+    res.status(500).json({ error: "Failed to create checkout session" });
+  }
+}
+
+export const getalluser = async (req, res) => {
+  try {
+    const user = await User.find({ userType: { $in: ['Customer', 'Agency'] } });
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    // Use the userId directly
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

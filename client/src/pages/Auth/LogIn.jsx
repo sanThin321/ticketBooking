@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import dzong from "../../assets/dzong.jpeg";
 import { toast } from "react-toastify";
@@ -31,13 +31,15 @@ export const LogIn = () => {
     }
 
     try {
-      const response = axios.post(
+      const response = await axios.post(
         "http://localhost:4004/pelrizhabtho/login",
         userCredentials
       );
 
-      if ((await response).status === 200) {
-        storeToken((await response).data);
+      if (response.status === 200) {
+        const user = {id: response.data.id, role: response.data.role}
+        storeToken(response.data);
+        localStorage.setItem("user", JSON.stringify(user))
         toast.success("Login successful.");
         navigate("/");
       }

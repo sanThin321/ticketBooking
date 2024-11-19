@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useStore } from "../../context/Store";
+const storedData = localStorage.getItem('user');
+let userId = null;
+
+try {
+  userId = storedData ? JSON.parse(storedData)?.id : null;
+} catch (error) {
+  console.error('Error parsing storedData:', error);
+}
+
+import { loadStripe } from '@stripe/stripe-js';
 
 export const BookingSeats = () => {
   const { id } = useParams();
@@ -32,49 +41,48 @@ export const BookingSeats = () => {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    if (!ticket._id) {
-      console.error("Ticket ID is missing.");
-      return;
-    }
+  //   if (!ticket._id) {
+  //     console.error("Ticket ID is missing.");
+  //     return;
+  //   }
 
-    const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
-      seatNumber,
-      name: seatDetails[seatNumber]?.name || "",
-      cid: seatDetails[seatNumber]?.cid || "",
-      contactNo: seatDetails[seatNumber]?.contactNo || "",
-    }));
+  //   const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
+  //     seatNumber,
+  //     name: seatDetails[seatNumber]?.name || "",
+  //     cid: seatDetails[seatNumber]?.cid || "",
+  //     contactNo: seatDetails[seatNumber]?.contactNo || "",
+  //   }));
 
-    for (let seat of bookedSeats) {
-      if (!seat.name || !seat.cid || !seat.contactNo) {
-        toast.error("All fields must be filled for each selected seat.");
-        return;
-      }
-    }
+  //   for (let seat of bookedSeats) {
+  //     if (!seat.name || !seat.cid || !seat.contactNo) {
+  //       toast.error("All fields must be filled for each selected seat.");
+  //       return;
+  //     }
+  //   }
 
-    try {
-      const response = await axios.put(
-        `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
-        { seatsBooked: bookedSeats }
-      );
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
+  //       { seatsBooked: bookedSeats }
+  //     );
 
-      if (response.status === 200) {
-        toast.success("Seats booked successfully!");
+  //     if (response.status === 200) {
+  //       toast.success("Seats booked successfully!");
+  //       setTimeout(() => {
+  //         window.location.reload();
+  //       }, 1000);
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+  //       handleCancel();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error booking seats:", error.message);
+  //   }
 
-        handleCancel();
-      }
-    } catch (error) {
-      console.error("Error booking seats:", error.message);
-    }
-
-    console.log("Selected Seats with User Details:", bookedSeats);
-  };
+  //   console.log("Selected Seats with User Details:", bookedSeats);
+  // };
 
   const handleCancel = () => {
     setSelectedSeats(new Set());
@@ -115,6 +123,68 @@ export const BookingSeats = () => {
     hour12: true, // AM/PM format
   });
 
+  const makePayment = async (event) => {
+    event.preventDefault();
+    const bookedSeats = Array.from(selectedSeats).map((seatNumber) => ({
+      seatNumber,
+      name: seatDetails[seatNumber]?.name || "",
+      cid: seatDetails[seatNumber]?.cid || "",
+      contactNo: seatDetails[seatNumber]?.contactNo || "",
+      price: ticket.price,
+      userId
+    }));
+
+    // Check if all necessary fields are filled
+    for (let seat of bookedSeats) {
+      if (!seat.name || !seat.cid || !seat.contactNo) {
+        toast.error("All fields must be filled for each selected seat.");
+        return;
+      }
+    }
+
+    try {
+      const stripe = await loadStripe("pk_test_51QMr5UChEc4w1h3ZJle3FaPE2IBx9kchCGineAwFcpzem5RBBrOLG2Q5oMfWCZy5UIisBkBz5GHRgJqLG1JLgE2100I533kKGm");
+
+      if (!stripe) {
+        throw new Error("Stripe failed to load.");
+      }
+
+      const response = await axios.post(
+        "http://localhost:4004/pelrizhabtho/create-checkout-session",
+        { bookedDetails: bookedSeats },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const session = response.data;
+      await bookSeatsAfterPayment(bookedSeats);
+      const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+
+      if (result.error) {
+        console.error("Error during redirect:", result.error.message);
+      }
+    } catch (error) {
+      console.error("Payment failed:", error.message || error);
+    }
+  };
+
+  // Function to book seats after payment
+  const bookSeatsAfterPayment = async (bookedSeats) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4004/pelrizhabtho/agency/tickets/${ticket._id}/book`,
+        { seatsBooked: bookedSeats }
+      );
+
+      if (response.status === 200) {
+        console.log("Seats booked successfully!");
+      }
+    } catch (error) {
+      console.error("Error booking seats:", error.message);
+    }
+  };
+
+
   useEffect(() => {
     if (id) {
       getTicketDetails(id);
@@ -124,12 +194,12 @@ export const BookingSeats = () => {
   return (
     <div className="container my-5">
       <div className="row">
-        <div className="col-12 col-lg-8">
+        <div className="col-12 col-lg-7">
           <div className="rounded border p-3">
             <h5>
               <strong>Book Seat</strong>
             </h5>
-            <div className="d-flex justify-content-between">
+            <div className="d-flex flex-column justify-content-between">
               <div className="d-flex gap-3">
                 <div
                   className="d-flex gap-3 pe-3"
@@ -152,25 +222,26 @@ export const BookingSeats = () => {
                   <h5>Nu. {ticket.price}</h5>
                 </div>
               </div>
-              <div className="d-flex gap-5 border-left ps-3">
+              <hr />
+              <div className="d-flex justify-content-between ps-3">
                 <div>
-                  <p>Available</p>
-                  <Armchair color="#8DD3BB" size={50} />
+                  <p className="mb-0">Available</p>
+                  <Armchair color="#8DD3BB" size={45} />
                 </div>
                 <div>
-                  <p>Selected</p>
-                  <Armchair color="#AFAFAF" size={50} />
+                  <p className="mb-0">Selected</p>
+                  <Armchair color="#AFAFAF" size={45} />
                 </div>
                 <div>
-                  <p>Booked</p>
-                  <Armchair color="#FF6F61" size={50} />
+                  <p className="mb-0">Booked</p>
+                  <Armchair color="#FF6F61" size={45} />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="mb-3 mt-4">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={makePayment}>
               <div>
                 <h5>Enter your details:</h5>
                 {selectedSeats.size === 0 ? <p>Select a seat.</p> : null}
@@ -191,7 +262,7 @@ export const BookingSeats = () => {
                             seatDetails[seatNumber]?.cid
                           )
                         }
-                        className="form-control mb-2"
+                        className="form-control mb-2 custom-search"
                       />
                       <input
                         type="number"
@@ -204,12 +275,14 @@ export const BookingSeats = () => {
                             e.target.value
                           )
                         }
-                        className="form-control mb-2"
+                        min={0}
+                        className="form-control mb-2 custom-search"
                       />
                       <input
                         type="number"
-                        placeholder="Enter Contact Number"
+                        placeholder="Contact Number"
                         value={seatDetails[seatNumber]?.contactNo || ""}
+                        min={0}
                         onChange={(e) =>
                           handleDetailChange(
                             seatNumber,
@@ -218,7 +291,7 @@ export const BookingSeats = () => {
                             e.target.value
                           )
                         }
-                        className="form-control mb-2"
+                        className="form-control mb-2 custom-search"
                       />
                     </div>
                   </div>
@@ -244,7 +317,7 @@ export const BookingSeats = () => {
             </form>
           </div>
         </div>
-        <div className="col-4 px-0">
+        <div className="col-5 px-0">
           <Seats
             booked={ticket.booked}
             onSeatSelection={handleSeatSelection}

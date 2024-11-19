@@ -1,4 +1,4 @@
-import { RegisterBus } from "../model/agencyModel.js";
+import { RegisterBus,  RegisterMember } from "../model/agencyModel.js";
 
 export const registerBus = async (req, res) => {
   const { agencyId, busNumber, driverId, totalSeat, imageOfTheBus } =
@@ -25,27 +25,34 @@ export const registerBus = async (req, res) => {
 };
 
 //update bus info
-export const updateBus=async(req,res)=>{
-  try{
-    const{busId}=req.params;
-    const{driverId, busNumber, totalSeat, imageOfTheBus}=req.body;
+export const updateBus = async (req, res) => {
+  try {
+      const { agencyId, driverId, busNumber, totalSeat, imageOfTheBus } = req.body;
 
-    const bus=await RegisterBus.findById(busId);
-    if(!bus){
-      return res.status(404).json({message:"Bus not found"});
-    }
+      // Prepare the update data
+      const busData = {
+          agencyId,
+          driverId: driverId, 
+          busNumber,
+          totalSeat,
+          imageOfTheBus,
+      };
 
-    //update bus detail
-    if(driverId) bus.driverId=driverId;
-    if(busNumber) bus.busNumber=busNumber;
-    if(totalSeat) bus.totalSeat=totalSeat;
-    if(imageOfTheBus) bus.imageOfTheBus=imageOfTheBus;
+      // Update the bus
+      const updatedBus = await RegisterBus.findOneAndUpdate(
+          { busNumber }, // Find the bus by its unique bus number
+          busData,
+          { new: true, runValidators: true } // Return the updated document and validate the schema
+      );
 
-    await bus.save();
-    res.status(200).json({message:"Bus updated successfully"})
-  }catch(error){
-    console.error('Error uypdating Bus:', error);
-    res.status(500).json({message: 'Error in updating bus', error});
+      if (!updatedBus) {
+          return res.status(404).json({ message: 'Bus not found' });
+      }
+
+      res.status(200).json({ message: 'Bus updated successfully', data: updatedBus });
+  } catch (error) {
+      console.error('Error updating Bus:', error);
+      res.status(500).json({ message: 'Error updating Bus', error });
   }
 };
 

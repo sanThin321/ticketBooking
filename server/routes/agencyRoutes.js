@@ -7,12 +7,9 @@ import {
   getTicket,
   updateBookedTicket,
   updateTicket,
+  getTicketByUserId,
+  getallTicketByAgency
 } from "../controller/ticketController.js";
-import {
-  validateDriver,
-  vaildBus,
-  validateBus,
-} from "../Middleware/vaildateItsfromagency.js";
 import {
   registerMember,
   getAllMembers,
@@ -37,26 +34,6 @@ router.post("/registerbus", registerBus);
 router.get("/getallbus/:agencyId", getAllBus);
 router.put("/updatebus/:busId", updateBus);
 router.delete("/deletebus/:busId", deleteBus);
-// Combined GET method for all agency data
-// router.get("/getagencydata/:agencyId", async (req, res) => {
-//   const { agencyId } = req.params;
-
-//   try {
-//     // Get all members
-//     const members = await getAllMembers({ params: { agencyId } });
-
-//     // Combine the data
-//     const result = {
-//       members,
-//     };
-
-//     res.status(200).json(result);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error retrieving data", error });
-//   }
-// });
-
-//payment
 
 router.post("/verify-payment", processPayment);
 
@@ -71,5 +48,6 @@ router.delete("/deleteTicket/:ticketId", delateTicket);
 router.put("/updateTicket/:ticketId", updateTicket);
 
 router.get("/ticketbooked/:ticketId/bookeddetails", bookedDetail);
-
+router.get("/ticket/:userId", getTicketByUserId);
+router.get("/getallTicketByagency/:agencyId",getallTicketByAgency)
 export default router;

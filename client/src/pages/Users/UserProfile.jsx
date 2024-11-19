@@ -2,7 +2,6 @@ import { useState } from "react";
 import backgroundImage from "../../assets/ProfileBackground.png";
 import { Account } from "../../components/Profile/Account";
 import { PurchaseHistory } from "../../components/Profile/PurchaseHistory";
-import { PaymentMethod } from "../../components/Profile/PaymentMethod";
 import { useAuth } from "../../auth/auth";
 
 export const UserProfile = () => {
@@ -12,10 +11,14 @@ export const UserProfile = () => {
   const isActive = {
     borderBottom: "3px solid #8DD3BB",
     cursor: "pointer",
+    backgroundColor: "#8DD3BB", // Selected tab background color
+    color: "#fff",
   };
 
   const defaultStyle = {
+    padding: "10px 20px",
     cursor: "pointer",
+    transition: "background-color 0.3s ease",
   };
 
   return (
@@ -47,13 +50,13 @@ export const UserProfile = () => {
         <p>{user.email}</p>
       </div>
 
-      <div className="bg-white border rounded my-3 py-3 px-3">
+      <div className="bg-white border rounded my-3 rounded">
         <ul
-          className="d-flex justify-content-around px-0 mb-0"
+          className="d-flex align-items-center px-0 mb-0 rounded"
           style={{ listStyle: "none" }}
         >
           <li
-            className="text-decoration-none"
+            className="w-50 text-decoration-none rounded"
             style={
               isSelected === 0 ? { ...defaultStyle, ...isActive } : defaultStyle
             }
@@ -62,7 +65,7 @@ export const UserProfile = () => {
             Account
           </li>
           <li
-            className="text-decoration-none"
+            className="w-50 text-decoration-none rounded"
             style={
               isSelected === 1 ? { ...defaultStyle, ...isActive } : defaultStyle
             }
@@ -70,24 +73,14 @@ export const UserProfile = () => {
           >
             Purchased History
           </li>
-          <li
-            className="text-decoration-none"
-            style={
-              isSelected === 2 ? { ...defaultStyle, ...isActive } : defaultStyle
-            }
-            onClick={() => setIsSelected(2)}
-          >
-            Payment Methods
-          </li>
         </ul>
       </div>
+
       {isSelected === 0 ? (
         <Account />
-      ) : isSelected === 1 ? (
-        <PurchaseHistory />
-      ) : (
-        <PaymentMethod />
-      )}
+      ) :
+        (isSelected === 1 ? <PurchaseHistory /> : "")
+      }
     </div>
   );
 };
